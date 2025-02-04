@@ -26,6 +26,7 @@ class AppDialogs {
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
+        backgroundColor: AppColors.white,
         shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(15.0.sp)),
         title: Icon(

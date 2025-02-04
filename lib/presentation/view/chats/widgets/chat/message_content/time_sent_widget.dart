@@ -20,7 +20,7 @@ class TimeSentWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: EdgeInsets.only(right: 4, bottom: 4),
+      padding: const EdgeInsets.only(right: 4, bottom: 4),
       child: Container(
         padding: isText
             ? EdgeInsets.zero

@@ -26,13 +26,9 @@ class PostsTabBar extends StatelessWidget {
       length: tabs.length,
       child: Column(
         children: [
-          Align(
-            alignment: AlignmentDirectional.centerStart,
-            child: TabBar(
-              isScrollable: true,
-              tabs: tabs,
-              indicatorWeight: 1.4.sp,
-            ),
+          TabBar(
+            tabs: tabs,
+            indicatorWeight: 0.5.h,
           ),
           Expanded(
             child: TabBarView(

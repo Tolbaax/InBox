@@ -58,7 +58,7 @@ class DraftsScreen extends StatelessWidget {
                 },
                 fallback: (context) => Center(
                   child: snapshot.hasError
-                      ? NoSavedPostsYet()
+                      ? const NoSavedPostsYet()
                       : CircularProgressIndicator(strokeWidth: 2.5.sp),
                 ),
               );

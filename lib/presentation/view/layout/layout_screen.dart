@@ -67,7 +67,7 @@ class _LayoutScreenState extends State<LayoutScreen>
                 FloatingActionButtonLocation.centerDocked,
             bottomNavigationBar: CustomBottomNavBar(cubit: cubit),
             body: user == null
-                ? UserNotLogged()
+                ? const UserNotLogged()
                 : Constants.screens[cubit.selectedIndex],
           ),
         );

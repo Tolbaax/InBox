@@ -6,7 +6,6 @@ import '../../core/utils/app_colors.dart';
 import '../../core/utils/app_strings.dart';
 
 ThemeData appTheme() {
-  // Set the status bar color to white
   SystemChrome.setSystemUIOverlayStyle(
     SystemUiOverlayStyle.light.copyWith(
       statusBarColor: Colors.transparent,
@@ -50,8 +49,10 @@ ThemeData appTheme() {
       elevation: 0.0,
     ),
     tabBarTheme: TabBarTheme(
-      unselectedLabelColor: AppColors.gray,
+      unselectedLabelColor: AppColors.grayRegular,
+      indicatorSize: TabBarIndicatorSize.tab,
       labelColor: AppColors.black,
+      indicatorColor: AppColors.black,
     ),
   );
 }
