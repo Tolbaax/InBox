@@ -6,12 +6,7 @@ import '../../core/utils/app_colors.dart';
 import '../../core/utils/app_strings.dart';
 
 ThemeData appTheme() {
-  SystemChrome.setSystemUIOverlayStyle(
-    SystemUiOverlayStyle.light.copyWith(
-      statusBarColor: Colors.transparent,
-      statusBarIconBrightness: Brightness.dark,
-    ),
-  );
+  _setSystemUIOverlayStyle();
 
   return ThemeData(
     primaryColor: AppColors.primary,
@@ -19,40 +14,68 @@ ThemeData appTheme() {
     fontFamily: AppStrings.montserratFont,
     scaffoldBackgroundColor: Colors.white,
     dividerColor: AppColors.primary.withOpacity(0.4),
-    appBarTheme: AppBarTheme(
-      centerTitle: true,
-      elevation: 0.0,
-      backgroundColor: Colors.transparent,
-      titleTextStyle: TextStyle(
-        color: AppColors.black,
-        fontSize: 18.5.sp,
-        fontFamily: AppStrings.montserratFont,
-        fontWeight: FontWeight.w600,
-        letterSpacing: 0.5.sp,
-      ),
-    ),
-    progressIndicatorTheme:
-        ProgressIndicatorThemeData(color: AppColors.primary),
+    appBarTheme: _appBarTheme(),
+    progressIndicatorTheme: _progressIndicatorTheme(),
     popupMenuTheme: const PopupMenuThemeData(color: Colors.white),
     textTheme: const TextTheme(),
-    listTileTheme: ListTileThemeData(
-      shape: RoundedRectangleBorder(
-        side: BorderSide(width: 1.sp, color: AppColors.flashWhite),
-        borderRadius: BorderRadius.circular(15.sp),
-      ),
-      horizontalTitleGap: 14.0.w,
-      minLeadingWidth: 0.0,
-    ),
+    listTileTheme: _listTileTheme(),
     visualDensity: VisualDensity.adaptivePlatformDensity,
-    bottomSheetTheme: const BottomSheetThemeData(
-      backgroundColor: Colors.white,
-      elevation: 0.0,
+    bottomSheetTheme: _bottomSheetTheme(),
+    tabBarTheme: _tabBarTheme(),
+  );
+}
+
+void _setSystemUIOverlayStyle() {
+  SystemChrome.setSystemUIOverlayStyle(
+    SystemUiOverlayStyle.light.copyWith(
+      statusBarColor: Colors.transparent,
+      statusBarIconBrightness: Brightness.dark,
     ),
-    tabBarTheme: TabBarTheme(
-      unselectedLabelColor: AppColors.grayRegular,
-      indicatorSize: TabBarIndicatorSize.tab,
-      labelColor: AppColors.black,
-      indicatorColor: AppColors.black,
+  );
+}
+
+AppBarTheme _appBarTheme() {
+  return AppBarTheme(
+    centerTitle: true,
+    elevation: 0.0,
+    backgroundColor: Colors.transparent,
+    titleTextStyle: TextStyle(
+      color: AppColors.black,
+      fontSize: 18.5.sp,
+      fontFamily: AppStrings.montserratFont,
+      fontWeight: FontWeight.w600,
+      letterSpacing: 0.5.sp,
     ),
+  );
+}
+
+ProgressIndicatorThemeData _progressIndicatorTheme() {
+  return ProgressIndicatorThemeData(color: AppColors.primary);
+}
+
+ListTileThemeData _listTileTheme() {
+  return ListTileThemeData(
+    shape: RoundedRectangleBorder(
+      side: BorderSide(width: 1.sp, color: AppColors.flashWhite),
+      borderRadius: BorderRadius.circular(15.sp),
+    ),
+    horizontalTitleGap: 14.0.w,
+    minLeadingWidth: 0.0,
+  );
+}
+
+BottomSheetThemeData _bottomSheetTheme() {
+  return const BottomSheetThemeData(
+    backgroundColor: Colors.white,
+    elevation: 0.0,
+  );
+}
+
+TabBarTheme _tabBarTheme() {
+  return TabBarTheme(
+    unselectedLabelColor: AppColors.grayRegular,
+    indicatorSize: TabBarIndicatorSize.tab,
+    labelColor: AppColors.black,
+    indicatorColor: AppColors.black,
   );
 }
