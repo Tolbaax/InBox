@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../../../../core/utils/app_strings.dart';
+import '../../../core/shared/common.dart';
 import '../../components/internet/check_internet_connection.dart';
 import 'widgets/no_users_found.dart';
 import '../../components/text_fields/search_field.dart';
@@ -18,14 +19,26 @@ class SearchScreen extends StatefulWidget {
 
 class _SearchScreenState extends State<SearchScreen> {
   final searchController = TextEditingController();
-
   bool isTextFieldEmpty = false;
+  bool isConnected = true; // Flag to check internet connection
+
+  @override
+  void initState() {
+    super.initState();
+    _initializeInternetCheck();
+  }
+
+  // Function to check internet connection on screen init
+  void _initializeInternetCheck() async {
+    isConnected = await checkInternetConnectivity();
+    setState(() {});
+  }
 
   @override
   Widget build(BuildContext context) {
-    final searchQuery = (searchController.text.trim());
+    final searchQuery = searchController.text.trim();
 
-    final usernameFuture = FirebaseFirestore.instance
+    final usernameQuery = FirebaseFirestore.instance
         .collection('users')
         .orderBy('username')
         .startAt([searchQuery]).endAt(["${searchQuery}uf8ff"]);
@@ -56,38 +69,38 @@ class _SearchScreenState extends State<SearchScreen> {
           start: 18.0.sp,
           top: 7.0.sp,
         ),
-        child: CheckInternetConnection(
-          child: FutureBuilder<QuerySnapshot>(
-            future: usernameFuture.get(),
-            builder: (context, snapshot) {
-              // Connection is waiting
-              if (snapshot.connectionState == ConnectionState.waiting &&
-                  isTextFieldEmpty &&
-                  !snapshot.hasError) {
-                return ShimmerUserCard(snapshot: snapshot);
-              }
+        child: isConnected
+            ? FutureBuilder<QuerySnapshot>(
+                future: usernameQuery.get(),
+                builder: (context, snapshot) {
+                  // Connection is waiting
+                  if (snapshot.connectionState == ConnectionState.waiting &&
+                      isTextFieldEmpty &&
+                      !snapshot.hasError) {
+                    return ShimmerUserCard(snapshot: snapshot);
+                  }
 
-              // No Users Found
-              if (searchController.text.isNotEmpty &&
-                  snapshot.hasData &&
-                  snapshot.data != null &&
-                  snapshot.data!.docs.isEmpty) {
-                return const NoUsersFound();
-              }
+                  // No Users Found
+                  if (searchController.text.isNotEmpty &&
+                      snapshot.hasData &&
+                      snapshot.data != null &&
+                      snapshot.data!.docs.isEmpty) {
+                    return const NoUsersFound();
+                  }
 
-              // Users Found Successfully
-              if (snapshot.hasData &&
-                  isTextFieldEmpty &&
-                  searchController.text.isNotEmpty &&
-                  searchQuery.isNotEmpty) {
-                return UserCard(snapshot: snapshot);
-              }
+                  // Users Found Successfully
+                  if (snapshot.hasData &&
+                      isTextFieldEmpty &&
+                      searchController.text.isNotEmpty &&
+                      searchQuery.isNotEmpty) {
+                    return UserCard(snapshot: snapshot);
+                  }
 
-              // User not searched yet
-              return const SearchForUsers();
-            },
-          ),
-        ),
+                  // User not searched yet
+                  return const SearchForUsers();
+                },
+              )
+            : const CheckInternetConnection(child: SizedBox()),
       ),
     );
   }
