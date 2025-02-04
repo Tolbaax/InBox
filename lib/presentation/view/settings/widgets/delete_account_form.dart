@@ -5,6 +5,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:inbox/core/extensions/media_query_extensions.dart';
 import 'package:inbox/core/functions/navigator.dart';
 import 'package:inbox/core/functions/app_dialogs.dart';
+import 'package:inbox/core/functions/validators.dart';
 import 'package:inbox/core/utils/app_colors.dart';
 import '../../../../../config/routes/app_routes.dart';
 import '../../../../../core/shared/common.dart';
@@ -63,37 +64,13 @@ class _DeleteAccountFormState extends State<DeleteAccountForm> {
 
   Widget _buildEmailTextField(UserEntity? user) {
     return CustomTextField(
-      controller: emailController,
-      hintText: AppStrings.email,
-      keyboardType: TextInputType.emailAddress,
-      prefixIcon: FontAwesomeIcons.envelope,
-      validator: (value) {
-        if (value.isEmpty) {
-          return 'Email cannot be empty';
-        }
-        final RegExp emailRegex =
-            RegExp(r'^[\w.-]+@[\w-]+(\.[\w-]+)*\.[\w-]{2,}$');
-
-        if (!emailRegex.hasMatch(value)) {
-          return 'Please enter a valid email address';
-        }
-
-        if (value.contains(' ')) {
-          return 'Email address cannot contain spaces';
-        }
-
-        final List<String> valueParts = value.split('@');
-        if (valueParts.length != 2) {
-          return 'Please enter a valid email address';
-        }
-
-        if (value.trim().toLowerCase() != user!.email.toLowerCase()) {
-          return 'Email does not match';
-        }
-
-        return null;
-      },
-    );
+        controller: emailController,
+        hintText: AppStrings.email,
+        keyboardType: TextInputType.emailAddress,
+        prefixIcon: FontAwesomeIcons.envelope,
+        autoValidateMode: AutovalidateMode.onUserInteraction,
+        autofillHints: const [AutofillHints.email],
+        validator: (value) => Validators.validateDeleteAccount(value, user!));
   }
 
   Widget _buildDeleteAccountButton() {

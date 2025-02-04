@@ -1,3 +1,5 @@
+import 'package:inbox/domain/entities/user_entity.dart';
+
 class Validators {
   static String? validateUsername(String? value, {isUsernameTaken}) {
     final usernameRegExp = RegExp(r'^(?!\d+\.)[a-zA-Z\d]+([._]?[a-zA-Z\d]+)*$');
@@ -90,6 +92,32 @@ class Validators {
     if (value.isEmpty) {
       return '';
     }
+    return null;
+  }
+
+  static String? validateDeleteAccount(String value, UserEntity user) {
+    if (value.isEmpty) {
+      return 'Email cannot be empty';
+    }
+    final RegExp emailRegex = RegExp(r'^[\w.-]+@[\w-]+(\.[\w-]+)*\.[\w-]{2,}$');
+
+    if (!emailRegex.hasMatch(value)) {
+      return 'Please enter a valid email address';
+    }
+
+    if (value.contains(' ')) {
+      return 'Email address cannot contain spaces';
+    }
+
+    final List<String> valueParts = value.split('@');
+    if (valueParts.length != 2) {
+      return 'Please enter a valid email address';
+    }
+
+    if (value.trim().toLowerCase() != user.email.toLowerCase()) {
+      return 'Email does not match';
+    }
+
     return null;
   }
 }

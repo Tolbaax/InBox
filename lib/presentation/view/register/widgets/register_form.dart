@@ -59,6 +59,7 @@ class RegisterForm extends StatelessWidget {
             textInputAction: TextInputAction.next,
             prefixIcon: FontAwesomeIcons.envelope,
             autoValidateMode: AutovalidateMode.onUserInteraction,
+            autofillHints: const [AutofillHints.email],
             validator: (value) => Validators.validateEmail(value),
           ),
           SizedBox(

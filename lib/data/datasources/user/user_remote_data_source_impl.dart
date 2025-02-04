@@ -212,16 +212,19 @@ class UserRemoteDataSourceImpl implements UserRemoteDataSource {
       final batch = firestore.batch();
 
       // Delete user's comments on posts
-      await deleteComments(uID, batch);
+      await _deleteComments(uID, batch);
 
       // Remove user from followers and following lists
-      await removeUserFromFollowersAndFollowing(uID, batch);
+      await _removeUserFromFollowersAndFollowing(uID, batch);
 
       // Delete user's posts and related data
-      await deletePostsAndRelatedData(uID, batch);
+      await _deletePostsAndRelatedData(uID, batch);
 
       // Delete user's profile picture
-      await deleteProfilePicture(uID);
+      await _deleteProfilePicture(uID);
+
+      // Delete user's Chats
+      await _deleteUserChats(uID, batch);
 
       // Delete user's collection
       await firestore.collection('users').doc(uID).delete();
@@ -237,7 +240,7 @@ class UserRemoteDataSourceImpl implements UserRemoteDataSource {
     }
   }
 
-  Future<void> deletePostsAndRelatedData(String uID, WriteBatch batch) async {
+  Future<void> _deletePostsAndRelatedData(String uID, WriteBatch batch) async {
     final postsSnapshot =
         await firestore.collection('posts').where('uID', isEqualTo: uID).get();
 
@@ -270,7 +273,7 @@ class UserRemoteDataSourceImpl implements UserRemoteDataSource {
     }
   }
 
-  Future<void> deleteProfilePicture(String uID) async {
+  Future<void> _deleteProfilePicture(String uID) async {
     final userSnapshot = await firestore.collection('users').doc(uID).get();
     final userData = userSnapshot.data() as Map<String, dynamic>;
 
@@ -280,7 +283,7 @@ class UserRemoteDataSourceImpl implements UserRemoteDataSource {
     }
   }
 
-  Future<void> deleteComments(String uID, WriteBatch batch) async {
+  Future<void> _deleteComments(String uID, WriteBatch batch) async {
     final userCommentsQuery = await firestore
         .collectionGroup('comments')
         .where('uID', isEqualTo: uID)
@@ -291,7 +294,7 @@ class UserRemoteDataSourceImpl implements UserRemoteDataSource {
     }
   }
 
-  Future<void> removeUserFromFollowersAndFollowing(
+  Future<void> _removeUserFromFollowersAndFollowing(
       String uID, WriteBatch batch) async {
     final followersSnapshot = await firestore
         .collection('users')
@@ -320,5 +323,32 @@ class UserRemoteDataSourceImpl implements UserRemoteDataSource {
         },
       );
     }
+  }
+
+  Future<void> _deleteUserChats(String uId, WriteBatch batch) async {
+    final userChatsRef =
+        firestore.collection('users').doc(uId).collection('chats');
+
+    final chatDocs = await userChatsRef.get();
+
+    if (chatDocs.docs.isEmpty) return; // No chats to delete
+
+    for (final chatDoc in chatDocs.docs) {
+      String otherUserId = chatDoc.id; // The other user's ID in this chat
+
+      // Delete the chat document from the deleted user's collection
+      batch.delete(chatDoc.reference);
+
+      // Delete the corresponding chat from the other user's collection
+      final otherUserChatRef = firestore
+          .collection('users')
+          .doc(otherUserId)
+          .collection('chats')
+          .doc(uId);
+
+      batch.delete(otherUserChatRef);
+    }
+
+    await batch.commit();
   }
 }
