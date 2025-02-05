@@ -29,7 +29,7 @@ class SenderMessageCard extends StatelessWidget {
     return Column(
       children: [
         SwipeTo(
-          onLeftSwipe: (dragUpdateDetails) {
+          onRightSwipe: (dragUpdateDetails) {
             ChatCubit.get(context).onMessageReply(
               MessageReplay(
                 message: message.message,

@@ -45,49 +45,39 @@ class BottomChatFieldState extends State<BottomChatField> {
         final bool isReply = messageReplay != null;
         final cubit = ChatCubit.get(context);
 
-        return WillPopScope(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              if (isReply)
-                ConstrainedBox(
-                  constraints: BoxConstraints(
-                    maxWidth: context.width - 22.0.sp * 2 - 13.0.w,
-                  ),
-                  child: MessageReplayPreview(messageReplay: messageReplay),
+        return Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            if (isReply)
+              ConstrainedBox(
+                constraints: BoxConstraints(
+                  maxWidth: context.width - 22.0.sp * 2 - 13.0.w,
                 ),
-              MessageInputField(
-                messageController: messageController,
-                isReply: isReply,
-                isMessageEmpty: isMessageEmpty,
-                receiverId: widget.receiverId,
-                isCameraRev: false,
-                name: widget.name,
-                textColor: AppColors.black,
+                child: MessageReplayPreview(messageReplay: messageReplay),
               ),
-              if (cubit.isShowEmoji)
-                EmojiPickerWidget(
-                  messageController: messageController,
-                  isShowEmoji: cubit.isShowEmoji,
-                  isCameraRev: false,
-                  onGifButtonTap: () async {
-                    if (await checkInternetConnectivity()) {
-                      if (context.mounted) {
-                        selectGif(cubit, context, widget.receiverId);
-                      }
+            MessageInputField(
+              messageController: messageController,
+              isReply: isReply,
+              isMessageEmpty: isMessageEmpty,
+              receiverId: widget.receiverId,
+              isCameraRev: false,
+              name: widget.name,
+              textColor: AppColors.black,
+            ),
+            if (cubit.isShowEmoji)
+              EmojiPickerWidget(
+                messageController: messageController,
+                isShowEmoji: cubit.isShowEmoji,
+                isCameraRev: false,
+                onGifButtonTap: () async {
+                  if (await checkInternetConnectivity()) {
+                    if (context.mounted) {
+                      selectGif(cubit, context, widget.receiverId);
                     }
-                  },
-                ),
-            ],
-          ),
-          onWillPop: () {
-            if (cubit.isShowEmoji) {
-              cubit.hideEmojiContainer();
-            } else {
-              Navigator.pop(context);
-            }
-            return Future.value(false);
-          },
+                  }
+                },
+              ),
+          ],
         );
       },
     );

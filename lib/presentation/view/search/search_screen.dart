@@ -41,7 +41,16 @@ class _SearchScreenState extends State<SearchScreen> {
     final usernameQuery = FirebaseFirestore.instance
         .collection('users')
         .orderBy('username')
-        .startAt([searchQuery]).endAt(["${searchQuery}uf8ff"]);
+        .startAt([searchQuery])
+        .endAt(["$searchQuery\uf8ff"])
+        .get();
+
+    // final nameQuery = FirebaseFirestore.instance
+    //     .collection('users')
+    //     .orderBy('name')
+    //     .startAt([searchQuery])
+    //     .endAt(["$searchQuery\uf8ff"])
+    //     .get();
 
     return Scaffold(
       appBar: AppBar(
@@ -71,7 +80,7 @@ class _SearchScreenState extends State<SearchScreen> {
         ),
         child: isConnected
             ? FutureBuilder<QuerySnapshot>(
-                future: usernameQuery.get(),
+                future: usernameQuery,
                 builder: (context, snapshot) {
                   // Connection is waiting
                   if (snapshot.connectionState == ConnectionState.waiting &&

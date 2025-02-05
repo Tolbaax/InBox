@@ -31,7 +31,19 @@ class EmojiPickerWidget extends StatelessWidget {
             onBackspacePressed: () {},
             config: Config(
               checkPlatformCompatibility: true,
+              categoryViewConfig: CategoryViewConfig(
+                backgroundColor: AppColors.white,
+              ),
+              searchViewConfig: SearchViewConfig(
+                backgroundColor: AppColors.white,
+              ),
+              bottomActionBarConfig: BottomActionBarConfig(
+                backgroundColor: AppColors.white,
+                buttonIconColor: AppColors.grayRegular,
+                buttonColor: AppColors.white,
+              ),
               emojiViewConfig: EmojiViewConfig(
+                backgroundColor: AppColors.white,
                 emojiSizeMax: 25.0.sp,
                 columns: 8,
               ),
@@ -39,29 +51,24 @@ class EmojiPickerWidget extends StatelessWidget {
           ),
           if (!isCameraRev)
             Positioned(
-              bottom: 0,
-              left: 0,
-              right: 0,
-              child: Container(
-                width: double.infinity,
-                color: Colors.white,
-                padding: EdgeInsets.only(top: 8.0.h, bottom: 8.0.h),
-                child: InkWell(
-                  onTap: onGifButtonTap,
-                  child: Container(
-                    margin: EdgeInsetsDirectional.symmetric(
-                        horizontal: context.width * 0.43, vertical: 1),
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(8.0.sp),
-                      border: Border.all(color: AppColors.grayRegular),
-                    ),
-                    child: Text(
-                      'GIF',
-                      textAlign: TextAlign.center,
-                      style: TextStyle(
-                        fontSize: 11.5.sp,
-                        fontWeight: FontWeight.bold,
-                      ),
+              bottom: 10,
+              child: GestureDetector(
+                onTap: onGifButtonTap,
+                child: Container(
+                  padding: EdgeInsetsDirectional.symmetric(horizontal: 10.w),
+                  margin: EdgeInsetsDirectional.symmetric(
+                      horizontal: context.width * 0.2, vertical: 1),
+                  decoration: BoxDecoration(
+                    color: AppColors.white,
+                    borderRadius: BorderRadius.circular(8.0.sp),
+                    border: Border.all(color: AppColors.grayRegular),
+                  ),
+                  child: Text(
+                    'GIF',
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      fontSize: 11.5.sp,
+                      fontWeight: FontWeight.bold,
                     ),
                   ),
                 ),
