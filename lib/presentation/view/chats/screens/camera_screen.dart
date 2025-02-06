@@ -1,4 +1,3 @@
-import 'dart:async';
 import 'dart:io';
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
@@ -28,7 +27,6 @@ class _CameraScreenState extends State<CameraScreen> {
   late Future<void> _cameraValue;
   bool isFlashOn = false;
   bool isCameraFront = true;
-  bool isRecording = false;
 
   @override
   void initState() {
@@ -40,14 +38,10 @@ class _CameraScreenState extends State<CameraScreen> {
     try {
       _cameraController = CameraController(cameras[1], ResolutionPreset.max);
       _cameraValue = _cameraController.initialize();
-      if (!mounted) {
-        return;
-      }
+      if (!mounted) return;
       setState(() {});
     } catch (e) {
-      if (e is CameraException) {
-        debugPrint(e.toString());
-      }
+      if (e is CameraException) debugPrint(e.toString());
     }
   }
 
@@ -58,7 +52,6 @@ class _CameraScreenState extends State<CameraScreen> {
       appBar: CameraAppBar(
         isFlashOn: isFlashOn,
         onFlashPressed: toggleFlash,
-        isRecording: isRecording,
       ),
       body: Stack(
         alignment: AlignmentDirectional.bottomCenter,
@@ -88,37 +81,9 @@ class _CameraScreenState extends State<CameraScreen> {
                 SelectImageFromGalleryButton(
                     receiverId: widget.receiverId, name: widget.name),
                 GestureDetector(
-                  onTap: () {
-                    if (!isRecording) takePhoto(context);
-                  },
-                  onLongPress: () async {
-                    await _cameraController.startVideoRecording();
-                    setState(() {
-                      isRecording = true;
-                    });
-                  },
-                  onLongPressUp: () async {
-                    XFile videoPath =
-                        await _cameraController.stopVideoRecording();
-                    setState(() {
-                      isRecording = false;
-                    });
-                    if (!mounted) return;
-
-                    if (context.mounted) {
-                      navigateTo(
-                        context,
-                        Routes.sendingVideoViewRoute,
-                        arguments: {
-                          'uId': widget.receiverId,
-                          'path': videoPath.path,
-                          'name': widget.name,
-                          'videoFile': File(videoPath.path),
-                        },
-                      );
-                    }
-                  },
-                  child: cameraIcon(),
+                  onTap: () => takePhoto(context),
+                  child: Icon(Icons.radio_button_checked_sharp,
+                      size: 75.0.sp, color: Colors.white),
                 ),
                 GestureDetector(
                   onTap: toggleCameraFront,
@@ -129,7 +94,6 @@ class _CameraScreenState extends State<CameraScreen> {
                       Icons.flip_camera_android_outlined,
                       color: AppColors.white,
                       size: 25.0.sp,
-                      weight: 1,
                     ),
                   ),
                 ),
@@ -141,21 +105,12 @@ class _CameraScreenState extends State<CameraScreen> {
     );
   }
 
-  Icon cameraIcon() {
-    return isRecording
-        ? Icon(Icons.radio_button_on, color: Colors.red, size: 75.0.sp)
-        : Icon(Icons.radio_button_checked_sharp,
-            size: 75.0.sp, color: Colors.white);
-  }
-
   void toggleFlash() {
     setState(() {
       isFlashOn = !isFlashOn;
     });
 
-    isFlashOn
-        ? _cameraController.setFlashMode(FlashMode.torch)
-        : _cameraController.setFlashMode(FlashMode.off);
+    _cameraController.setFlashMode(isFlashOn ? FlashMode.torch : FlashMode.off);
   }
 
   void toggleCameraFront() {
@@ -183,7 +138,7 @@ class _CameraScreenState extends State<CameraScreen> {
 
   @override
   void dispose() {
-    super.dispose();
     _cameraController.dispose();
+    super.dispose();
   }
 }
