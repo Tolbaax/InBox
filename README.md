@@ -52,7 +52,7 @@
 - [ ] Messaging feature with chat, voice, and video call capabilities
 - [ ] Get Posts with infinity scroll pagination
 - [ ] Custom gallery display
-- [ ] Improve display loading of posts when opening the app
+- [x] Improve display loading of posts when opening the app
 - [ ] share post
 - [ ] Reply, like and delete comment
 - [ ] Add post gif, music and location
