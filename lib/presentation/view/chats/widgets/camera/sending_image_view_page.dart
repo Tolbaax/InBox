@@ -33,9 +33,10 @@ class _SendingImageViewPageState extends State<SendingImageViewPage> {
     return Container(
       decoration: BoxDecoration(
         image: DecorationImage(
-            image: FileImage(File(
-          cubit.messageImage == null ? widget.path : cubit.messageImage!.path,
-        ))),
+          image: FileImage(File(
+            cubit.messageImage == null ? widget.path : cubit.messageImage!.path,
+          )),
+        ),
       ),
       child: Scaffold(
         backgroundColor: Colors.transparent,
@@ -43,7 +44,7 @@ class _SendingImageViewPageState extends State<SendingImageViewPage> {
           leadingWidth: context.width,
           leading: ImageViewTopRowIcons(
             onCropButtonTaped: () {
-              cropImage(widget.path, title: '').then((value) {
+              cropImage(widget.path).then((value) {
                 setState(() {
                   ChatCubit.get(context).messageImage = value;
                 });

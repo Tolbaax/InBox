@@ -1,12 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:inbox/core/extensions/media_query_extensions.dart';
 import 'package:video_player/video_player.dart';
 
-import '../../../../../../core/utils/app_colors.dart';
 import '../../../components/post_item/widgets/play_icon.dart';
 import '../../../controllers/post/add_post/add_post_cubit.dart';
+import 'cancel_post_icon.dart';
 
 class VideoContainer extends StatefulWidget {
   final AddPostCubit cubit;
@@ -57,32 +55,12 @@ class _VideoContainerState extends State<VideoContainer> {
                   child: ClipRRect(
                     borderRadius: BorderRadius.circular(15),
                     child: AspectRatio(
-                      aspectRatio: aspectRatio < 3 / 4 ? 3 / 4 : aspectRatio,
+                      aspectRatio: aspectRatio,
                       child: VideoPlayer(controller),
                     ),
                   ),
                 ),
-                Positioned(
-                  right: 0.0,
-                  top: 0.0,
-                  child: IconButton(
-                    splashRadius: 20.0.sp,
-                    alignment: AlignmentDirectional.topEnd,
-                    onPressed: () => widget.cubit.disposeVideo(),
-                    icon: Icon(
-                      FontAwesomeIcons.xmark,
-                      color: AppColors.white,
-                      shadows: [
-                        BoxShadow(
-                          color: AppColors.black,
-                          spreadRadius: 1.sp,
-                          blurRadius: 5.sp,
-                          offset: const Offset(0, 1),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
+                CancelPostIcon(onPressed: () => widget.cubit.disposeVideo()),
                 if (!controller.value.isPlaying || showIcon) const PlayIcon(),
               ],
             ),

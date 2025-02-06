@@ -36,7 +36,7 @@ class FirebaseRemoteAuthDataSourceImpl implements FirebaseRemoteAuthDataSource {
       name: params.name,
       email: params.email,
       profilePic: '',
-      bio: 'Write your bio here..',
+      bio: '',
       isOnline: false,
       lastSeen: DateTime.now(),
       postsCount: 0,

@@ -7,6 +7,7 @@ import 'package:inbox/config/routes/app_routes.dart';
 import 'package:inbox/core/extensions/media_query_extensions.dart';
 import 'package:inbox/core/functions/navigator.dart';
 import 'package:inbox/core/utils/app_strings.dart';
+import 'package:inbox/presentation/controllers/user/user_cubit.dart';
 import '../../presentation/components/buttons/profile_button.dart';
 import '../../presentation/controllers/post/add_post/add_post_cubit.dart';
 import '../utils/app_colors.dart';
@@ -125,7 +126,13 @@ class AppDialogs {
     );
   }
 
-  static void showDiscardPostDialog(context, AddPostCubit cubit) {
+  static void showBottomSheetDialog({
+    required BuildContext context,
+    required String title,
+    required String discardText,
+    required Function discardAction,
+    required Function cancelAction,
+  }) {
     showModalBottomSheet(
       backgroundColor: Colors.transparent,
       elevation: 0.0,
@@ -143,43 +150,35 @@ class AppDialogs {
                 borderRadius: BorderRadius.circular(15.0.sp),
               ),
               contentPadding: EdgeInsetsDirectional.only(
-                  top: 15.0.sp, bottom: 25.0.sp, end: 12.0.sp, start: 12.0.sp),
+                top: 15.0.sp,
+                bottom: 25.0.sp,
+                end: 12.0.sp,
+                start: 12.0.sp,
+              ),
               content: Column(
                 children: [
                   Text(
-                    AppStrings.discardPost,
+                    title,
                     style: TextStyle(
                       fontSize: 17.0.sp,
                       fontWeight: FontWeight.w500,
                     ),
                   ),
-                  SizedBox(
-                    height: 20.0.h,
-                  ),
+                  SizedBox(height: 20.0.h),
                   SizedBox(
                     width: context.width * 0.54,
                     child: ProfileButton(
-                      onTap: () {
-                        cubit.postTextController.clear();
-                        cubit.postImage = null;
-                        if (cubit.video != null) {
-                          cubit.videoPlayerController!.dispose();
-                          cubit.video = null;
-                        }
-                        navigateAndRemove(context, Routes.layout);
-                      },
-                      text: AppStrings.discard,
+                      onTap: () => discardAction(),
+                      text: discardText,
                       color: AppColors.primary,
                     ),
                   ),
-                  SizedBox(
-                    height: 15.0.h,
-                  ),
+                  SizedBox(height: 15.0.h),
                   SizedBox(
                     width: context.width * 0.54,
                     height: 28.0.h,
                     child: OutlinedButton(
-                      onPressed: () => navigatePop(context),
+                      onPressed: () => cancelAction(),
                       style: OutlinedButton.styleFrom(
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(9.0.r),
@@ -201,6 +200,38 @@ class AppDialogs {
           ),
         );
       },
+    );
+  }
+
+  static void showDiscardPostDialog(BuildContext context, AddPostCubit cubit) {
+    showBottomSheetDialog(
+      context: context,
+      title: AppStrings.discardPost,
+      discardText: AppStrings.discard,
+      discardAction: () {
+        cubit.postTextController.clear();
+          cubit.disposePostImage();
+        if (cubit.video != null) {
+          cubit.disposeVideo();
+        }
+        navigateAndRemove(context, Routes.layout);
+      },
+      cancelAction: () => navigatePop(context),
+    );
+  }
+
+  static void showDiscardEditProfileDialog(
+      BuildContext context, UserCubit cubit) {
+    showBottomSheetDialog(
+      context: context,
+      title: AppStrings.discardChanges,
+      discardText: AppStrings.discard,
+      discardAction: () {
+        cubit.disposeProfileImage();
+        navigatePop(context);
+        navigatePop(context);
+      },
+      cancelAction: () => navigatePop(context),
     );
   }
 

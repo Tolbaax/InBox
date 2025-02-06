@@ -1,5 +1,5 @@
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-
 import 'layout_states.dart';
 
 class LayoutCubit extends Cubit<LayoutStates> {
@@ -14,12 +14,12 @@ class LayoutCubit extends Cubit<LayoutStates> {
     emit(ChangeBottomNavState());
   }
 
-  Future<bool> onWillPop() async {
+  Future<void> onPopInvokedWithResult(context) async {
     if (selectedIndex != 0) {
       selectedIndex = 0;
       emit(OnWillPopState());
-      return false;
+    } else {
+      SystemNavigator.pop();
     }
-    return true;
   }
 }

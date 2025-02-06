@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:inbox/core/shared/common.dart';
 import '../../../../../config/routes/app_routes.dart';
 import '../../../../../core/functions/app_dialogs.dart';
 import '../../../../../core/functions/navigator.dart';
@@ -21,7 +22,8 @@ class LogoutOption extends StatelessWidget {
         AppDialogs.showLogOutDialog(
             context: context,
             onPressed: () {
-              cubit.signOut().then((value) {
+              cubit.signOut().then((value) async{
+                await clearCache();
                 if (context.mounted) navigateAndRemove(context, Routes.login);
               });
               UserCubit.get(context).setUserState(isOnline: false);

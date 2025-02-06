@@ -56,8 +56,11 @@ class _LayoutScreenState extends State<LayoutScreen>
         final cubit = LayoutCubit.get(context);
         final user = FirebaseAuth.instance.currentUser;
 
-        return WillPopScope(
-          onWillPop: cubit.onWillPop,
+        return PopScope(
+          canPop: false,
+          onPopInvokedWithResult: (didPop, result) async {
+            await cubit.onPopInvokedWithResult(context);
+          },
           child: Scaffold(
             appBar: AppBar(toolbarHeight: 0.0),
             resizeToAvoidBottomInset: false,

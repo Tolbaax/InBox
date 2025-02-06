@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:giphy_get/giphy_get.dart';
 import 'package:image_cropper/image_cropper.dart';
@@ -8,6 +9,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:inbox/core/enums/message_type.dart';
 import 'package:inbox/core/functions/app_dialogs.dart';
 import 'package:inbox/core/utils/app_colors.dart';
+import 'package:path_provider/path_provider.dart';
 
 import '../../presentation/controllers/chat/chat_cubit.dart';
 import '../params/chat/message_params.dart';
@@ -176,5 +178,28 @@ Future<void> selectGif(ChatCubit cubit, context, receiverId) async {
         messageReplay: cubit.messageReplay,
       ),
     );
+  }
+}
+
+/// Deletes a file safely
+Future<void> deleteFile(File? file) async {
+  if (file != null && await file.exists()) {
+    try {
+      await file.delete();
+    } catch (e) {
+      if (kDebugMode) print("Error deleting file: $e");
+    }
+  }
+}
+
+/// Clears the cache directory
+Future<void> clearCache() async {
+  final tempDir = await getTemporaryDirectory();
+  if (await tempDir.exists()) {
+    try {
+      tempDir.deleteSync(recursive: true);
+    } catch (e) {
+      if (kDebugMode) print("Error clearing cache: $e");
+    }
   }
 }

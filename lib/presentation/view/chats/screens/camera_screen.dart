@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:inbox/core/extensions/media_query_extensions.dart';
 import 'package:inbox/core/utils/app_colors.dart';
 
 import '../../../../../config/routes/app_routes.dart';
@@ -60,6 +61,7 @@ class _CameraScreenState extends State<CameraScreen> {
         isRecording: isRecording,
       ),
       body: Stack(
+        alignment: AlignmentDirectional.bottomCenter,
         children: [
           FutureBuilder(
             future: _cameraValue,
@@ -67,75 +69,73 @@ class _CameraScreenState extends State<CameraScreen> {
               if (snapshot.connectionState == ConnectionState.done) {
                 return SizedBox(
                   width: double.infinity,
+                  height: context.height * 0.8,
                   child: CameraPreview(_cameraController),
                 );
               } else {
-                return const Center(child: SizedBox.shrink());
+                return SizedBox(
+                  width: double.infinity,
+                  height: context.height * 0.8,
+                );
               }
             },
           ),
-          Positioned(
-            left: 0,
-            right: 0,
-            bottom: 0,
-            child: Padding(
-              padding:
-                  EdgeInsets.symmetric(horizontal: 10.0.w, vertical: 10.0.h),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  SelectImageFromGalleryButton(
-                      receiverId: widget.receiverId, name: widget.name),
-                  GestureDetector(
-                    onTap: () {
-                      if (!isRecording) takePhoto(context);
-                    },
-                    onLongPress: () async {
-                      await _cameraController.startVideoRecording();
-                      setState(() {
-                        isRecording = true;
-                      });
-                    },
-                    onLongPressUp: () async {
-                      XFile videoPath =
-                          await _cameraController.stopVideoRecording();
-                      setState(() {
-                        isRecording = false;
-                      });
-                      if (!mounted) return;
+          Padding(
+            padding: EdgeInsets.symmetric(horizontal: 10.0.w, vertical: 10.0.h),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                SelectImageFromGalleryButton(
+                    receiverId: widget.receiverId, name: widget.name),
+                GestureDetector(
+                  onTap: () {
+                    if (!isRecording) takePhoto(context);
+                  },
+                  onLongPress: () async {
+                    await _cameraController.startVideoRecording();
+                    setState(() {
+                      isRecording = true;
+                    });
+                  },
+                  onLongPressUp: () async {
+                    XFile videoPath =
+                        await _cameraController.stopVideoRecording();
+                    setState(() {
+                      isRecording = false;
+                    });
+                    if (!mounted) return;
 
-                      if (context.mounted) {
-                        navigateTo(
-                          context,
-                          Routes.sendingVideoViewRoute,
-                          arguments: {
-                            'uId': widget.receiverId,
-                            'path': videoPath.path,
-                            'name': widget.name,
-                            'videoFile': File(videoPath.path),
-                          },
-                        );
-                      }
-                    },
-                    child: cameraIcon(),
-                  ),
-                  GestureDetector(
-                    onTap: toggleCameraFront,
-                    child: CircleAvatar(
-                      radius: 22.0.sp,
-                      backgroundColor: Colors.black38,
-                      child: Icon(
-                        Icons.flip_camera_android_outlined,
-                        color: AppColors.white,
-                        size: 25.0.sp,
-                        weight: 1,
-                      ),
+                    if (context.mounted) {
+                      navigateTo(
+                        context,
+                        Routes.sendingVideoViewRoute,
+                        arguments: {
+                          'uId': widget.receiverId,
+                          'path': videoPath.path,
+                          'name': widget.name,
+                          'videoFile': File(videoPath.path),
+                        },
+                      );
+                    }
+                  },
+                  child: cameraIcon(),
+                ),
+                GestureDetector(
+                  onTap: toggleCameraFront,
+                  child: CircleAvatar(
+                    radius: 22.0.sp,
+                    backgroundColor: Colors.black38,
+                    child: Icon(
+                      Icons.flip_camera_android_outlined,
+                      color: AppColors.white,
+                      size: 25.0.sp,
+                      weight: 1,
                     ),
                   ),
-                ],
-              ),
+                ),
+              ],
             ),
-          )
+          ),
         ],
       ),
     );

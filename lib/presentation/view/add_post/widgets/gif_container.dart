@@ -1,8 +1,8 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:inbox/core/extensions/media_query_extensions.dart';
+import 'package:inbox/presentation/view/add_post/widgets/cancel_post_icon.dart';
 
 import '../../../../../../core/utils/app_colors.dart';
 import '../../../controllers/post/add_post/add_post_cubit.dart';
@@ -54,26 +54,7 @@ class GifContainer extends StatelessWidget {
                   ),
                 ),
               ),
-              Positioned(
-                right: 0.0,
-                child: IconButton(
-                  splashRadius: 20.0.sp,
-                  alignment: AlignmentDirectional.topEnd,
-                  onPressed: () => cubit.disposeGif(),
-                  icon: Icon(
-                    FontAwesomeIcons.xmark,
-                    color: AppColors.white,
-                    shadows: [
-                      BoxShadow(
-                        color: AppColors.black,
-                        spreadRadius: 1.sp,
-                        blurRadius: 5.sp,
-                        offset: const Offset(0, 1),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
+              CancelPostIcon(onPressed: () => cubit.disposeGif()),
             ],
           )
         else

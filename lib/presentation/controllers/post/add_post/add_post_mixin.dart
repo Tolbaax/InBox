@@ -1,5 +1,4 @@
 import 'dart:io';
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -22,8 +21,10 @@ mixin AddPostMixin on Cubit<AddPostStates> {
   Future<void> pickImage(BuildContext context) async {
     final pickedFile = await pickImageFile(context);
     if (pickedFile != null) {
+      await deleteFile(postImage); // Delete previous image
       if (video != null) disposeVideo();
       if (gif != null) disposeGif();
+
       cropImage(pickedFile.path, title: 'Post Image').then((value) {
         if (value != null) {
           postImage = File(value.path);
@@ -36,32 +37,38 @@ mixin AddPostMixin on Cubit<AddPostStates> {
   Future<void> getPostImageFromCamera(BuildContext context) async {
     final pickedImage =
         await pickImageFile(context, imageSource: ImageSource.camera);
-
     if (pickedImage != null) {
-      postImage = pickedImage;
-      emit(PickPostImageSuccessState());
+      await deleteFile(postImage);
+      if (video != null) disposeVideo();
+      if (gif != null) disposeGif();
+
+      cropImage(pickedImage.path, title: 'Post Image').then((value) {
+        if (value != null) {
+          postImage = File(value.path);
+          emit(PickPostImageSuccessState());
+        }
+      });
     } else {
-      if (kDebugMode) {
-        print('Error: The pickedImage is null.');
-      }
+      if (kDebugMode) print('Error: The pickedImage is null.');
     }
-    if (video != null) disposeVideo();
-    if (gif != null) disposeGif();
   }
 
   Future<void> pickVideo() async {
     final pickedFile = await ImagePicker().pickVideo(
       source: ImageSource.gallery,
-      maxDuration: const Duration(seconds: 30),
+      maxDuration: const Duration(seconds: 15),
     );
     if (pickedFile != null) {
+      await deleteFile(video); // Delete previous video
       video = File(pickedFile.path);
+
       videoPlayerController = VideoPlayerController.file(video!)
         ..initialize().then((_) {
           videoPlayerController!.play();
           emit(PickVideoSuccessState(video: video!));
         });
-      if (postImage != null) deletePostImage();
+
+      if (postImage != null) disposePostImage();
       if (gif != null) disposeGif();
     }
   }
@@ -82,23 +89,25 @@ mixin AddPostMixin on Cubit<AddPostStates> {
       AppDialogs.showToast(msg: e.toString());
     }
 
-    if (postImage != null) deletePostImage();
+    if (postImage != null) disposePostImage();
     if (video != null) disposeVideo();
   }
 
-  void deletePostImage() {
+  void disposePostImage() async {
+    deleteFile(postImage);
     postImage = null;
     emit(DeletePostImageState());
   }
 
-  void disposeVideo() {
+  void disposeVideo() async {
+    deleteFile(video);
     video = null;
     videoPlayerController?.dispose();
     videoPlayerController = null;
     emit(DisposeVideoState());
   }
 
-  void disposeGif() {
+  void disposeGif() async {
     gif = null;
     emit(DisposeGifState());
   }

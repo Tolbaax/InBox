@@ -17,14 +17,13 @@ class ImageViewTopRowIcons extends StatelessWidget {
       child: Row(
         children: [
           IconButton(
-            splashRadius: 20,
             iconSize: 25.0.sp,
             onPressed: () {
               ChatCubit.get(context).messageImage = null;
               navigatePop(context);
             },
             icon: CircleAvatar(
-              radius: 30.0.sp,
+              radius: 20.0.sp,
               backgroundColor: AppColors.black.withOpacity(0.5),
               child: Icon(Icons.clear, color: AppColors.white),
             ),

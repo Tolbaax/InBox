@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:inbox/core/extensions/media_query_extensions.dart';
 import 'package:video_player/video_player.dart';
 import 'package:visibility_detector/visibility_detector.dart';
 
+import '../../../../core/utils/app_colors.dart';
 import 'play_icon.dart';
 
 class PostItemVideo extends StatefulWidget {
@@ -16,79 +16,48 @@ class PostItemVideo extends StatefulWidget {
 }
 
 class _PostItemVideoState extends State<PostItemVideo> {
-  late VideoPlayerController _controller;
-  bool showIcon = false;
+  late final VideoPlayerController _controller;
+  late final Future<void> _initializeVideoPlayerFuture;
+  bool _showIcon = false;
+  bool _isInitialized = false; // Track initialization status
 
   @override
   void initState() {
     super.initState();
-    _initializeVideoPlayer();
-  }
-
-  void _initializeVideoPlayer() async {
     _controller = VideoPlayerController.networkUrl(Uri.parse(widget.videoUrl))
       ..addListener(_videoListener);
-    await _controller.initialize();
 
-    setState(() {});
-  }
-
-  void _videoListener() =>
-      setState(() => showIcon = !_controller.value.isPlaying);
-
-  @override
-  Widget build(BuildContext context) {
-    final aspectRatio = _controller.value.aspectRatio;
-
-    return Padding(
-      padding: EdgeInsetsDirectional.only(top: 5.h, start: 10.w, end: 10.w),
-      child: VisibilityDetector(
-        key: Key(widget.videoUrl),
-        onVisibilityChanged: _onVisibilityChanged,
-        child: GestureDetector(
-          onTap: _onTap,
-          child: Stack(
-            alignment: AlignmentDirectional.center,
-            children: [
-              SizedBox(
-                width: context.width * 0.96,
-                child: ClipRRect(
-                  borderRadius: BorderRadius.circular(15.0.sp),
-                  child: AspectRatio(
-                    aspectRatio: aspectRatio < 3 / 4 ? 3 / 4 : aspectRatio,
-                    child: VideoPlayer(_controller),
-                  ),
-                ),
-              ),
-              if (showIcon) const PlayIcon(),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-
-  void _onVisibilityChanged(VisibilityInfo visibilityInfo) {
-    if (mounted) {
-      setState(() {
-        showIcon =
-            !_controller.value.isPlaying || visibilityInfo.visibleFraction == 0;
-        if (visibilityInfo.visibleFraction == 0) _controller.pause();
-        // To auto play videos:
-        // else if (!_controller.value.isPlaying) _controller.play();
+    if (!_isInitialized) {
+      _initializeVideoPlayerFuture = _controller.initialize().then((_) {
+        setState(() {
+          _isInitialized =
+              true; // Mark as initialized once the controller is ready
+        });
       });
     }
   }
 
-  void _onTap() {
-    setState(() {
-      if (_controller.value.isPlaying) {
-        _controller.pause();
-      } else {
-        _controller.play();
-      }
-      showIcon = !_controller.value.isPlaying;
-    });
+  void _videoListener() {
+    if (!mounted || !_controller.value.isInitialized) return;
+    setState(() => _showIcon = !_controller.value.isPlaying);
+  }
+
+  void _onVisibilityChanged(VisibilityInfo info) {
+    if (!mounted || !_controller.value.isInitialized) return;
+    if (info.visibleFraction == 0) {
+      _controller.pause();
+    }
+  }
+
+  void _togglePlay() {
+    if (!_controller.value.isInitialized) return;
+
+    if (_controller.value.isPlaying) {
+      _controller.pause();
+    } else {
+      _controller.play();
+    }
+    setState(() => _showIcon = !_controller.value.isPlaying);
   }
 
   @override
@@ -96,5 +65,55 @@ class _PostItemVideoState extends State<PostItemVideo> {
     _controller.removeListener(_videoListener);
     _controller.dispose();
     super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 5.h),
+      child: VisibilityDetector(
+        key: Key(widget.videoUrl),
+        onVisibilityChanged: _onVisibilityChanged,
+        child: GestureDetector(
+          onTap: _togglePlay,
+          child: ClipRRect(
+            borderRadius: BorderRadius.circular(15.sp),
+            child: Stack(
+              alignment: Alignment.center,
+              children: [
+                FutureBuilder(
+                  future: _initializeVideoPlayerFuture,
+                  builder: (context, snapshot) {
+                    if (_isInitialized) {
+                      // Only show the video if it's initialized
+                      return AspectRatio(
+                        aspectRatio: _controller.value.aspectRatio,
+                        child: VideoPlayer(_controller),
+                      );
+                    } else {
+                      return Container(
+                        height: 200.h,
+                        color: AppColors.black,
+                        child: const Center(
+                          child: CircularProgressIndicator(
+                            color: Colors.white,
+                            strokeWidth: 1,
+                          ),
+                        ),
+                      );
+                    }
+                  },
+                ),
+                AnimatedOpacity(
+                  opacity: _showIcon ? 1 : 0,
+                  duration: const Duration(milliseconds: 200),
+                  child: const PlayIcon(),
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
   }
 }

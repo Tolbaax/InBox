@@ -62,16 +62,11 @@ class _AddPostAppBarState extends State<AddPostAppBar> {
           (state is PickVideoSuccessState) ||
           (state is PickedGifSuccessState);
 
-      Future<bool> onWillPop() async {
-        if (isMedia || !isEmpty) {
-          AppDialogs.showDiscardPostDialog(context, cubit);
-          return false;
-        }
-        return true;
-      }
-
-      return WillPopScope(
-        onWillPop: onWillPop,
+      return PopScope(
+        canPop: false,
+        onPopInvokedWithResult: (didPop, result) async {
+          await _onPopInvokedWithResult(context, cubit, isMedia);
+        },
         child: AppBar(
           leading: BackButton(color: AppColors.blackOlive),
           title: Text(
@@ -117,5 +112,13 @@ class _AddPostAppBarState extends State<AddPostAppBar> {
         ),
       );
     });
+  }
+
+  Future<void> _onPopInvokedWithResult(context, cubit, isMedia) async {
+    if (isMedia || !isEmpty) {
+      AppDialogs.showDiscardPostDialog(context, cubit);
+    } else {
+      navigatePop(context);
+    }
   }
 }

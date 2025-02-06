@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:inbox/core/functions/app_dialogs.dart';
 import 'package:inbox/core/functions/navigator.dart';
-
 import '../../../../../core/utils/app_colors.dart';
 import '../../../../../core/utils/app_strings.dart';
 import '../../../components/profile_image/my_cached_net_image.dart';
@@ -23,34 +23,58 @@ class EditProfileScreen extends StatelessWidget {
         if (state is UpdateUserDataSuccessState) {
           navigatePop(context);
           await cubit.getCurrentUser();
-          cubit.profileImageFile = null;
+          cubit.disposeProfileImage();
         }
       },
       builder: (context, state) {
-        return Scaffold(
-          appBar: AppBar(
-            leading: BackButton(color: AppColors.blackOlive),
-            title: const Text(AppStrings.editProfile),
-          ),
-          body: SingleChildScrollView(
-            child: Column(
-              children: [
-                MyCachedNetImage(
-                  onTap: () => cubit.selectProfileImageFromGallery(context),
-                  imageUrl: user!.profilePic,
-                  radius: 55.0.sp,
-                  haveButton: true,
-                  imageFile: cubit.profileImageFile,
-                ),
-                SizedBox(
-                  height: 35.0.h,
-                ),
-                const EditProfileForm(),
-              ],
+        return PopScope(
+          canPop: false,
+          onPopInvokedWithResult: (didPop, result) async {
+            await _onPopInvokedWithResult(context, cubit, didPop, user);
+          },
+          child: Scaffold(
+            appBar: AppBar(
+              leading: BackButton(color: AppColors.blackOlive),
+              title: const Text(AppStrings.editProfile),
+            ),
+            body: SingleChildScrollView(
+              child: Column(
+                children: [
+                  MyCachedNetImage(
+                    onTap: () => cubit.selectProfileImageFromGallery(context),
+                    imageUrl: user?.profilePic ?? '',
+                    radius: 55.0.sp,
+                    haveButton: true,
+                    imageFile: cubit.profileImageFile,
+                  ),
+                  SizedBox(height: 35.0.h),
+                  const EditProfileForm(),
+                ],
+              ),
             ),
           ),
         );
       },
     );
+  }
+
+  Future<void> _onPopInvokedWithResult(
+    BuildContext context,
+    UserCubit cubit,
+    bool didPop,
+    var user,
+  ) async {
+    if (didPop) return;
+
+    bool hasChanges = cubit.profileImageFile != null ||
+        cubit.nameController.text != user.name ||
+        cubit.userNameController.text != user.username ||
+        cubit.bioController.text != user.bio;
+
+    if (hasChanges) {
+      AppDialogs.showDiscardEditProfileDialog(context, cubit);
+    } else {
+      navigatePop(context);
+    }
   }
 }

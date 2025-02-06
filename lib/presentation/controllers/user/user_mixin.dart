@@ -27,4 +27,9 @@ mixin UserMixin on Cubit<UserStates> {
       });
     }
   }
+
+  void disposeProfileImage() {
+    deleteFile(profileImageFile);
+    profileImageFile = null;
+  }
 }

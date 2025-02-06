@@ -76,6 +76,8 @@ class AppStrings {
   static const String shareProfile = 'Share Profile';
   static const String noUsersFound = 'No Users Found!';
   static const String searchForUsers = 'Search For Users!';
+  static const String discardChanges = 'Discard Changes?';
+
 
   //AddPost
   static const String post = 'Post';

@@ -61,13 +61,16 @@ class _SendingVideoViewPageState extends State<SendingVideoViewPage> {
       body: SafeArea(
         child: Stack(
           children: [
-            Visibility(
-              visible: _controller.value.isInitialized,
-              child: SizedBox(
-                width: double.infinity,
-                child: AspectRatio(
-                  aspectRatio: _controller.value.aspectRatio,
-                  child: VideoPlayer(_controller),
+            SizedBox(
+              height: context.height * 0.8,
+              child: Visibility(
+                visible: _controller.value.isInitialized,
+                child: SizedBox(
+                  width: double.infinity,
+                  child: AspectRatio(
+                    aspectRatio: _controller.value.aspectRatio,
+                    child: VideoPlayer(_controller),
+                  ),
                 ),
               ),
             ),
