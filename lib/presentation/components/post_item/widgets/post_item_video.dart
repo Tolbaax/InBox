@@ -2,9 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:video_player/video_player.dart';
 import 'package:visibility_detector/visibility_detector.dart';
-
+import '../../../../core/services/injection_container.dart';
 import '../../../../core/utils/app_colors.dart';
 import 'play_icon.dart';
+import 'video_manager.dart';
 
 class PostItemVideo extends StatefulWidget {
   final String videoUrl;
@@ -19,7 +20,8 @@ class _PostItemVideoState extends State<PostItemVideo> {
   late final VideoPlayerController _controller;
   late final Future<void> _initializeVideoPlayerFuture;
   bool _showIcon = false;
-  bool _isInitialized = false; // Track initialization status
+  bool _isInitialized = false;
+  final VideoManager _videoManager = sl<VideoManager>();
 
   @override
   void initState() {
@@ -30,8 +32,8 @@ class _PostItemVideoState extends State<PostItemVideo> {
     if (!_isInitialized) {
       _initializeVideoPlayerFuture = _controller.initialize().then((_) {
         setState(() {
-          _isInitialized =
-              true; // Mark as initialized once the controller is ready
+          _isInitialized = true;
+          _videoManager.setController(_controller);
         });
       });
     }
@@ -55,6 +57,7 @@ class _PostItemVideoState extends State<PostItemVideo> {
     if (_controller.value.isPlaying) {
       _controller.pause();
     } else {
+      _videoManager.setController(_controller);
       _controller.play();
     }
     setState(() => _showIcon = !_controller.value.isPlaying);
@@ -85,7 +88,6 @@ class _PostItemVideoState extends State<PostItemVideo> {
                   future: _initializeVideoPlayerFuture,
                   builder: (context, snapshot) {
                     if (_isInitialized) {
-                      // Only show the video if it's initialized
                       return AspectRatio(
                         aspectRatio: _controller.value.aspectRatio,
                         child: VideoPlayer(_controller),

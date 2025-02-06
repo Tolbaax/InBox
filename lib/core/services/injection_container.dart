@@ -57,6 +57,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '../../domain/repositories/firebase_auth_repository.dart';
 import '../../domain/repositories/post_repository.dart';
 import '../../domain/repositories/user_repository.dart';
+import '../../presentation/components/post_item/widgets/video_manager.dart';
 
 final sl = GetIt.instance;
 
@@ -171,4 +172,6 @@ void registerExternalDependencies() {
   sl.registerLazySingleton(() => auth);
   sl.registerLazySingleton(() => firestore);
   sl.registerLazySingleton(() => firebaseStorage);
+
+  sl.registerLazySingleton(() => VideoManager());
 }

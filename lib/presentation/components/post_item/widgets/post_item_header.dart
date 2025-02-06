@@ -3,11 +3,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:inbox/core/extensions/media_query_extensions.dart';
+import 'package:inbox/presentation/components/post_item/widgets/video_manager.dart';
 import 'package:inbox/presentation/controllers/user/user_cubit.dart';
 import '../../../../../config/routes/app_routes.dart';
 import '../../../../../core/functions/format_post_time.dart';
 import '../../../../../core/functions/navigator.dart';
 import '../../../../../core/utils/app_colors.dart';
+import '../../../../core/services/injection_container.dart';
 import '../../../../domain/entities/post_entity.dart';
 import '../../profile_image/my_cached_net_image.dart';
 import 'custom_pop_menu.dart';
@@ -31,6 +33,7 @@ class PostItemHeader extends StatelessWidget {
         GestureDetector(
           onTap: () async {
             final currentUser = FirebaseAuth.instance.currentUser;
+            sl<VideoManager>().stopCurrentVideo();
             final userEntity =
                 await UserCubit.get(context).getUserById(post.uID);
 
