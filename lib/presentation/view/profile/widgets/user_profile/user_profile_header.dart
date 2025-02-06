@@ -4,8 +4,10 @@ import 'package:inbox/config/routes/app_routes.dart';
 import 'package:inbox/core/functions/navigator.dart';
 
 import '../../../../../../core/utils/app_strings.dart';
+import '../../../../../core/services/injection_container.dart';
 import '../../../../../domain/entities/user_entity.dart';
 import '../../../../components/buttons/profile_button.dart';
+import '../../../../components/post_item/widgets/video_manager.dart';
 import '../common/profile_header.dart';
 import 'follow_button.dart';
 
@@ -33,11 +35,14 @@ class UserProfileHeader extends StatelessWidget {
               ),
               Expanded(
                 child: ProfileButton(
-                  onTap: () => navigateTo(
-                    context,
-                    Routes.chat,
-                    arguments: {'uId': user.uID, 'name': user.name},
-                  ),
+                  onTap: () {
+                    navigateTo(
+                      context,
+                      Routes.chat,
+                      arguments: {'uId': user.uID, 'name': user.name},
+                    );
+                    sl<VideoManager>().stopCurrentVideo();
+                  },
                   text: AppStrings.message,
                 ),
               ),

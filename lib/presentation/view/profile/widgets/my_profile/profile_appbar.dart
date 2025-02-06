@@ -4,7 +4,9 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:inbox/config/routes/app_routes.dart';
 import 'package:inbox/core/functions/navigator.dart';
+import 'package:inbox/presentation/components/post_item/widgets/video_manager.dart';
 import '../../../../../../core/utils/app_colors.dart';
+import '../../../../../core/services/injection_container.dart';
 import '../../../../controllers/user/user_cubit.dart';
 import '../../../../controllers/user/user_states.dart';
 
@@ -29,7 +31,10 @@ class ProfileAppBar extends StatelessWidget implements PreferredSizeWidget {
           titleSpacing: fromSearch ? 0.0 : 16.0.sp,
           actions: [
             IconButton(
-              onPressed: () => navigateTo(context, Routes.settings),
+              onPressed: () {
+                navigateTo(context, Routes.settings);
+                sl<VideoManager>().stopCurrentVideo();
+              },
               splashColor: AppColors.lightBlue.withOpacity(0.38),
               splashRadius: 20.0.sp,
               icon: Icon(

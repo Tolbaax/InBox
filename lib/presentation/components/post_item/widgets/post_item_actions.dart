@@ -13,6 +13,8 @@ import 'package:inbox/presentation/controllers/post/post_cubit.dart';
 
 import '../../../../../config/routes/app_routes.dart';
 import '../../../../../core/utils/app_colors.dart';
+import '../../../../core/services/injection_container.dart';
+import 'video_manager.dart';
 
 class PostItemActions extends StatelessWidget {
   final PostEntity post;
@@ -103,8 +105,10 @@ class PostItemActions extends StatelessWidget {
                 iconColor: isLiked ? Colors.red : AppColors.grayRegular,
               ),
               PostActionIcon(
-                onTap: () =>
-                    navigateTo(context, Routes.comment, arguments: post.postID),
+                onTap: () {
+                  navigateTo(context, Routes.comment, arguments: post.postID);
+                  sl<VideoManager>().stopCurrentVideo();
+                },
                 icon: CupertinoIcons.text_bubble,
                 text: AppStrings.comment,
               ),

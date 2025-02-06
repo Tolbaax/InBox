@@ -5,7 +5,9 @@ import 'package:page_transition/page_transition.dart';
 import 'package:share_plus/share_plus.dart';
 
 import '../../../../../../core/utils/app_strings.dart';
+import '../../../../../core/services/injection_container.dart';
 import '../../../../components/buttons/profile_button.dart';
+import '../../../../components/post_item/widgets/video_manager.dart';
 import '../../../../controllers/user/user_cubit.dart';
 import '../../../../controllers/user/user_states.dart';
 import '../../screens/edit_profile_screen.dart';
@@ -34,13 +36,14 @@ class MyProfileHeader extends StatelessWidget {
                 children: [
                   Expanded(
                     child: ProfileButton(
-                      onTap: () => Navigator.push(
-                        context,
-                        PageTransition(
-                          type: PageTransitionType.fade,
-                          child: const EditProfileScreen(),
-                        ),
-                      ),
+                      onTap: () {
+                        Navigator.push(
+                            context,
+                            PageTransition(
+                                type: PageTransitionType.fade,
+                                child: const EditProfileScreen()));
+                        sl<VideoManager>().stopCurrentVideo();
+                      },
                       text: AppStrings.editProfile,
                     ),
                   ),
