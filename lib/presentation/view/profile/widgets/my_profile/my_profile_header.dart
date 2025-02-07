@@ -5,7 +5,7 @@ import 'package:page_transition/page_transition.dart';
 import 'package:share_plus/share_plus.dart';
 
 import '../../../../../../core/utils/app_strings.dart';
-import '../../../../../core/services/injection_container.dart';
+import '../../../../../core/injection/injector.dart';
 import '../../../../components/buttons/profile_button.dart';
 import '../../../../components/post_item/widgets/video_manager.dart';
 import '../../../../controllers/user/user_cubit.dart';

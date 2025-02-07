@@ -13,7 +13,7 @@ import 'package:inbox/presentation/controllers/post/post_cubit.dart';
 
 import '../../../../../config/routes/app_routes.dart';
 import '../../../../../core/utils/app_colors.dart';
-import '../../../../core/services/injection_container.dart';
+import '../../../../core/injection/injector.dart';
 import 'video_manager.dart';
 
 class PostItemActions extends StatelessWidget {

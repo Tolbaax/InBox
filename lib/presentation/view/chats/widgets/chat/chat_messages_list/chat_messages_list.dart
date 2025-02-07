@@ -1,9 +1,9 @@
-import 'package:conditional_builder_null_safety/conditional_builder_null_safety.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:inbox/core/extensions/time_extension.dart';
 import 'package:inbox/core/params/chat/set_chat_message_seen_params.dart';
+import 'package:inbox/core/utils/app_colors.dart';
 import 'package:inbox/domain/entities/message_entity.dart';
 import 'package:inbox/presentation/controllers/chat/chat_cubit.dart';
 import 'package:inbox/presentation/controllers/chat/chat_states.dart';
@@ -23,7 +23,7 @@ class ChatMessagesList extends StatefulWidget {
 
 class _ChatMessagesListState extends State<ChatMessagesList> {
   final ScrollController _scrollController = ScrollController();
-  int previousMessageCount = 0;
+  int _previousMessageCount = 0;
 
   @override
   Widget build(BuildContext context) {
@@ -32,89 +32,101 @@ class _ChatMessagesListState extends State<ChatMessagesList> {
         return StreamBuilder<List<MessageEntity>>(
           stream: ChatCubit.get(context).getChatMessages(widget.receiverId),
           builder: (context, snapshot) {
-            return ConditionalBuilder(
-              condition: snapshot.hasData,
-              builder: (context) {
-                if (snapshot.hasData && snapshot.data!.isNotEmpty) {
-                  final currentMessageCount = snapshot.data!.length;
+            if (!snapshot.hasData || snapshot.data!.isEmpty) {
+              return const SizedBox.shrink();
+            }
 
-                  // Check if new messages have arrived
-                  if (currentMessageCount > previousMessageCount) {
-                    // Scroll to the bottom when new messages arrive
-                    SchedulerBinding.instance.addPostFrameCallback((_) {
-                      _scrollController.jumpTo(
-                        _scrollController.position.maxScrollExtent,
-                      );
-                    });
+            final messages = snapshot.data!;
+            final currentMessageCount = messages.length;
 
-                    // Update the previous message count
-                    previousMessageCount = currentMessageCount;
+            // Scroll to the bottom when new messages arrive
+            if (currentMessageCount > _previousMessageCount) {
+              SchedulerBinding.instance.addPostFrameCallback((_) {
+                _scrollController
+                    .jumpTo(_scrollController.position.maxScrollExtent);
+              });
+              _previousMessageCount = currentMessageCount;
+            }
+
+            return Expanded(
+              child: ListView.builder(
+                controller: _scrollController,
+                shrinkWrap: true,
+                itemCount: messages.length,
+                itemBuilder: (context, index) {
+                  final message = messages[index];
+                  final lastMessage = messages.last;
+                  final previousMessage =
+                      index > 0 ? messages[index - 1] : null;
+
+                  // Check if the current message should have a small bubble
+                  final isFirst = index == 0 ||
+                      message.senderId != previousMessage?.senderId ||
+                      !message.timeSent.isSameDay(previousMessage!.timeSent);
+
+                  // Set chat message seen
+                  if (!message.isSeen &&
+                      message.receiverId != widget.receiverId) {
+                    ChatCubit.get(context).setChatMessageSeen(
+                      SetChatMessageSeenParams(
+                        receiverId: widget.receiverId,
+                        messageId: message.messageId,
+                      ),
+                    );
                   }
 
-                  return Expanded(
-                    child: ListView.builder(
-                      controller: _scrollController,
-                      shrinkWrap: true,
-                      itemCount: snapshot.data!.length,
-                      itemBuilder: (context, index) {
-                        final message = snapshot.data![index];
-
-                        final lastMessage = snapshot.data!.last;
-
-                        var previousMessage =
-                            index > 0 ? snapshot.data![index - 1] : null;
-
-                        // Check if the current message should have a small bubble for the first message
-                        bool isFirst = index == 0 ||
-                            message.senderId != previousMessage?.senderId ||
-                            !message.timeSent
-                                .isSameDay(previousMessage!.timeSent);
-
-                        // Set chat message seen
-                        if (!message.isSeen &&
-                            message.receiverId != widget.receiverId) {
-                          ChatCubit.get(context).setChatMessageSeen(
-                            SetChatMessageSeenParams(
-                              receiverId: widget.receiverId,
-                              messageId: message.messageId,
-                            ),
-                          );
-                        }
-
-                        return Column(
-                          children: [
-                            if (index == 0 ||
-                                !DateConverter.isSameDay(
-                                  message.timeSent,
-                                  snapshot.data![index - 1].timeSent,
-                                ))
-                              ChatTimeCard(dateTime: message.timeSent),
-                            if (message.receiverId == widget.receiverId)
-                              MyMessageCard(
-                                message: message,
-                                lastMessage: lastMessage,
-                                isFirst: isFirst,
-                              ),
-                            if (message.receiverId != widget.receiverId)
-                              SenderMessageCard(
-                                message: message,
-                                isFirst: isFirst,
-                                lastMessage: lastMessage,
-                              ),
-                          ],
-                        );
-                      },
-                    ),
-                  );
-                } else {
-                  return const SizedBox.shrink();
-                }
-              },
-              fallback: (context) => const SizedBox.shrink(),
+                  return _buildMessageItem(
+                      message, lastMessage, isFirst, index, messages);
+                },
+              ),
             );
           },
         );
       },
+    );
+  }
+
+  Widget _buildMessageItem(MessageEntity message, MessageEntity lastMessage,
+      bool isFirst, int index, List<MessageEntity> messages) {
+    final cubit = context.read<ChatCubit>();
+    final isSelected = cubit.selectedMessages.contains(message.messageId);
+
+    return GestureDetector(
+      onLongPress: () => cubit.handleMessageLongPress(message),
+      onTap: () => cubit.handleMessageTap(message),
+      child: Column(
+        children: [
+          if (index == 0 ||
+              !DateConverter.isSameDay(
+                  message.timeSent, messages[index - 1].timeSent))
+            ChatTimeCard(dateTime: message.timeSent),
+          Stack(
+            children: [
+              // Message Card
+              message.receiverId == widget.receiverId
+                  ? MyMessageCard(
+                      message: message,
+                      lastMessage: lastMessage,
+                      isFirst: isFirst)
+                  : SenderMessageCard(
+                      message: message,
+                      lastMessage: lastMessage,
+                      isFirst: isFirst),
+
+              // Highlight Overlay
+              if (isSelected)
+                Positioned.fill(
+                  child: Container(
+                    decoration: BoxDecoration(
+                      color: AppColors.primary.withOpacity(0.2),
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                  ),
+                ),
+            ],
+          ),
+        ],
+      ),
     );
   }
 

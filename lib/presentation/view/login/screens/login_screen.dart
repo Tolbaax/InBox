@@ -4,7 +4,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:inbox/config/routes/app_routes.dart';
 import 'package:inbox/core/functions/navigator.dart';
 
-import '../../../../../core/services/injection_container.dart';
+import '../../../../../core/injection/injector.dart';
 import '../../../../../core/utils/app_colors.dart';
 import '../../../../../core/utils/app_strings.dart';
 import '../../../../../core/utils/assets_manager.dart';
@@ -26,7 +26,9 @@ class SignInScreen extends StatelessWidget {
               .setUserLoggedIn(sl<GetCurrentUIDUseCase>().toString())
               .then((value) async {
             if (context.mounted) navigateAndRemove(context, Routes.layout);
-            sl<AuthCubit>().clearSignInControllers();
+            if (context.mounted) {
+              context.read<AuthCubit>().clearSignInControllers();
+            }
           });
         }
       },

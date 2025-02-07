@@ -168,6 +168,7 @@ void registerExternalDependencies() {
   final auth = FirebaseAuth.instance;
   final firestore = FirebaseFirestore.instance;
   final firebaseStorage = FirebaseStorage.instance;
+  firestore.settings = const Settings(persistenceEnabled: true);
 
   sl.registerLazySingleton(() => auth);
   sl.registerLazySingleton(() => firestore);

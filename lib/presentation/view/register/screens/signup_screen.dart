@@ -10,7 +10,6 @@ import '../../../../../core/utils/assets_manager.dart';
 import '../../../controllers/auth/auth_cubit.dart';
 import '../../../controllers/auth/auth_states.dart';
 import '../widgets/register_form.dart';
-import 'package:inbox/core/services/injection_container.dart' as di;
 
 class SignUpScreen extends StatelessWidget {
   const SignUpScreen({super.key});
@@ -21,12 +20,11 @@ class SignUpScreen extends StatelessWidget {
       listener: (context, state) async {
         if (state is RegisterSuccessfullyState) {
           navigateAndRemove(context, Routes.login);
-          di.sl<AuthCubit>().clearSignUpControllers();
+          context.read<AuthCubit>().clearSignUpControllers();
         }
       },
       builder: (context, state) {
-        final cubit = AuthCubit.get(context);
-
+        final cubit = context.read<AuthCubit>();
         return Scaffold(
           body: SingleChildScrollView(
             child: Padding(

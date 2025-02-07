@@ -3,7 +3,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:inbox/core/services/injection_container.dart' as di;
+import 'package:inbox/core/injection/injector.dart' as di;
 import 'package:timeago/timeago.dart' as timeago;
 import 'app.dart';
 import 'core/error/crashlytics.dart';

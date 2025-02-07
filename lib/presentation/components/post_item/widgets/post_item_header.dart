@@ -9,7 +9,7 @@ import '../../../../../config/routes/app_routes.dart';
 import '../../../../../core/functions/format_post_time.dart';
 import '../../../../../core/functions/navigator.dart';
 import '../../../../../core/utils/app_colors.dart';
-import '../../../../core/services/injection_container.dart';
+import '../../../../core/injection/injector.dart';
 import '../../../../domain/entities/post_entity.dart';
 import '../../profile_image/my_cached_net_image.dart';
 import 'custom_pop_menu.dart';
@@ -27,11 +27,16 @@ class PostItemHeader extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    bool isTapped = false;
+
     return Stack(
       alignment: AlignmentDirectional.centerEnd,
       children: [
         GestureDetector(
           onTap: () async {
+            if (isTapped) return;
+            isTapped = true;
+
             final currentUser = FirebaseAuth.instance.currentUser;
             sl<VideoManager>().stopCurrentVideo();
             final userEntity =
@@ -50,6 +55,7 @@ class PostItemHeader extends StatelessWidget {
                 }
               }
             }
+            isTapped = false;
           },
           child: Row(
             crossAxisAlignment: CrossAxisAlignment.start,

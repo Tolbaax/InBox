@@ -4,7 +4,7 @@ import 'package:inbox/config/routes/app_routes.dart';
 import 'package:inbox/core/functions/navigator.dart';
 
 import '../../../../../../core/utils/app_strings.dart';
-import '../../../../../core/services/injection_container.dart';
+import '../../../../../core/injection/injector.dart';
 import '../../../../../domain/entities/user_entity.dart';
 import '../../../../components/buttons/profile_button.dart';
 import '../../../../components/post_item/widgets/video_manager.dart';

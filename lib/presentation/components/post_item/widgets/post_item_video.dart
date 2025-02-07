@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:video_player/video_player.dart';
 import 'package:visibility_detector/visibility_detector.dart';
-import '../../../../core/services/injection_container.dart';
+import '../../../../core/injection/injector.dart';
 import '../../../../core/utils/app_colors.dart';
 import 'play_icon.dart';
 import 'video_manager.dart';

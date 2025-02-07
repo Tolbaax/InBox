@@ -6,7 +6,7 @@ import 'package:inbox/config/routes/app_routes.dart';
 import 'package:inbox/core/functions/navigator.dart';
 import 'package:inbox/presentation/components/post_item/widgets/video_manager.dart';
 import '../../../../../../core/utils/app_colors.dart';
-import '../../../../../core/services/injection_container.dart';
+import '../../../../../core/injection/injector.dart';
 import '../../../../controllers/user/user_cubit.dart';
 import '../../../../controllers/user/user_states.dart';
 

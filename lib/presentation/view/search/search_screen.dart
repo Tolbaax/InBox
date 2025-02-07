@@ -1,3 +1,4 @@
+import 'dart:async'; // Add this import
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -21,6 +22,7 @@ class _SearchScreenState extends State<SearchScreen> {
   final searchController = TextEditingController();
   bool isTextFieldEmpty = false;
   bool isConnected = true; // Flag to check internet connection
+  Timer? _debounce; // Timer for debounce
 
   @override
   void initState() {
@@ -38,19 +40,11 @@ class _SearchScreenState extends State<SearchScreen> {
   Widget build(BuildContext context) {
     final searchQuery = searchController.text.trim();
 
+    // Firestore query to search for users by username
     final usernameQuery = FirebaseFirestore.instance
         .collection('users')
         .orderBy('username')
-        .startAt([searchQuery])
-        .endAt(["$searchQuery\uf8ff"])
-        .get();
-
-    // final nameQuery = FirebaseFirestore.instance
-    //     .collection('users')
-    //     .orderBy('name')
-    //     .startAt([searchQuery])
-    //     .endAt(["$searchQuery\uf8ff"])
-    //     .get();
+        .startAt([searchQuery]).endAt(["$searchQuery\uf8ff"]).get();
 
     return Scaffold(
       appBar: AppBar(
@@ -60,8 +54,14 @@ class _SearchScreenState extends State<SearchScreen> {
           hintText: AppStrings.searchForaUser,
           isTextFieldEmpty: isTextFieldEmpty,
           onChanged: (value) {
-            setState(() {
-              isTextFieldEmpty = true;
+            if (_debounce?.isActive ?? false) {
+              _debounce?.cancel(); // Cancel the previous timer
+            }
+            _debounce = Timer(const Duration(milliseconds: 400), () {
+              // 400 ms debounce
+              setState(() {
+                isTextFieldEmpty = value.isNotEmpty;
+              });
             });
           },
           suffixTap: () {
@@ -118,5 +118,6 @@ class _SearchScreenState extends State<SearchScreen> {
   void dispose() {
     super.dispose();
     searchController.dispose();
+    _debounce?.cancel(); // Clean up the debounce timer
   }
 }

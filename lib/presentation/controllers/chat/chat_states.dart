@@ -33,3 +33,5 @@ class ToggleCameraFrontState extends ChatStates {}
 class StartVideoRecordingState extends ChatStates {}
 
 class StopVideoRecordingState extends ChatStates {}
+
+class SelectMessageState extends ChatStates {}

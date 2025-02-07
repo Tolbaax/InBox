@@ -3,7 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:inbox/core/utils/app_strings.dart';
 
-import '../../../../../core/services/injection_container.dart';
+import '../../../../../core/injection/injector.dart';
 import '../../../../../core/utils/app_colors.dart';
 import '../../../controllers/post/comment/comment_cubit.dart';
 import '../../../controllers/post/comment/comment_states.dart';

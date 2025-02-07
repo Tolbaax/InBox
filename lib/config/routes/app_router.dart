@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:page_transition/page_transition.dart';
 
-import '../../core/services/injection_container.dart';
+import '../../core/injection/injector.dart';
 import '../../core/utils/app_strings.dart';
 import '../../data/datasources/auth/local/auth_local_data_source.dart';
 import '../../presentation/components/post_item/comment/comment_screen.dart';
