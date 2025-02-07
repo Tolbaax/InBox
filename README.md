@@ -58,6 +58,7 @@
 - [ ] Add post gif, music and location
 - [ ] Add a story for 24 hours
 - [ ] Make it stable for web
+- [ ] Typing User: Listen to user typing
 - [ ] Clean-up more code
 
 ## Getting Started
