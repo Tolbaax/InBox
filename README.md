@@ -1,69 +1,82 @@
-# InBox Project
-
 [![Flutter Version](https://img.shields.io/badge/Flutter-v3.24.5-blue)](https://flutter.dev/)
 [![Dart Version](https://img.shields.io/badge/Dart-v3.5.4-blue)](https://dart.dev/)
 
+## Overview
+
+**InBox Project** is a feature-rich social media and messaging platform built using Flutter and Firebase. The app enables users to engage with each other through posts, likes, comments, and real-time messaging, offering a seamless and interactive experience.
+
 ## Features
 
-- User registration and login with email and password
-- Firebase Authentication for secure and reliable authentication
-- User profile management with profile picture, display name, and status
-- User can create posts by uploading images, videos, and status updates
-- User can view their own posts and those of the people they follow
-- Like and comment on posts
-- Posts can be liked and commented on by other users
-- User can search for other users and follow them
-- Real-time messaging with Firebase Cloud Messaging
-- Display User Online/Offline Status for Real-time Interaction
-- Users can send emojis in their messages using a built-in emoji picker
-- You can reply to specific messages in a conversation, facilitating threaded discussions
-- 'Seen' Status for Chat Messages
-- Auto Scroll on New Messages
-- Push notifications for messaging and other app events
-- User can save other users' posts and his own posts
-- Allow users to delete their own account when they decide to leave the platform.
+### Authentication & User Management
+- Secure email/password registration and login
+- Firebase Authentication integration
+- User profile with display name, profile picture, and status
+- Account deletion feature for user privacy
+
+### Social Networking
+- Create posts with images, videos, and text updates
+- Like, comment, and reply to posts
+- Follow/unfollow users
+- Save posts for later viewing
+- Search and discover other users
+
+### Messaging & Notifications
+- Real-time messaging powered by Firebase Cloud Messaging
+- Display user online/offline status
+- Message reactions and emoji picker
+- Reply to specific messages for threaded conversations
+- "Seen" status for chat messages
+- Auto-scroll on new messages
+- Push notifications for messages and other interactions
+
+### Enhancements & UX
+- Caching profiles, images, and other resources
+- Animations with Rive and Lottie for a polished experience
+- Improved loading performance when opening the app
+- Image cropping before selection
 
 ## Technologies Used
 
-- Flutter Framework for cross-platform app development
-- Firebase Authentication for user authentication
-- Firebase Cloud Firestore for database storage and management
-- Firebase Storage for storing and retrieving images, videos, and other media
-- Firebase Cloud Messaging for real-time messaging and push notifications
-- Use Firestore batch for updating user data in a single transaction
-- Firebase Crashlytics to handle errors
-- Bloc package for state management
-- Rive and Lottie for animations throughout the application.
+- **Flutter**: Cross-platform UI development
+- **Firebase**:
+  - Authentication (User management)
+  - Firestore (Database storage)
+  - Storage (Media storage & retrieval)
+  - Cloud Messaging (Real-time messaging & notifications)
+  - Crashlytics (Error handling & logging)
+  - Firestore batch transactions for optimized updates
+- **State Management**: Bloc pattern
 
-## Screenshots
-[Insert screenshots here]
 
-## What's Next?
-- [ ] Notifications for likes, comments, follows, etc
-- [x] Caching of Profiles, Images, Etc.
-- [ ] Calling video and voice in chat
-- [x] Crop the image before selection
-- [ ] Create group chat
-- [ ] Calling video and voice in group chat
-- [ ] Send posts to chats
-- [ ] share profile to chats and other apps
-- [ ] control in the dimension of selected image & video from the gallery
-- [ ] Dark mode for comfortable viewing in low light conditions
-- [ ] Messaging feature with chat, voice, and video call capabilities
-- [ ] Get Posts with infinity scroll pagination
+### Upcoming Features
+- [ ] Notifications for likes, comments, follows, etc.
+- [ ] Video and voice calling in chat
+- [ ] Group chat functionality
+- [ ] Video and voice calling in group chat
+- [ ] Send posts in chat
+- [ ] Share profiles via chat and external apps
+- [ ] Control dimensions of selected images & videos
+- [ ] Dark mode for a comfortable viewing experience
+- [ ] Infinite scroll pagination for posts
 - [ ] Custom gallery display
-- [x] Improve display loading of posts when opening the app
-- [ ] share post
-- [ ] Reply, like and delete comment
-- [ ] Add post gif, music and location
-- [ ] Add a story for 24 hours
-- [ ] Make it stable for web
-- [ ] Typing User: Listen to user typing
-- [ ] Clean-up more code
+- [ ] Post sharing
+- [ ] Reply, like, and delete comments
+- [ ] Support for GIFs, music, and location in posts
+- [ ] 24-hour stories
+- [ ] Web platform optimization
+- [ ] Typing indicators in chat
+- [ ] Codebase cleanup and optimization
 
 ## Getting Started
 
-1. Clone the repository to your local machine
-2. Open the project in your preferred code editor
-3. Set up a Firebase project and add the necessary configuration files
-4. Run the app on your device or emulator
+### Prerequisites
+Ensure you have the following installed:
+- [Flutter SDK](https://flutter.dev/docs/get-started/install)
+- [Dart SDK](https://dart.dev/get-dart)
+- [Firebase CLI](https://firebase.google.com/docs/cli)
+
+### Installation Steps
+1. **Clone the repository**:
+   ```bash
+   git clone https://github.com/your-repo/inbox_project.git
+   cd inbox_project
