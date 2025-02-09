@@ -1,6 +1,5 @@
 import 'package:conditional_builder_null_safety/conditional_builder_null_safety.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:inbox/core/extensions/media_query_extensions.dart';
 
 import '../../../../../domain/entities/post_entity.dart';
@@ -51,9 +50,8 @@ class GetMyPostsWithoutVideos extends StatelessWidget {
               return const TabViewNoPostsYet();
             }
           },
-          fallback: (context) => Center(
-            child: CircularProgressIndicator(strokeWidth: 2.5.sp),
-          ),
+          fallback: (context) =>
+              const Center(child: CircularProgressIndicator(strokeWidth: 1.2)),
         );
       },
     );

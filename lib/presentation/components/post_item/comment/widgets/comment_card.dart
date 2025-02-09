@@ -8,6 +8,7 @@ import 'package:timeago/timeago.dart' as timeago;
 
 import '../../../../../../config/routes/app_routes.dart';
 import '../../../../../../core/functions/navigator.dart';
+import '../../../../../core/injection/injector.dart';
 import '../../../../../domain/entities/comment_entity.dart';
 import '../../../../controllers/user/user_cubit.dart';
 import '../../../profile_image/my_cached_net_image.dart';
@@ -20,6 +21,8 @@ class CommentCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final firebaseAuth = sl<FirebaseAuth>();
+
     return Column(
       children: [
         Padding(
@@ -29,7 +32,7 @@ class CommentCard extends StatelessWidget {
             children: [
               GestureDetector(
                 onTap: () async {
-                  final currentUser = FirebaseAuth.instance.currentUser;
+                  final currentUser = firebaseAuth.currentUser;
                   final userEntity =
                       await UserCubit.get(context).getUserById(comment.uID);
 

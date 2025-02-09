@@ -31,11 +31,13 @@ import 'app_routes.dart';
 
 class AppRouter {
   static Route? onGenerateRoute(RouteSettings settings) {
+    final firebaseAuth = sl<FirebaseAuth>();
+
     // Check user authentication before generating routes
     if (settings.name == Routes.initialRoute) {
       // If the user is logged in, navigate to layout, otherwise to login
       final isAuthenticated = sl<AuthLocalDataSource>().getUser() != null &&
-          FirebaseAuth.instance.currentUser != null;
+          firebaseAuth.currentUser != null;
 
       return isAuthenticated ? _navigateToLayout() : _navigateToLogin();
     }

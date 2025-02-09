@@ -8,6 +8,7 @@ import 'package:inbox/core/functions/navigator.dart';
 import 'package:inbox/core/utils/app_colors.dart';
 import 'package:inbox/core/utils/app_strings.dart';
 
+import '../../../../core/injection/injector.dart';
 import '../../../../domain/entities/post_entity.dart';
 import '../../../controllers/post/post_cubit.dart';
 
@@ -25,6 +26,8 @@ class CustomPubMenuButton extends StatefulWidget {
 class CustomPubMenuButtonState extends State<CustomPubMenuButton> {
   bool isPostSaved = false;
 
+  final firebaseAuth = sl<FirebaseAuth>();
+
   Future<void> updatePostSavedStatus() async {
     if (!mounted) return;
 
@@ -39,7 +42,7 @@ class CustomPubMenuButtonState extends State<CustomPubMenuButton> {
   }
 
   Future<void> checkAuthentication() async {
-    final user = FirebaseAuth.instance.currentUser;
+    final user = firebaseAuth.currentUser;
     if (user != null) {
       updatePostSavedStatus();
     }
@@ -48,7 +51,7 @@ class CustomPubMenuButtonState extends State<CustomPubMenuButton> {
   @override
   Widget build(BuildContext context) {
     final cubit = PostCubit.get(context);
-    final uID = FirebaseAuth.instance.currentUser!.uid;
+    final uID = firebaseAuth.currentUser!.uid;
     const String save = AppStrings.save;
     const String delete = AppStrings.delete;
     return PopupMenuButton(

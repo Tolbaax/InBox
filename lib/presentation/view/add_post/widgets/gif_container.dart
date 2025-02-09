@@ -47,7 +47,7 @@ class GifContainer extends StatelessWidget {
                         height: 110.0.sp,
                         width: 160.0.sp,
                         child: Center(
-                          child: CircularProgressIndicator(strokeWidth: 2.0.sp),
+                          child: CircularProgressIndicator(strokeWidth: 1.2.sp),
                         ),
                       );
                     },

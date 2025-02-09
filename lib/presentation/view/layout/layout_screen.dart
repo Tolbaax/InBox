@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../../core/utils/constants.dart';
+import '../../../core/injection/injector.dart';
 import '../../components/common/user_not_logged.dart';
 import '../../controllers/layout/layout_cubit.dart';
 import '../../controllers/layout/layout_states.dart';
@@ -53,8 +54,9 @@ class _LayoutScreenState extends State<LayoutScreen>
         }
       },
       builder: (context, state) {
-        final cubit = LayoutCubit.get(context);
-        final user = FirebaseAuth.instance.currentUser;
+        final cubit = context.read<LayoutCubit>();
+        final firebaseAuth = sl<FirebaseAuth>();
+        final user = firebaseAuth.currentUser;
 
         return PopScope(
           canPop: false,

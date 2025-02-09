@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:inbox/core/utils/assets_manager.dart';
 import 'package:inbox/presentation/controllers/chat/chat_cubit.dart';
+import '../../../../core/injection/injector.dart';
 import '../widgets/chat/chat_field/bottom_chat_field.dart';
 import '../widgets/chat/chat_appbar/chat_appbar.dart';
 import '../widgets/chat/chat_messages_list/chat_messages_list.dart';
@@ -17,7 +17,7 @@ class ChatScreen extends StatelessWidget {
     return PopScope(
       canPop: false,
       onPopInvokedWithResult: (didPop, result) async {
-        await context.read<ChatCubit>().onPopInvokedWithResult(context);
+        await sl<ChatCubit>().onPopInvokedWithResult(context);
       },
       child: Container(
         decoration: const BoxDecoration(

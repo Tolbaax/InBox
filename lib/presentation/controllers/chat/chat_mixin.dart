@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:inbox/core/functions/navigator.dart';
+import 'package:inbox/presentation/controllers/chat/chat_cubit.dart';
+import '../../../core/injection/injector.dart';
 import '../../../domain/entities/message_entity.dart';
 import 'chat_states.dart';
 
@@ -10,9 +12,11 @@ mixin ChatProviders on Cubit<ChatStates> {
   FocusNode cameraFocusNode = FocusNode();
 
   bool isShowEmoji = false;
+  bool isReplying = false;
   CroppedFile? messageImage;
   bool isSelecting = false;
-  late List<String> selectedMessages = [];
+  List<String> selectedMessageIds = [];
+  String selectedReceiverId = '';
 
   void showEmojiContainer() {
     isShowEmoji = true;
@@ -39,37 +43,45 @@ mixin ChatProviders on Cubit<ChatStates> {
   void handleMessageLongPress(MessageEntity message) {
     if (!isSelecting) {
       isSelecting = true;
-      selectedMessages.add(message.messageId);
-      emit(SelectMessageState());
+      selectedMessageIds.add(message.messageId);
+      selectedReceiverId = message.receiverId;
+      print(selectedMessageIds);
       emit(SelectMessageState());
     }
   }
 
   void handleMessageTap(MessageEntity message) {
     if (isSelecting) {
-      selectedMessages.contains(message.messageId)
-          ? selectedMessages.remove(message.messageId)
-          : selectedMessages.add(message.messageId);
-      if (selectedMessages.isEmpty) isSelecting = false;
+      if (selectedMessageIds.contains(message.messageId)) {
+        selectedMessageIds.remove(message.messageId);
+      } else {
+        selectedMessageIds.add(message.messageId);
+      }
+
+      if (selectedMessageIds.isEmpty) {
+        isSelecting = false;
+      }
       emit(SelectMessageState());
     }
   }
 
   void removeSelected() {
     if (isSelecting) {
-      selectedMessages = [];
-      if (selectedMessages.isEmpty) isSelecting = false;
+      selectedMessageIds.clear();
+      isSelecting = false;
+      selectedReceiverId = '';
       emit(SelectMessageState());
     }
   }
 
-  Future<void> onPopInvokedWithResult(context) async {
+  Future<void> onPopInvokedWithResult(BuildContext context) async {
     if (isSelecting) {
-      selectedMessages = [];
-      if (selectedMessages.isEmpty) isSelecting = false;
-      emit(SelectMessageState());
-    } else {
-      navigatePop(context);
+      removeSelected();
+      return;
     }
+
+    if (isShowEmoji) hideEmojiContainer();
+    if (isReplying) sl<ChatCubit>().cancelReply();
+    if (Navigator.of(context).canPop()) navigatePop(context);
   }
 }

@@ -4,6 +4,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:inbox/core/extensions/time_extension.dart';
 import 'package:inbox/domain/entities/user_chat_entity.dart';
 import '../../../../../../core/utils/app_colors.dart';
+import '../../../../../core/injection/injector.dart';
 import '../../../../controllers/chat/chat_cubit.dart';
 import 'chat_card.dart';
 
@@ -14,7 +15,8 @@ class MessageCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final uID = FirebaseAuth.instance.currentUser!.uid;
+    final firebaseAuth = sl<FirebaseAuth>();
+    final uID = firebaseAuth.currentUser!.uid;
 
     return StreamBuilder<int>(
       stream: ChatCubit.get(context).getNumOfMessageNotSeen(chat.userId),

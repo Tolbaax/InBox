@@ -7,6 +7,7 @@ import 'package:inbox/core/extensions/time_extension.dart';
 
 import '../../../../../../config/routes/app_routes.dart';
 import '../../../../../../core/functions/navigator.dart';
+import '../../../../../../core/injection/injector.dart';
 import '../../../../../../core/utils/app_colors.dart';
 import '../../../../../../core/utils/app_strings.dart';
 import '../../../../../../data/models/user_model.dart';
@@ -21,7 +22,9 @@ class UserInfoAppBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final isMe = receiverId == FirebaseAuth.instance.currentUser!.uid;
+    final firebaseAuth = sl<FirebaseAuth>();
+
+    final isMe = receiverId == firebaseAuth.currentUser!.uid;
 
     return StreamBuilder<UserEntity>(
       stream: _getUserById(),
@@ -39,11 +42,7 @@ class UserInfoAppBar extends StatelessWidget {
           },
           child: Row(
             children: [
-              Hero(
-                tag: user.uID,
-                child:
-                    MyCachedNetImage(imageUrl: user.profilePic, radius: 19.sp),
-              ),
+              MyCachedNetImage(imageUrl: user.profilePic, radius: 19.sp),
               SizedBox(width: 8.w),
               Container(
                 constraints: BoxConstraints(maxWidth: context.width * 0.58),

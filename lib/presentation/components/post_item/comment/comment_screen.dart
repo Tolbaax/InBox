@@ -30,8 +30,8 @@ class CommentScreen extends StatelessWidget {
         listener: (context, state) {},
         builder: (context, state) {
           if (state is GetCommentsLoadingState) {
-            return Center(
-                child: CircularProgressIndicator(strokeWidth: 2.5.sp));
+            return const Center(
+                child: CircularProgressIndicator(strokeWidth: 1.2));
           }
 
           if (state is GetCommentsSuccessState) {

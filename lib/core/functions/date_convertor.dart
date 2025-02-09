@@ -8,9 +8,12 @@ class DateConverter {
     if (localDateTime.isAfter(now.subtract(const Duration(days: 1)))) {
       // Within the last 24 hours
       String amPm = localDateTime.hour < 12 ? 'AM' : 'PM';
-      int hour = localDateTime.hour > 12
-          ? localDateTime.hour - 12
-          : localDateTime.hour;
+      int hour = localDateTime.hour;
+      if (hour == 0) {
+        hour = 12;
+      } else if (hour > 12) {
+        hour = hour - 12;
+      }
       String minute = localDateTime.minute.toString().padLeft(2, '0');
       return '$hour:$minute $amPm';
     } else if (localDateTime.day == now.day - 1) {
@@ -44,7 +47,8 @@ class DateConverter {
 
     if (isSameDay(now, localDateTime)) {
       return 'today';
-    } else if (isSameDay(now.subtract(const Duration(days: 1)), localDateTime)) {
+    } else if (isSameDay(
+        now.subtract(const Duration(days: 1)), localDateTime)) {
       return 'yesterday';
     } else {
       return dateConverterMonthNum(dateTime.toString());

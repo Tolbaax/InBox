@@ -8,6 +8,7 @@ import 'package:inbox/domain/entities/message_entity.dart';
 import 'package:inbox/presentation/controllers/chat/chat_cubit.dart';
 import 'package:inbox/presentation/controllers/chat/chat_states.dart';
 import '../../../../../../../core/functions/date_convertor.dart';
+import '../../../../../../core/injection/injector.dart';
 import '../message_card/chat_time_card.dart';
 import '../message_card/my_message_card.dart';
 import '../message_card/sender_message_card.dart';
@@ -27,7 +28,13 @@ class _ChatMessagesListState extends State<ChatMessagesList> {
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<ChatCubit, ChatStates>(
+    return BlocConsumer<ChatCubit, ChatStates>(
+      listener: (BuildContext context, ChatStates state) {
+        if (state is DeleteMessageSuccessState ||
+            state is SendMessageSuccessState) {
+          sl<ChatCubit>().removeSelected();
+        }
+      },
       builder: (context, state) {
         return StreamBuilder<List<MessageEntity>>(
           stream: ChatCubit.get(context).getChatMessages(widget.receiverId),
@@ -89,7 +96,7 @@ class _ChatMessagesListState extends State<ChatMessagesList> {
   Widget _buildMessageItem(MessageEntity message, MessageEntity lastMessage,
       bool isFirst, int index, List<MessageEntity> messages) {
     final cubit = context.read<ChatCubit>();
-    final isSelected = cubit.selectedMessages.contains(message.messageId);
+    final isSelected = cubit.selectedMessageIds.contains(message.messageId);
 
     return GestureDetector(
       onLongPress: () => cubit.handleMessageLongPress(message),

@@ -35,3 +35,9 @@ class StartVideoRecordingState extends ChatStates {}
 class StopVideoRecordingState extends ChatStates {}
 
 class SelectMessageState extends ChatStates {}
+
+class DeleteMessageLoadingState extends ChatStates {}
+
+class DeleteMessageSuccessState extends ChatStates {}
+
+class DeleteMessageErrorState extends ChatStates {}

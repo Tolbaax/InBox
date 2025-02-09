@@ -28,6 +28,7 @@ class PostItemHeader extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     bool isTapped = false;
+    final firebaseAuth = sl<FirebaseAuth>();
 
     return Stack(
       alignment: AlignmentDirectional.centerEnd,
@@ -37,7 +38,7 @@ class PostItemHeader extends StatelessWidget {
             if (isTapped) return;
             isTapped = true;
 
-            final currentUser = FirebaseAuth.instance.currentUser;
+            final currentUser = firebaseAuth.currentUser;
             sl<VideoManager>().stopCurrentVideo();
             final userEntity =
                 await UserCubit.get(context).getUserById(post.uID);

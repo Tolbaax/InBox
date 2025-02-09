@@ -7,6 +7,7 @@ import 'package:inbox/core/functions/navigator.dart';
 import 'package:inbox/data/models/user_model.dart';
 import 'package:inbox/domain/entities/user_entity.dart';
 import '../../../../../core/utils/app_colors.dart';
+import '../../../../core/injection/injector.dart';
 import '../../../components/profile_image/my_cached_net_image.dart';
 
 class UserCard extends StatelessWidget {
@@ -16,6 +17,8 @@ class UserCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final firebaseAuth = sl<FirebaseAuth>();
+
     return ListView.separated(
       itemCount: snapshot.data!.docs.length,
       separatorBuilder: (context, index) {
@@ -30,7 +33,7 @@ class UserCard extends StatelessWidget {
             AppColors.gray.withOpacity(0.15),
           ),
           onTap: () async {
-            final currentUser = FirebaseAuth.instance.currentUser;
+            final currentUser = firebaseAuth.currentUser;
             if (currentUser != null && data.id == currentUser.uid) {
               // Navigate to user's own profile page
               navigateTo(context, Routes.profile, arguments: true);

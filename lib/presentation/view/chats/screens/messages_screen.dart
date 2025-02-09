@@ -8,6 +8,7 @@ import 'package:inbox/domain/entities/user_chat_entity.dart';
 import 'package:inbox/presentation/controllers/chat/chat_cubit.dart';
 import '../../../../../core/shared/common.dart';
 import '../../../../../core/utils/app_strings.dart';
+import '../../../../core/injection/injector.dart';
 import '../../../components/text_fields/search_field.dart';
 import '../../search/widgets/no_users_found.dart';
 import '../../search/widgets/shimmer_user_card.dart';
@@ -62,9 +63,12 @@ class _MessagesScreenState extends State<MessagesScreen> {
   Widget buildBody(BuildContext context) {
     final searchQuery = convertToTitleCase(searchController.text.trim());
 
-    final searchFuture = FirebaseFirestore.instance
+    final firestore = sl<FirebaseFirestore>();
+    final firebaseAuth = sl<FirebaseAuth>();
+
+    final searchFuture = firestore
         .collection('users')
-        .doc(FirebaseAuth.instance.currentUser!.uid)
+        .doc(firebaseAuth.currentUser!.uid)
         .collection('chats')
         .orderBy('name')
         .startAt([searchQuery]).endAt(["${searchQuery}uf8ff"]);
@@ -136,7 +140,7 @@ class _MessagesScreenState extends State<MessagesScreen> {
           fallback: (context) => Center(
             child: snapshot.hasError
                 ? const NoMessagesYet()
-                : CircularProgressIndicator(strokeWidth: 2.5.sp),
+                : const CircularProgressIndicator(strokeWidth: 1.2),
           ),
         );
       },

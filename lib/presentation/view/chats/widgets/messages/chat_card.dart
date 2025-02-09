@@ -6,6 +6,7 @@ import 'package:inbox/core/extensions/media_query_extensions.dart';
 import 'package:inbox/core/functions/navigator.dart';
 import 'package:inbox/domain/entities/user_chat_entity.dart';
 import '../../../../../../core/utils/app_colors.dart';
+import '../../../../../core/injection/injector.dart';
 import '../../../../components/profile_image/my_cached_net_image.dart';
 import 'unseen_message_circle.dart';
 
@@ -18,7 +19,8 @@ class ChatCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final String uID = FirebaseAuth.instance.currentUser!.uid;
+    final firebaseAuth = sl<FirebaseAuth>();
+    final String uID = firebaseAuth.currentUser!.uid;
     final bool isMe = uID == chat.userId;
 
     return InkWell(

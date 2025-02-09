@@ -4,6 +4,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:inbox/core/utils/app_strings.dart';
 import 'package:inbox/domain/entities/user_entity.dart';
 
+import '../../../../../core/injection/injector.dart';
 import '../common/statistics_column.dart';
 
 class UserProfileStatistics extends StatelessWidget {
@@ -13,10 +14,9 @@ class UserProfileStatistics extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final snapshot = FirebaseFirestore.instance
-        .collection('users')
-        .doc(user.uID)
-        .snapshots();
+    final firestore = sl<FirebaseFirestore>();
+
+    final snapshot = firestore.collection('users').doc(user.uID).snapshots();
 
     return StreamBuilder(
       stream: snapshot,

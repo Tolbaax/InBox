@@ -12,6 +12,7 @@ import 'package:inbox/core/utils/app_colors.dart';
 import 'package:path_provider/path_provider.dart';
 
 import '../../presentation/controllers/chat/chat_cubit.dart';
+import '../injection/injector.dart';
 import '../params/chat/message_params.dart';
 
 Future<File?> pickImageFile(BuildContext context,
@@ -92,7 +93,9 @@ Future<bool> checkInternetConnectivity() async {
 }
 
 Future<bool> checkUsernameAvailability(String username) async {
-  final QuerySnapshot result = await FirebaseFirestore.instance
+  final firestore = sl<FirebaseFirestore>();
+
+  final QuerySnapshot result = await firestore
       .collection('users')
       .where('username', isEqualTo: username.trim())
       .limit(1)
@@ -194,12 +197,12 @@ Future<void> deleteFile(File? file) async {
 
 /// Clears the cache directory
 Future<void> clearCache() async {
-  final tempDir = await getTemporaryDirectory();
-  if (await tempDir.exists()) {
-    try {
-      tempDir.deleteSync(recursive: true);
-    } catch (e) {
-      if (kDebugMode) print("Error clearing cache: $e");
+  try {
+    final tempDir = await getTemporaryDirectory();
+    await tempDir.delete(recursive: true);
+  } catch (e) {
+    if (kDebugMode) {
+      print("Error clearing cache: $e");
     }
   }
 }

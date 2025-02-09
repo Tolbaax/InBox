@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
+import '../../../core/injection/injector.dart';
 import '../../components/buttons/appbar_back_button.dart';
 import '../../components/common/user_not_logged.dart';
 import '../../controllers/user/user_cubit.dart';
@@ -13,8 +14,10 @@ class AddPostScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final user = FirebaseAuth.instance.currentUser;
-    final userEntity = UserCubit.get(context).userEntity;
+    final firebaseAuth = sl<FirebaseAuth>();
+
+    final user = firebaseAuth.currentUser;
+    final userEntity = sl<UserCubit>().userEntity;
 
     if (user == null || userEntity == null) {
       return Scaffold(
@@ -28,10 +31,7 @@ class AddPostScreen extends StatelessWidget {
       appBar: AddPostAppBar(),
       body: Stack(
         children: [
-          // Main content goes here
           AddPostHeader(),
-
-          // The draggable scrollable sheet
           AddPostDraggableSheet(),
         ],
       ),

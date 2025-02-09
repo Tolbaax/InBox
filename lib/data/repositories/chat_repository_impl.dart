@@ -1,6 +1,7 @@
 import 'package:dartz/dartz.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:inbox/core/error/failure.dart';
+import 'package:inbox/core/params/chat/delete_message_params.dart';
 import 'package:inbox/core/params/chat/set_chat_message_seen_params.dart';
 import 'package:inbox/core/params/chat/message_params.dart';
 import 'package:inbox/data/datasources/chat/chat_remote_data_source.dart';
@@ -61,6 +62,17 @@ class ChatRepositoryImpl implements ChatRepository {
   Future<Either<Failure, void>> setChatMessageSeen(
       SetChatMessageSeenParams parameters) async {
     final result = await _chatRemoteDataSource.setChatMessageSeen(parameters);
+    try {
+      return Right(result);
+    } on FirebaseAuthException catch (failure) {
+      return Left(ServerFailure(failure.message!));
+    }
+  }
+
+  @override
+  Future<Either<Failure, void>> deleteMessages(
+      DeleteMessageParams parameters) async {
+    final result = await _chatRemoteDataSource.deleteMessages(parameters);
     try {
       return Right(result);
     } on FirebaseAuthException catch (failure) {

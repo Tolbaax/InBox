@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:inbox/core/params/chat/delete_message_params.dart';
 import '../../../../../../core/utils/app_colors.dart';
 import '../../../../../controllers/chat/chat_cubit.dart';
 
@@ -16,14 +17,21 @@ class SelectionModeAppBar extends StatelessWidget {
       children: [
         SizedBox(width: 10.w),
         Text(
-          cubit.selectedMessages.length.toString(),
+          cubit.selectedMessageIds.length.toString(),
           style: TextStyle(color: AppColors.white, fontFamily: ''),
         ),
         const Spacer(),
-        if (cubit.selectedMessages.length <= 1)
+        if (cubit.selectedMessageIds.length <= 1)
           _buildIconButton(FontAwesomeIcons.arrowTurnUp, -90, () {}),
         _buildIconButton(FontAwesomeIcons.copy, 0, () {}),
-        _buildIconButton(FontAwesomeIcons.trashCan, 0, () {}),
+        _buildIconButton(FontAwesomeIcons.trashCan, 0, () async {
+          await cubit.deleteMessages(
+            DeleteMessageParams(
+              receiverId: cubit.selectedReceiverId,
+              messageIds: cubit.selectedMessageIds,
+            ),
+          );
+        }),
         SizedBox(width: 15.w),
       ],
     );

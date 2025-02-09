@@ -87,7 +87,7 @@ class ConfirmDeleteAccountScreen extends StatelessWidget {
                       child: Center(
                         child: state is DeleteUserAccountLoadingState
                             ? CircularProgressIndicator(
-                                color: AppColors.white, strokeWidth: 2.5.sp)
+                                color: AppColors.white, strokeWidth: 1.2)
                             : Center(
                                 child: Text(
                                   AppStrings.deleteAccount,

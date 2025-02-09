@@ -24,7 +24,7 @@ class ChatAppBar extends StatelessWidget implements PreferredSizeWidget {
           leading: BackButton(
             color: AppColors.white,
             onPressed: () {
-              if (cubit.selectedMessages.isEmpty) {
+              if (cubit.selectedMessageIds.isEmpty) {
                 navigatePop(context);
               } else {
                 cubit.removeSelected();

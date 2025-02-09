@@ -38,7 +38,6 @@ class _AddPostAppBarState extends State<AddPostAppBar> {
   @override
   void dispose() {
     cubit.postTextController.removeListener(_onPostTextChanged);
-    cubit.close();
     super.dispose();
   }
 
@@ -114,10 +113,12 @@ class _AddPostAppBarState extends State<AddPostAppBar> {
     });
   }
 
-  Future<void> _onPopInvokedWithResult(context, cubit, isMedia) async {
+  Future<void> _onPopInvokedWithResult(
+      BuildContext context, cubit, bool isMedia) async {
     if (isMedia || !isEmpty) {
-      AppDialogs.showDiscardPostDialog(context, cubit);
-    } else {
+      return AppDialogs.showDiscardPostDialog(context, cubit);
+    }
+    if (Navigator.of(context).canPop()) {
       navigatePop(context);
     }
   }

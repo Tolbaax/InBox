@@ -8,11 +8,13 @@ import 'package:video_player/video_player.dart';
 
 import '../../../../../core/functions/app_dialogs.dart';
 import '../../../../../core/shared/common.dart';
+import '../../../../core/functions/navigator.dart';
 import 'add_post_states.dart';
 
 mixin AddPostMixin on Cubit<AddPostStates> {
   final postTextController = TextEditingController();
   VideoPlayerController? videoPlayerController;
+  bool isEmpty = true;
   File? postImage;
   GiphyGif? gif;
   String? gifUrl;
@@ -110,5 +112,13 @@ mixin AddPostMixin on Cubit<AddPostStates> {
   void disposeGif() async {
     gif = null;
     emit(DisposeGifState());
+  }
+
+  Future<void> onPopInvokedWithResult(context, cubit, isMedia) async {
+    if (isMedia || !isEmpty) {
+      AppDialogs.showDiscardPostDialog(context, cubit);
+    } else {
+      navigatePop(context);
+    }
   }
 }

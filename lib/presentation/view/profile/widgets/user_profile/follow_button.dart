@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:inbox/presentation/controllers/user/user_cubit.dart';
 import '../../../../../../core/utils/app_colors.dart';
 import '../../../../../../core/utils/app_strings.dart';
+import '../../../../../core/injection/injector.dart';
 import '../../../../components/buttons/profile_button.dart';
 
 class FollowButton extends StatelessWidget {
@@ -14,10 +15,11 @@ class FollowButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final cubit = context.read<UserCubit>();
-    final snapshot = FirebaseFirestore.instance
-        .collection('users')
-        .doc(cubit.userEntity!.uID)
-        .snapshots();
+
+    final firestore = sl<FirebaseFirestore>();
+
+    final snapshot =
+        firestore.collection('users').doc(cubit.userEntity!.uID).snapshots();
 
     return StreamBuilder(
       stream: snapshot,

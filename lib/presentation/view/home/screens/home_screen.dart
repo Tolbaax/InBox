@@ -1,7 +1,6 @@
 import 'package:conditional_builder_null_safety/conditional_builder_null_safety.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:inbox/core/extensions/media_query_extensions.dart';
 import 'package:inbox/domain/entities/post_entity.dart';
 import 'package:inbox/presentation/controllers/post/post_states.dart';
@@ -51,8 +50,8 @@ class HomeScreen extends StatelessWidget {
                     return const NoPotsYet();
                   }
                 },
-                fallback: (context) => Center(
-                  child: CircularProgressIndicator(strokeWidth: 2.5.sp),
+                fallback: (context) => const Center(
+                  child: CircularProgressIndicator(strokeWidth: 1.2),
                 ),
               );
             },

@@ -47,9 +47,7 @@ class CustomButton extends StatelessWidget {
         child: Center(
           child: condition!
               ? CircularProgressIndicator(
-                  color: AppColors.white,
-                  strokeWidth: 2.5.sp,
-                )
+                  color: AppColors.white, strokeWidth: 1.2.sp)
               : Text(
                   text,
                   style: TextStyle(

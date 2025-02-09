@@ -15,6 +15,8 @@ import 'package:inbox/domain/entities/message_entity.dart';
 import 'package:inbox/domain/entities/user_chat_entity.dart';
 import 'package:uuid/uuid.dart';
 
+import '../../../core/params/chat/delete_message_params.dart';
+
 class ChatRemoteDataSourceImpl implements ChatRemoteDataSource {
   final FirebaseAuth auth;
   final FirebaseFirestore firestore;
@@ -250,4 +252,26 @@ class ChatRemoteDataSourceImpl implements ChatRemoteDataSource {
 
     await batch.commit();
   }
+
+  @override
+  Future<void> deleteMessages(DeleteMessageParams params) async {
+    final String uID = auth.currentUser!.uid;
+    final String receiverId = params.receiverId;
+    final batch = firestore.batch();
+
+    for (String messageId in params.messageIds) {
+      final senderMessageRef = firestore
+          .collection('users')
+          .doc(uID)
+          .collection('chats')
+          .doc(receiverId)
+          .collection('messages')
+          .doc(messageId);
+
+      batch.delete(senderMessageRef);
+    }
+
+    await batch.commit();
+  }
+
 }

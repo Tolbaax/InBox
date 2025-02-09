@@ -24,7 +24,8 @@ class PostItemActions extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final cubit = BlocProvider.of<PostCubit>(context);
-    final uID = FirebaseAuth.instance.currentUser!.uid;
+    final firebaseAuth = sl<FirebaseAuth>();
+    final uID = firebaseAuth.currentUser!.uid;
     final isLiked = post.likes.contains(uID);
 
     return Padding(

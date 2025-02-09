@@ -6,6 +6,7 @@ import 'package:inbox/data/datasources/chat/chat_remote_data_source.dart';
 import 'package:inbox/data/datasources/chat/chat_remote_data_source_impl.dart';
 import 'package:inbox/data/repositories/chat_repository_impl.dart';
 import 'package:inbox/domain/repositories/chat_repository.dart';
+import 'package:inbox/domain/usecases/chat/delete_message_usecase.dart';
 import 'package:inbox/presentation/controllers/chat/chat_cubit.dart';
 import 'package:inbox/data/datasources/auth/local/auth_local_data_source.dart';
 import 'package:inbox/data/datasources/auth/local/auth_local_data_source_impl.dart';
@@ -88,7 +89,7 @@ void registerCubits() {
   sl.registerLazySingleton(() => AddPostCubit(sl()));
   sl.registerLazySingleton(() => CommentCubit(sl(), sl()));
   sl.registerLazySingleton(
-      () => ChatCubit(sl(), sl(), sl(), sl(), sl(), sl(), sl()));
+      () => ChatCubit(sl(), sl(), sl(), sl(), sl(), sl(), sl(), sl()));
 }
 
 // Register UseCases
@@ -126,6 +127,7 @@ void registerUseCases() {
   sl.registerLazySingleton(() => SendFileMessageUseCase(sl()));
   sl.registerLazySingleton(() => SendGifMessageUseCase(sl()));
   sl.registerLazySingleton(() => SetChatMessageSeenUseCase(sl()));
+  sl.registerLazySingleton(() => DeleteMessagesUseCase(sl()));
 }
 
 // Register Repositories

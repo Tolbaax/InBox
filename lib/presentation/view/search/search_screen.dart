@@ -3,6 +3,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../../../../core/utils/app_strings.dart';
+import '../../../core/injection/injector.dart';
 import '../../../core/shared/common.dart';
 import '../../components/internet/check_internet_connection.dart';
 import 'widgets/no_users_found.dart';
@@ -40,8 +41,10 @@ class _SearchScreenState extends State<SearchScreen> {
   Widget build(BuildContext context) {
     final searchQuery = searchController.text.trim();
 
+    final firestore = sl<FirebaseFirestore>();
+
     // Firestore query to search for users by username
-    final usernameQuery = FirebaseFirestore.instance
+    final usernameQuery = firestore
         .collection('users')
         .orderBy('username')
         .startAt([searchQuery]).endAt(["$searchQuery\uf8ff"]).get();

@@ -4,6 +4,7 @@ import 'package:inbox/core/extensions/media_query_extensions.dart';
 import 'package:inbox/core/utils/app_colors.dart';
 
 import '../../../../../../../core/enums/message_type.dart';
+import '../../../../../../core/injection/injector.dart';
 import '../../../../../controllers/chat/chat_cubit.dart';
 import 'reply_message_content.dart';
 
@@ -63,7 +64,7 @@ class MessageReplyCard extends StatelessWidget {
                 if (showCloseButton)
                   GestureDetector(
                     onTap: () {
-                      ChatCubit.get(context).cancelReply();
+                      sl<ChatCubit>().cancelReply();
                     },
                     child: Icon(
                       Icons.close,

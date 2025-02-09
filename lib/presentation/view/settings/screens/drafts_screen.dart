@@ -1,7 +1,6 @@
 import 'package:conditional_builder_null_safety/conditional_builder_null_safety.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:inbox/core/extensions/media_query_extensions.dart';
 import 'package:inbox/core/utils/app_colors.dart';
 import 'package:inbox/core/utils/app_strings.dart';
@@ -59,7 +58,7 @@ class DraftsScreen extends StatelessWidget {
                 fallback: (context) => Center(
                   child: snapshot.hasError
                       ? const NoSavedPostsYet()
-                      : CircularProgressIndicator(strokeWidth: 2.5.sp),
+                      : const CircularProgressIndicator(strokeWidth: 1.2),
                 ),
               );
             },

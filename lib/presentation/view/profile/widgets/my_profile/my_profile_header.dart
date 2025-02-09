@@ -18,12 +18,12 @@ class MyProfileHeader extends StatelessWidget {
 
   @override
   Widget build(context) {
-    var user = UserCubit.get(context).userEntity;
+    var user = context.read<UserCubit>().userEntity;
 
     return BlocConsumer<UserCubit, UserStates>(
       listener: (context, state) {
         if (state is GetCurrentUserSuccessState) {
-          user = UserCubit.get(context).userEntity;
+          user = context.read<UserCubit>().userEntity;
         }
       },
       builder: (context, state) {

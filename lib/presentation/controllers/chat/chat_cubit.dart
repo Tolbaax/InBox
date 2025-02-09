@@ -1,7 +1,9 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:inbox/core/params/chat/delete_message_params.dart';
 import 'package:inbox/core/params/chat/message_reply.dart';
 import 'package:inbox/core/params/chat/set_chat_message_seen_params.dart';
 import 'package:inbox/core/params/chat/message_params.dart';
+import 'package:inbox/domain/usecases/chat/delete_message_usecase.dart';
 import '../../../domain/entities/message_entity.dart';
 import '../../../domain/entities/user_chat_entity.dart';
 import '../../../domain/usecases/chat/get_chat_messages_usecase.dart';
@@ -22,6 +24,7 @@ class ChatCubit extends Cubit<ChatStates> with ChatProviders {
   final SendGifMessageUseCase _sendGifMessageUseCase;
   final SendFileMessageUseCase _sendFileMessageUseCase;
   final GetNumberOfMessageNotSeenUseCase _getNumberOfMessageNotSeenUseCase;
+  final DeleteMessagesUseCase _deleteMessagesUseCase;
 
   ChatCubit(
     this._sendTextMessageUseCase,
@@ -31,6 +34,7 @@ class ChatCubit extends Cubit<ChatStates> with ChatProviders {
     this._sendGifMessageUseCase,
     this._sendFileMessageUseCase,
     this._getNumberOfMessageNotSeenUseCase,
+    this._deleteMessagesUseCase,
   ) : super(ChatInitialState());
 
   static ChatCubit get(context) => BlocProvider.of(context);
@@ -41,11 +45,13 @@ class ChatCubit extends Cubit<ChatStates> with ChatProviders {
   void onMessageReply(MessageReplay params) {
     emit(MessageSwipeLoadingState());
     messageReplay = params;
+    isReplying = true;
     emit(MessageSwipeState());
   }
 
   void cancelReply() {
     messageReplay = null;
+    isReplying = false;
     emit(CancelReplayState());
   }
 
@@ -97,4 +103,15 @@ class ChatCubit extends Cubit<ChatStates> with ChatProviders {
 
   Stream<int> getNumOfMessageNotSeen(String senderId) =>
       _getNumberOfMessageNotSeenUseCase.call(senderId);
+
+  Future<void> deleteMessages(DeleteMessageParams params) async {
+    emit(DeleteMessageLoadingState());
+
+    final result = await _deleteMessagesUseCase(params);
+
+    result.fold(
+      (l) => emit(DeleteMessageErrorState()),
+      (r) => emit(DeleteMessageSuccessState()),
+    );
+  }
 }

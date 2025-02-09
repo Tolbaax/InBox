@@ -1,5 +1,6 @@
 import 'package:dartz/dartz.dart';
 import 'package:inbox/core/error/failure.dart';
+import 'package:inbox/core/params/chat/delete_message_params.dart';
 import 'package:inbox/core/params/chat/set_chat_message_seen_params.dart';
 import 'package:inbox/core/params/chat/message_params.dart';
 
@@ -17,7 +18,10 @@ abstract class ChatRepository {
 
   Stream<List<MessageEntity>> getChatMessages(String receiverId);
 
-  Future<Either<Failure, void>> setChatMessageSeen(SetChatMessageSeenParams parameters);
+  Future<Either<Failure, void>> setChatMessageSeen(
+      SetChatMessageSeenParams parameters);
 
   Stream<int> getNumOfMessageNotSeen(String senderId);
+
+  Future<Either<Failure, void>> deleteMessages(DeleteMessageParams parameters);
 }
