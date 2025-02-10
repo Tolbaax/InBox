@@ -55,7 +55,7 @@
 - [ ] Video and voice calling in group chat
 - [ ] Send posts in chat
 - [ ] Share profiles via chat and external apps
-- [ ] Control dimensions of selected images & videos
+- [x] Control dimensions of selected images & videos
 - [ ] Dark mode for a comfortable viewing experience
 - [ ] Infinite scroll pagination for posts
 - [ ] Custom gallery display
