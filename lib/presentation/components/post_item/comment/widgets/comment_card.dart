@@ -34,7 +34,7 @@ class CommentCard extends StatelessWidget {
                 onTap: () async {
                   final currentUser = firebaseAuth.currentUser;
                   final userEntity =
-                      await UserCubit.get(context).getUserById(comment.uID);
+                      await sl<UserCubit>().getUserById(comment.uID);
 
                   if (currentUser != null && comment.uID == currentUser.uid) {
                     if (context.mounted) {

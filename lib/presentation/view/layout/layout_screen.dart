@@ -26,7 +26,7 @@ class _LayoutScreenState extends State<LayoutScreen>
   void initState() {
     super.initState();
     WidgetsBinding.instance.addObserver(this);
-    _userCubit = BlocProvider.of<UserCubit>(context);
+    _userCubit = sl<UserCubit>();
     _getUserData();
     _userCubit.setUserState(isOnline: true);
   }

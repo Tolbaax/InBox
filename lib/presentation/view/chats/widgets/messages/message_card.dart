@@ -19,7 +19,7 @@ class MessageCard extends StatelessWidget {
     final uID = firebaseAuth.currentUser!.uid;
 
     return StreamBuilder<int>(
-      stream: ChatCubit.get(context).getNumOfMessageNotSeen(chat.userId),
+      stream: sl<ChatCubit>().getNumOfMessageNotSeen(chat.userId),
       builder: (context, snapshot) {
         int unseenMessageCount = snapshot.data ?? 0;
 

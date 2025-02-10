@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:conditional_builder_null_safety/conditional_builder_null_safety.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:inbox/data/models/user_chat_model.dart';
 import 'package:inbox/domain/entities/user_chat_entity.dart';
@@ -28,9 +29,12 @@ class _MessagesScreenState extends State<MessagesScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: buildAppBar(context),
-      body: buildBody(context),
+    return BlocProvider(
+      create: (BuildContext context) => sl<ChatCubit>(),
+      child: Scaffold(
+        appBar: buildAppBar(context),
+        body: buildBody(context),
+      ),
     );
   }
 
@@ -126,7 +130,7 @@ class _MessagesScreenState extends State<MessagesScreen> {
 
   Widget chatMessagesBody(BuildContext context) {
     return StreamBuilder<List<UserChatEntity>>(
-      stream: ChatCubit.get(context).getUsersChats(),
+      stream: sl<ChatCubit>().getUsersChats(),
       builder: (context, snapshot) {
         return ConditionalBuilder(
           condition: snapshot.hasData,

@@ -39,7 +39,11 @@ class UserProfileHeader extends StatelessWidget {
                     navigateTo(
                       context,
                       Routes.chat,
-                      arguments: {'uId': user.uID, 'name': user.name},
+                      arguments: {
+                        'uId': user.uID,
+                        'name': user.name,
+                        'imageUrl': user.profilePic,
+                      },
                     );
                     sl<VideoManager>().stopCurrentVideo();
                   },

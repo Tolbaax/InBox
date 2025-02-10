@@ -244,11 +244,20 @@ class ChatRemoteDataSourceImpl implements ChatRemoteDataSource {
         .collection('chats')
         .doc(uID);
 
-    batch.update(senderMessageReference, {'isSeen': true});
-    batch.update(receiverMessageReference, {'isSeen': true});
+    // Check if documents exist before updating
+    final senderMessageDoc = await senderMessageReference.get();
+    final receiverMessageDoc = await receiverMessageReference.get();
+    final receiverLastMessageDoc = await receiverLastMessageRef.get();
 
-    // Set receiver see last message
-    batch.update(receiverLastMessageRef, {'isSeen': true});
+    if (senderMessageDoc.exists) {
+      batch.update(senderMessageReference, {'isSeen': true});
+    }
+    if (receiverMessageDoc.exists) {
+      batch.update(receiverMessageReference, {'isSeen': true});
+    }
+    if (receiverLastMessageDoc.exists) {
+      batch.update(receiverLastMessageRef, {'isSeen': true});
+    }
 
     await batch.commit();
   }
@@ -273,5 +282,4 @@ class ChatRemoteDataSourceImpl implements ChatRemoteDataSource {
 
     await batch.commit();
   }
-
 }

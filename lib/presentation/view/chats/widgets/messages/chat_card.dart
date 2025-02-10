@@ -28,7 +28,11 @@ class ChatCard extends StatelessWidget {
         navigateTo(
           context,
           Routes.chat,
-          arguments: {'uId': chat.userId, 'name': chat.name},
+          arguments: {
+            'uId': chat.userId,
+            'name': chat.name,
+            'imageUrl': chat.profilePic,
+          },
         );
         FocusScope.of(context).unfocus();
       },
@@ -116,3 +120,5 @@ class ChatCard extends StatelessWidget {
     );
   }
 }
+
+

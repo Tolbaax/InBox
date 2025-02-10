@@ -43,10 +43,15 @@ mixin ChatProviders on Cubit<ChatStates> {
   void handleMessageLongPress(MessageEntity message) {
     if (!isSelecting) {
       isSelecting = true;
+      selectedReceiverId = message.receiverId; // Set receiverId once
       selectedMessageIds.add(message.messageId);
-      selectedReceiverId = message.receiverId;
-      print(selectedMessageIds);
       emit(SelectMessageState());
+    } else {
+      // Only allow selecting messages from the same receiver
+      if (message.receiverId == selectedReceiverId) {
+        selectedMessageIds.add(message.messageId);
+        emit(SelectMessageState());
+      }
     }
   }
 
@@ -74,14 +79,23 @@ mixin ChatProviders on Cubit<ChatStates> {
     }
   }
 
+  bool _isPopping = false;
+
   Future<void> onPopInvokedWithResult(BuildContext context) async {
+    if (_isPopping) return;
+    _isPopping = true;
+
     if (isSelecting) {
       removeSelected();
+      _isPopping = false;
       return;
     }
 
     if (isShowEmoji) hideEmojiContainer();
     if (isReplying) sl<ChatCubit>().cancelReply();
+
     if (Navigator.of(context).canPop()) navigatePop(context);
+
+    _isPopping = false;
   }
 }

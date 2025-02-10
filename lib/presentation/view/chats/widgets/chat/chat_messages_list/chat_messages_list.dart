@@ -126,7 +126,6 @@ class _ChatMessagesListState extends State<ChatMessagesList> {
                   child: Container(
                     decoration: BoxDecoration(
                       color: AppColors.primary.withOpacity(0.2),
-                      borderRadius: BorderRadius.circular(8),
                     ),
                   ),
                 ),

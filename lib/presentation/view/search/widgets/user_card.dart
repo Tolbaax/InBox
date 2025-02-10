@@ -45,12 +45,9 @@ class UserCard extends StatelessWidget {
           child: Row(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Hero(
-                tag: user.uID,
-                child: MyCachedNetImage(
-                  imageUrl: data['profilePic'],
-                  radius: 28.0.sp,
-                ),
+              MyCachedNetImage(
+                imageUrl: data['profilePic'],
+                radius: 28.0.sp,
               ),
               SizedBox(
                 width: 10.0.w,

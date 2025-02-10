@@ -139,10 +139,11 @@ class AppRouter {
         final arguments = settings.arguments as Map<String, dynamic>;
         final String uId = arguments['uId'];
         final String name = arguments['name'];
+        final String imageUrl = arguments['imageUrl'];
         return PageTransition(
           type: PageTransitionType.fade,
           curve: Curves.ease,
-          child: ChatScreen(uID: uId, name: name),
+          child: ChatScreen(uID: uId, name: name, imageUrl: imageUrl),
         );
 
       case Routes.camera:

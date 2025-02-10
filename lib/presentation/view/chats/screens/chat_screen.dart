@@ -9,8 +9,14 @@ import '../widgets/chat/chat_messages_list/chat_messages_list.dart';
 class ChatScreen extends StatelessWidget {
   final String uID;
   final String name;
+  final String imageUrl;
 
-  const ChatScreen({super.key, required this.uID, required this.name});
+  const ChatScreen({
+    super.key,
+    required this.uID,
+    required this.name,
+    required this.imageUrl,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -28,7 +34,11 @@ class ChatScreen extends StatelessWidget {
         ),
         child: Scaffold(
           backgroundColor: Colors.transparent,
-          appBar: ChatAppBar(receiverId: uID),
+          appBar: ChatAppBar(
+            receiverId: uID,
+            name: name,
+            imageUrl: imageUrl,
+          ),
           body: Column(
             mainAxisAlignment: MainAxisAlignment.end,
             crossAxisAlignment: CrossAxisAlignment.start,

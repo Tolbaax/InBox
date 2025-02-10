@@ -10,8 +10,15 @@ import 'user_info_app_bar.dart';
 
 class ChatAppBar extends StatelessWidget implements PreferredSizeWidget {
   final String receiverId;
+  final String name;
+  final String imageUrl;
 
-  const ChatAppBar({super.key, required this.receiverId});
+  const ChatAppBar({
+    super.key,
+    required this.receiverId,
+    required this.name,
+    required this.imageUrl,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -36,7 +43,11 @@ class ChatAppBar extends StatelessWidget implements PreferredSizeWidget {
           toolbarHeight: kToolbarHeight,
           title: cubit.isSelecting
               ? SelectionModeAppBar(cubit: cubit)
-              : UserInfoAppBar(receiverId: receiverId),
+              : UserInfoAppBar(
+                  receiverId: receiverId,
+                  name: name,
+                  imageUrl: imageUrl,
+                ),
         );
       },
     );
