@@ -21,13 +21,15 @@
 - Search and discover other users
 
 ### Messaging & Notifications
-- Real-time messaging powered by Firebase Cloud Messaging
-- Display user online/offline status
-- Message reactions and emoji picker
-- Reply to specific messages for threaded conversations
-- "Seen" status for chat messages
+- Real-time chat powered by Firebase Cloud Messaging
+- User presence: Show online/offline status
+- Message reactions with an emoji picker
+- Threaded replies: Reply to specific messages
+- Message deletion: Remove messages for yourself or everyone
+- Delete chat: clear entire conversation history
+- Read receipts: "Seen" status for messages
 - Auto-scroll on new messages
-- Push notifications for messages and other interactions
+- Push notifications for messages and interactions
 
 ### Enhancements & UX
 - Caching profiles, images, and other resources
