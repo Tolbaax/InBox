@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:inbox/core/utils/assets_manager.dart';
 import 'package:inbox/presentation/controllers/chat/chat_cubit.dart';
 import '../../../../core/injection/injector.dart';
@@ -20,32 +21,35 @@ class ChatScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return PopScope(
-      canPop: false,
-      onPopInvokedWithResult: (didPop, result) async {
-        await sl<ChatCubit>().onPopInvokedWithResult(context);
-      },
-      child: Container(
-        decoration: const BoxDecoration(
-          image: DecorationImage(
-            image: AssetImage(ImgAssets.whatsappLightBackground),
-            fit: BoxFit.cover,
+    return BlocProvider.value(
+      value: sl<ChatCubit>(),
+      child: PopScope(
+        canPop: false,
+        onPopInvokedWithResult: (didPop, result) async {
+          await sl<ChatCubit>().onPopInvokedWithResult(context);
+        },
+        child: Container(
+          decoration: const BoxDecoration(
+            image: DecorationImage(
+              image: AssetImage(ImgAssets.whatsappLightBackground),
+              fit: BoxFit.cover,
+            ),
           ),
-        ),
-        child: Scaffold(
-          backgroundColor: Colors.transparent,
-          appBar: ChatAppBar(
-            receiverId: uID,
-            name: name,
-            imageUrl: imageUrl,
-          ),
-          body: Column(
-            mainAxisAlignment: MainAxisAlignment.end,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              ChatMessagesList(receiverId: uID),
-              BottomChatField(receiverId: uID, name: name),
-            ],
+          child: Scaffold(
+            backgroundColor: Colors.transparent,
+            appBar: ChatAppBar(
+              receiverId: uID,
+              name: name,
+              imageUrl: imageUrl,
+            ),
+            body: Column(
+              mainAxisAlignment: MainAxisAlignment.end,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                ChatMessagesList(receiverId: uID),
+                BottomChatField(receiverId: uID, name: name),
+              ],
+            ),
           ),
         ),
       ),

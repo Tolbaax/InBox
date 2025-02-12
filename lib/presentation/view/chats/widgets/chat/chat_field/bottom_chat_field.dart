@@ -6,6 +6,7 @@ import 'package:inbox/core/params/chat/message_reply.dart';
 import 'package:inbox/core/shared/common.dart';
 import 'package:inbox/core/utils/app_colors.dart';
 
+import '../../../../../../core/injection/injector.dart';
 import '../../../../../components/text_fields/message_input_field.dart';
 import '../../../../../controllers/chat/chat_cubit.dart';
 import '../../../../../controllers/chat/chat_states.dart';
@@ -41,10 +42,9 @@ class BottomChatFieldState extends State<BottomChatField> {
   Widget build(BuildContext context) {
     return BlocBuilder<ChatCubit, ChatStates>(
       builder: (context, state) {
-        MessageReplay? messageReplay = ChatCubit.get(context).messageReplay;
-        final bool isReply = messageReplay != null;
-        final cubit = ChatCubit.get(context);
-
+        final cubit = sl<ChatCubit>();
+        MessageReplay? messageReplay = cubit.messageReplay;
+        final bool isReply = messageReplay != null && cubit.isReplying;
         return Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [

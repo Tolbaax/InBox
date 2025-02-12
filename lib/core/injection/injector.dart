@@ -50,6 +50,7 @@ import 'package:inbox/domain/usecases/post/save_post_usecase.dart';
 import 'package:inbox/domain/usecases/user/delete_user_account.dart';
 import 'package:inbox/presentation/controllers/auth/auth_cubit.dart';
 import 'package:inbox/presentation/controllers/layout/layout_cubit.dart';
+import 'package:inbox/presentation/controllers/messages/messages_cubit.dart';
 import 'package:inbox/presentation/controllers/post/add_post/add_post_cubit.dart';
 import 'package:inbox/presentation/controllers/post/comment/comment_cubit.dart';
 import 'package:inbox/presentation/controllers/post/post_cubit.dart';
@@ -88,8 +89,8 @@ void registerCubits() {
       () => PostCubit(sl(), sl(), sl(), sl(), sl(), sl(), sl(), sl()));
   sl.registerLazySingleton(() => AddPostCubit(sl()));
   sl.registerLazySingleton(() => CommentCubit(sl(), sl()));
-  sl.registerLazySingleton(
-      () => ChatCubit(sl(), sl(), sl(), sl(), sl(), sl(), sl(), sl()));
+  sl.registerLazySingleton(() => MessagesCubit(sl(), sl(), sl()));
+  sl.registerLazySingleton(() => ChatCubit(sl(), sl(), sl(), sl(), sl(), sl()));
 }
 
 // Register UseCases

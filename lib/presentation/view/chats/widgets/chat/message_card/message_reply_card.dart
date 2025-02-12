@@ -68,7 +68,7 @@ class MessageReplyCard extends StatelessWidget {
                     },
                     child: Icon(
                       Icons.close,
-                      size: 16.0.sp,
+                      size: 18.0.sp,
                     ),
                   )
               ],

@@ -19,66 +19,69 @@ class SignInScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocConsumer<AuthCubit, AuthStates>(
-      listener: (context, state) async {
-        if (state is LoginSuccessfullyState) {
-          await sl<AuthLocalDataSource>()
-              .setUserLoggedIn(sl<GetCurrentUIDUseCase>().toString())
-              .then((value) async {
-            if (context.mounted) navigateAndRemove(context, Routes.layout);
-            if (context.mounted) {
-              context.read<AuthCubit>().clearSignInControllers();
-            }
-          });
-        }
-      },
-      builder: (context, state) {
-        final cubit = AuthCubit.get(context);
+    return BlocProvider.value(
+      value: sl<AuthCubit>(),
+      child: BlocConsumer<AuthCubit, AuthStates>(
+        listener: (context, state) async {
+          if (state is LoginSuccessfullyState) {
+            await sl<AuthLocalDataSource>()
+                .setUserLoggedIn(sl<GetCurrentUIDUseCase>().toString())
+                .then((value) async {
+              if (context.mounted) navigateAndRemove(context, Routes.layout);
+              if (context.mounted) {
+                context.read<AuthCubit>().clearSignInControllers();
+              }
+            });
+          }
+        },
+        builder: (context, state) {
+          final cubit = AuthCubit.get(context);
 
-        return Scaffold(
-          body: SingleChildScrollView(
-            child: Padding(
-              padding: EdgeInsetsDirectional.only(
-                start: 20.0.w,
-                end: 20.0.w,
-                top: 40.0.h,
-              ),
-              child: Center(
-                child: Column(
-                  children: [
-                    SafeArea(
-                      child: Image.asset(
-                        ImgAssets.logo,
-                        height: 70.h,
+          return Scaffold(
+            body: SingleChildScrollView(
+              child: Padding(
+                padding: EdgeInsetsDirectional.only(
+                  start: 20.0.w,
+                  end: 20.0.w,
+                  top: 40.0.h,
+                ),
+                child: Center(
+                  child: Column(
+                    children: [
+                      SafeArea(
+                        child: Image.asset(
+                          ImgAssets.logo,
+                          height: 70.h,
+                        ),
                       ),
-                    ),
-                    SizedBox(
-                      height: 15.0.h,
-                    ),
-                    Text(
-                      AppStrings.login,
-                      style: TextStyle(
-                        fontSize: 33.0.sp,
-                        color: AppColors.primary,
-                        letterSpacing: 4.5.sp,
-                        fontFamily: AppStrings.economicaFont,
-                        fontWeight: FontWeight.bold,
+                      SizedBox(
+                        height: 15.0.h,
                       ),
-                    ),
-                    SizedBox(
-                      height: 60.0.h,
-                    ),
-                    LoginForm(
-                      cubit: cubit,
-                      state: state,
-                    ),
-                  ],
+                      Text(
+                        AppStrings.login,
+                        style: TextStyle(
+                          fontSize: 33.0.sp,
+                          color: AppColors.primary,
+                          letterSpacing: 4.5.sp,
+                          fontFamily: AppStrings.economicaFont,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      SizedBox(
+                        height: 60.0.h,
+                      ),
+                      LoginForm(
+                        cubit: cubit,
+                        state: state,
+                      ),
+                    ],
+                  ),
                 ),
               ),
             ),
-          ),
-        );
-      },
+          );
+        },
+      ),
     );
   }
 }

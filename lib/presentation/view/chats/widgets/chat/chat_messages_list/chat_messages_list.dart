@@ -7,6 +7,7 @@ import 'package:inbox/core/utils/app_colors.dart';
 import 'package:inbox/domain/entities/message_entity.dart';
 import 'package:inbox/presentation/controllers/chat/chat_cubit.dart';
 import 'package:inbox/presentation/controllers/chat/chat_states.dart';
+
 import '../../../../../../../core/functions/date_convertor.dart';
 import '../../../../../../core/injection/injector.dart';
 import '../message_card/chat_time_card.dart';
@@ -29,10 +30,11 @@ class _ChatMessagesListState extends State<ChatMessagesList> {
   @override
   Widget build(BuildContext context) {
     return BlocConsumer<ChatCubit, ChatStates>(
-      listener: (BuildContext context, ChatStates state) {
+      listener: (BuildContext context, ChatStates state) async {
         if (state is DeleteMessageSuccessState ||
             state is SendMessageSuccessState) {
-          sl<ChatCubit>().removeSelected();
+          await sl<ChatCubit>().removeSelected();
+          sl<ChatCubit>().isReplying = false;
         }
       },
       builder: (context, state) {
@@ -99,7 +101,8 @@ class _ChatMessagesListState extends State<ChatMessagesList> {
     final isSelected = cubit.selectedMessageIds.contains(message.messageId);
 
     return GestureDetector(
-      onLongPress: () => cubit.handleMessageLongPress(message),
+      onLongPress: () =>
+          cubit.handleMessageLongPress(message, widget.receiverId),
       onTap: () => cubit.handleMessageTap(message),
       child: Column(
         children: [

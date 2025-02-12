@@ -6,9 +6,9 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:inbox/core/enums/message_type.dart';
 import 'package:inbox/core/extensions/media_query_extensions.dart';
 import 'package:inbox/presentation/controllers/chat/chat_cubit.dart';
-import 'package:inbox/presentation/controllers/chat/chat_states.dart';
 import '../../../../../../core/params/chat/message_params.dart';
 import '../../../../../../core/utils/app_colors.dart';
+import '../../../../controllers/chat/chat_states.dart';
 import '../chat/chat_field/emoji_picker_widget.dart';
 import '../../../../components/text_fields/message_input_field.dart';
 

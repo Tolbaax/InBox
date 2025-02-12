@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:inbox/core/functions/navigator.dart';
 import 'package:inbox/presentation/controllers/chat/chat_cubit.dart';
+
 import '../../../../../../../core/utils/app_colors.dart';
 import '../../../../../controllers/chat/chat_states.dart';
 import 'selection_mode_app_bar.dart';
@@ -30,11 +31,11 @@ class ChatAppBar extends StatelessWidget implements PreferredSizeWidget {
           backgroundColor: AppColors.policeBlue,
           leading: BackButton(
             color: AppColors.white,
-            onPressed: () {
+            onPressed: () async {
               if (cubit.selectedMessageIds.isEmpty) {
                 navigatePop(context);
               } else {
-                cubit.removeSelected();
+                await cubit.removeSelected();
               }
             },
           ),
@@ -42,7 +43,9 @@ class ChatAppBar extends StatelessWidget implements PreferredSizeWidget {
           titleSpacing: 0.0,
           toolbarHeight: kToolbarHeight,
           title: cubit.isSelecting
-              ? SelectionModeAppBar(cubit: cubit)
+              ? SelectionModeAppBar(
+                  cubit: cubit,
+                )
               : UserInfoAppBar(
                   receiverId: receiverId,
                   name: name,

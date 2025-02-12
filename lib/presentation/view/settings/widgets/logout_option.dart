@@ -5,6 +5,7 @@ import '../../../../../config/routes/app_routes.dart';
 import '../../../../../core/functions/app_dialogs.dart';
 import '../../../../../core/functions/navigator.dart';
 import '../../../../../core/utils/app_strings.dart';
+import '../../../../core/injection/injector.dart';
 import '../../../controllers/auth/auth_cubit.dart';
 import '../../../controllers/layout/layout_cubit.dart';
 import '../../../controllers/user/user_cubit.dart';
@@ -15,21 +16,21 @@ class LogoutOption extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final cubit = AuthCubit.get(context);
+    final cubit = sl<AuthCubit>();
 
     return SettingsOption(
       onTap: () {
         AppDialogs.showLogOutDialog(
             context: context,
             onPressed: () {
-              cubit.signOut().then((value) async{
+              cubit.signOut().then((value) async {
                 await clearCache();
                 if (context.mounted) navigateAndRemove(context, Routes.login);
               });
-              UserCubit.get(context).setUserState(isOnline: false);
+              sl<UserCubit>().setUserState(isOnline: false);
               cubit.clearSignInControllers();
               cubit.clearSignUpControllers();
-              LayoutCubit.get(context).selectedIndex = 0;
+              sl<LayoutCubit>().selectedIndex = 0;
             });
       },
       icon: FontAwesomeIcons.arrowRightFromBracket,

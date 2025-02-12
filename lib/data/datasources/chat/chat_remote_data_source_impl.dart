@@ -5,8 +5,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:inbox/core/enums/message_type.dart';
-import 'package:inbox/core/params/chat/set_chat_message_seen_params.dart';
 import 'package:inbox/core/params/chat/message_params.dart';
+import 'package:inbox/core/params/chat/set_chat_message_seen_params.dart';
 import 'package:inbox/data/datasources/chat/chat_remote_data_source.dart';
 import 'package:inbox/data/datasources/user/user_remote_data_source.dart';
 import 'package:inbox/data/models/message_model.dart';
@@ -264,11 +264,13 @@ class ChatRemoteDataSourceImpl implements ChatRemoteDataSource {
 
   @override
   Future<void> deleteMessages(DeleteMessageParams params) async {
-    final String uID = auth.currentUser!.uid;
-    final String receiverId = params.receiverId;
+    final uID = auth.currentUser!.uid;
     final batch = firestore.batch();
+    final receiverId = params.receiverId;
+    final isMyMessages = params.isMyMessages;
+    final deleteForMeWithEveryOne = params.deleteForMeWithEveryOne;
 
-    for (String messageId in params.messageIds) {
+    for (final messageId in params.messageIds) {
       final senderMessageRef = firestore
           .collection('users')
           .doc(uID)
@@ -278,6 +280,18 @@ class ChatRemoteDataSourceImpl implements ChatRemoteDataSource {
           .doc(messageId);
 
       batch.delete(senderMessageRef);
+
+      if (isMyMessages && !deleteForMeWithEveryOne) {
+        final receiverMessageRef = firestore
+            .collection('users')
+            .doc(receiverId)
+            .collection('chats')
+            .doc(uID)
+            .collection('messages')
+            .doc(messageId);
+
+        batch.delete(receiverMessageRef);
+      }
     }
 
     await batch.commit();

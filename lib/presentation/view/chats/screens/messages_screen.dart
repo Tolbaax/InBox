@@ -6,11 +6,11 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:inbox/data/models/user_chat_model.dart';
 import 'package:inbox/domain/entities/user_chat_entity.dart';
-import 'package:inbox/presentation/controllers/chat/chat_cubit.dart';
+import 'package:inbox/presentation/controllers/messages/messages_cubit.dart';
+import 'package:inbox/presentation/controllers/messages/messages_states.dart';
+import 'package:inbox/presentation/view/chats/widgets/messages/message_app_bar.dart';
 import '../../../../../core/shared/common.dart';
-import '../../../../../core/utils/app_strings.dart';
 import '../../../../core/injection/injector.dart';
-import '../../../components/text_fields/search_field.dart';
 import '../../search/widgets/no_users_found.dart';
 import '../../search/widgets/shimmer_user_card.dart';
 import '../widgets/messages/message_card.dart';
@@ -24,48 +24,18 @@ class MessagesScreen extends StatefulWidget {
 }
 
 class _MessagesScreenState extends State<MessagesScreen> {
-  final TextEditingController searchController = TextEditingController();
-  bool isTextFieldEmpty = false;
-
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (BuildContext context) => sl<ChatCubit>(),
-      child: Scaffold(
-        appBar: buildAppBar(context),
-        body: buildBody(context),
-      ),
-    );
-  }
-
-  AppBar buildAppBar(BuildContext context) {
-    return AppBar(
-      toolbarHeight: 86.0.h,
-      title: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            AppStrings.messages,
-            style: TextStyle(fontSize: 20.0.sp),
-          ),
-          SizedBox(height: 12.0.h),
-          Padding(
-            padding: EdgeInsetsDirectional.symmetric(horizontal: 4.0.w),
-            child: SearchField(
-              controller: searchController,
-              hintText: AppStrings.search,
-              isTextFieldEmpty: isTextFieldEmpty,
-              onChanged: onSearchFieldChanged,
-              suffixTap: clearSearchField,
-            ),
-          ),
-        ],
-      ),
+    return Scaffold(
+      appBar: const MessageAppBar(),
+      body: buildBody(context),
     );
   }
 
   Widget buildBody(BuildContext context) {
-    final searchQuery = convertToTitleCase(searchController.text.trim());
+    final cubit = sl<MessagesCubit>();
+
+    final searchQuery = convertToTitleCase(cubit.searchController.text.trim());
 
     final firestore = sl<FirebaseFirestore>();
     final firebaseAuth = sl<FirebaseAuth>();
@@ -77,60 +47,64 @@ class _MessagesScreenState extends State<MessagesScreen> {
         .orderBy('name')
         .startAt([searchQuery]).endAt(["${searchQuery}uf8ff"]);
 
-    return Padding(
-      padding: EdgeInsetsDirectional.only(
-        end: 18.0.sp,
-        start: 18.0.sp,
-        top: 7.0.sp,
-      ),
-      child: searchQuery.isEmpty
-          ? chatMessagesBody(context)
-          : FutureBuilder<QuerySnapshot>(
-              future: searchFuture.get(),
-              builder: (context, snapshot) {
-                // Connection is waiting
-                if (snapshot.connectionState == ConnectionState.waiting &&
-                    isTextFieldEmpty &&
-                    !snapshot.hasError) {
-                  return ShimmerUserCard(snapshot: snapshot);
-                }
+    return BlocProvider.value(
+      value: sl<MessagesCubit>(),
+      child: BlocConsumer<MessagesCubit, MessagesStates>(
+        listener: (BuildContext context, Object? state) {},
+        builder: (BuildContext context, state) {
+          return Padding(
+            padding: EdgeInsetsDirectional.only(top: 4.0.sp),
+            child: searchQuery.isEmpty
+                ? chatMessagesBody(context)
+                : FutureBuilder<QuerySnapshot>(
+                    future: searchFuture.get(),
+                    builder: (context, snapshot) {
+                      // Connection is waiting
+                      if (snapshot.connectionState == ConnectionState.waiting &&
+                          cubit.isTextFieldEmpty &&
+                          !snapshot.hasError) {
+                        return ShimmerUserCard(snapshot: snapshot);
+                      }
 
-                // No Users Found
-                if (searchController.text.isNotEmpty &&
-                    snapshot.hasData &&
-                    snapshot.data != null &&
-                    snapshot.data!.docs.isEmpty) {
-                  return const NoUsersFound();
-                }
+                      // No Users Found
+                      if (cubit.searchController.text.isNotEmpty &&
+                          snapshot.hasData &&
+                          snapshot.data != null &&
+                          snapshot.data!.docs.isEmpty) {
+                        return const NoUsersFound();
+                      }
 
-                // Users Found Successfully
-                if (snapshot.hasData &&
-                    searchController.text.isNotEmpty &&
-                    isTextFieldEmpty &&
-                    searchQuery.isNotEmpty) {
-                  return ListView.builder(
-                    shrinkWrap: true,
-                    itemCount: snapshot.data!.docs.length,
-                    itemBuilder: (context, index) {
-                      var data = snapshot.data!.docs[index];
-                      UserChatEntity chat = UserChatModel.fromJson(
-                          data.data() as Map<String, dynamic>);
+                      // Users Found Successfully
+                      if (snapshot.hasData &&
+                          cubit.searchController.text.isNotEmpty &&
+                          cubit.isTextFieldEmpty &&
+                          searchQuery.isNotEmpty) {
+                        return ListView.builder(
+                          shrinkWrap: true,
+                          itemCount: snapshot.data!.docs.length,
+                          itemBuilder: (context, index) {
+                            var data = snapshot.data!.docs[index];
+                            UserChatEntity chat = UserChatModel.fromJson(
+                                data.data() as Map<String, dynamic>);
 
-                      return MessageCard(chat: chat);
+                            return MessageCard(chat: chat);
+                          },
+                        );
+                      }
+
+                      // User not searched yet
+                      return const NoMessagesYet();
                     },
-                  );
-                }
-
-                // User not searched yet
-                return const NoMessagesYet();
-              },
-            ),
+                  ),
+          );
+        },
+      ),
     );
   }
 
   Widget chatMessagesBody(BuildContext context) {
     return StreamBuilder<List<UserChatEntity>>(
-      stream: sl<ChatCubit>().getUsersChats(),
+      stream: sl<MessagesCubit>().getUsersChats(),
       builder: (context, snapshot) {
         return ConditionalBuilder(
           condition: snapshot.hasData,
@@ -160,24 +134,5 @@ class _MessagesScreenState extends State<MessagesScreen> {
         return MessageCard(chat: chat);
       },
     );
-  }
-
-  void onSearchFieldChanged(value) {
-    setState(() {
-      isTextFieldEmpty = true;
-    });
-  }
-
-  void clearSearchField() {
-    setState(() {
-      searchController.clear();
-      isTextFieldEmpty = false;
-    });
-  }
-
-  @override
-  void dispose() {
-    super.dispose();
-    searchController.dispose();
   }
 }

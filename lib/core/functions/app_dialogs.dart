@@ -7,9 +7,12 @@ import 'package:inbox/config/routes/app_routes.dart';
 import 'package:inbox/core/extensions/media_query_extensions.dart';
 import 'package:inbox/core/functions/navigator.dart';
 import 'package:inbox/core/utils/app_strings.dart';
+import 'package:inbox/presentation/controllers/chat/chat_cubit.dart';
 import 'package:inbox/presentation/controllers/user/user_cubit.dart';
+
 import '../../presentation/components/buttons/profile_button.dart';
 import '../../presentation/controllers/post/add_post/add_post_cubit.dart';
+import '../injection/injector.dart';
 import '../utils/app_colors.dart';
 
 class AppDialogs {
@@ -210,7 +213,7 @@ class AppDialogs {
       discardText: AppStrings.discard,
       discardAction: () {
         cubit.postTextController.clear();
-          cubit.disposePostImage();
+        cubit.disposePostImage();
         if (cubit.video != null) {
           cubit.disposeVideo();
         }
@@ -315,6 +318,103 @@ class AppDialogs {
           ),
         );
       },
+    );
+  }
+
+  static void showConfirmDeleteChatMessage(
+    context, {
+    required GestureTapCallback onTap,
+    required int messageCount,
+    required bool isMyMessages,
+  }) {
+    showModalBottomSheet(
+      backgroundColor: Colors.transparent,
+      elevation: 0.0,
+      context: context,
+      isScrollControlled: true,
+      builder: (BuildContext context) {
+        return AnimatedContainer(
+          duration: const Duration(milliseconds: 300),
+          curve: Curves.easeInOut,
+          height: context.height * 0.59,
+          child: SingleChildScrollView(
+            child: AlertDialog(
+              backgroundColor: AppColors.white,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(20.0.sp),
+              ),
+              contentPadding: EdgeInsetsDirectional.only(
+                  top: 15.0.sp, bottom: 18.0.sp, end: 12.0.sp, start: 12.0.sp),
+              content: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  SizedBox(height: 5.0.h),
+                  Text(
+                    messageCount == 1
+                        ? 'Delete Message?'
+                        : 'Delete $messageCount Messages?',
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      fontSize: 13.0.sp,
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ),
+                  SizedBox(height: 13.0.h),
+                  if (isMyMessages) ...[
+                    Align(
+                      alignment: AlignmentDirectional.centerEnd,
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.end,
+                        children: [
+                          _buildTextButton(
+                              AppStrings.deleteForEvery, AppColors.red, onTap,
+                              isForMe: false),
+                          _buildTextButton(
+                              AppStrings.deleteForMe, AppColors.red, onTap,
+                              isForMe: true),
+                          _buildTextButton(AppStrings.cancel, AppColors.primary,
+                              () => navigatePop(context)),
+                        ],
+                      ),
+                    ),
+                  ] else ...[
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: [
+                        _buildTextButton(AppStrings.cancel, AppColors.primary,
+                            () => navigatePop(context)),
+                        _buildTextButton(
+                            AppStrings.deleteForMe, AppColors.red, onTap)
+                      ],
+                    ),
+                  ]
+                ],
+              ),
+            ),
+          ),
+        );
+      },
+    );
+  }
+
+  static Widget _buildTextButton(String text, Color color, VoidCallback onTap,
+      {bool isForMe = false}) {
+    return TextButton(
+      onPressed: () async {
+        if (isForMe) {
+          await sl<ChatCubit>().setDeleteForMeWithEveryOne(true);
+        }
+        onTap();
+      },
+      child: Text(
+        text,
+        style: TextStyle(
+          color: color,
+          fontSize: 13.4.sp,
+          fontWeight: FontWeight.w600,
+        ),
+      ),
     );
   }
 }
