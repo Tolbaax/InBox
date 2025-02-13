@@ -1,11 +1,16 @@
-abstract class MessagesStates {}
+abstract class MessagesState {}
 
-class MessagesInitialState extends MessagesStates {}
+class MessagesInitial extends MessagesState {}
 
-class DeleteMessageLoadingState extends MessagesStates {}
+class MessagesSearchUpdated extends MessagesState {}
 
-class DeleteMessageSuccessState extends MessagesStates {}
+class DeleteMessageLoadingState extends MessagesState {}
 
-class DeleteMessageErrorState extends MessagesStates {}
+class DeleteMessageSuccessState extends MessagesState {}
 
-class SelectChatState extends MessagesStates {}
+class DeleteMessageErrorState extends MessagesState {}
+
+class SelectChatState extends MessagesState {}
+
+class RemoveSelectedState extends MessagesState {}
+

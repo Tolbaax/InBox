@@ -6,20 +6,20 @@ import '../../../../../core/utils/constants.dart';
 import '../../../components/profile_image/my_cached_net_image.dart';
 
 class ShimmerUserCard extends StatelessWidget {
-  final AsyncSnapshot snapshot;
+  final AsyncSnapshot? snapshot;
 
-  const ShimmerUserCard({super.key, required this.snapshot});
+  const ShimmerUserCard({super.key, this.snapshot});
 
   @override
   Widget build(BuildContext context) {
-    if (!snapshot.hasData || snapshot.data == null) {
-      return buildShimmerRow(context);
-    }
+    int itemCount = (snapshot?.hasData == true && snapshot!.data != null)
+        ? (snapshot!.data!.docs != null && snapshot!.data!.docs.length > 5
+            ? 5
+            : snapshot!.data!.docs.length)
+        : 4;
 
     return ListView.separated(
-      itemCount: snapshot.data!.docs != null && snapshot.data!.docs.length > 5
-          ? 5
-          : snapshot.data!.docs.length,
+      itemCount: itemCount,
       separatorBuilder: (context, index) {
         return SizedBox(height: 8.0.h);
       },

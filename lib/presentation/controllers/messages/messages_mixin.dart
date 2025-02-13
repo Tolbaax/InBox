@@ -1,14 +1,37 @@
-import 'package:flutter/cupertino.dart';
+import 'dart:async';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import '../../../core/injection/injector.dart';
 import 'messages_states.dart';
 
-mixin MessagesMixin on Cubit<MessagesStates> {
+mixin MessagesMixin on Cubit<MessagesState> {
   // Chat Selection State
   bool isChatSelecting = false;
   List<String> selectedChatIds = [];
+  Timer? debounce;
 
-  final searchController = TextEditingController();
-  bool isTextFieldEmpty = false;
+  final TextEditingController searchController = TextEditingController();
+  bool isTextFieldEmpty = true;
+
+  final FirebaseFirestore firestore = sl<FirebaseFirestore>();
+  final FirebaseAuth firebaseAuth = sl<FirebaseAuth>();
+
+  void onSearchFieldChanged(String value) {
+    debounce?.cancel();
+    debounce = Timer(const Duration(milliseconds: 400), () {
+      isTextFieldEmpty = value.isEmpty;
+      if (selectedChatIds.isNotEmpty) selectedChatIds.clear();
+      emit(MessagesSearchUpdated());
+    });
+  }
+
+  void clearSearchField() {
+    searchController.clear();
+    isTextFieldEmpty = true;
+    emit(MessagesSearchUpdated());
+  }
 
   void handleChatLongPress(String chatId) {
     if (!isChatSelecting) {
@@ -37,17 +60,6 @@ mixin MessagesMixin on Cubit<MessagesStates> {
   void removeSelectedChats() {
     selectedChatIds.clear();
     isChatSelecting = false;
-    emit(SelectChatState());
-  }
-
-  void onSearchFieldChanged(value) {
-    isTextFieldEmpty = true;
-    emit(SelectChatState());
-  }
-
-  void clearSearchField() {
-    searchController.clear();
-    isTextFieldEmpty = false;
-    emit(SelectChatState());
+    emit(RemoveSelectedState());
   }
 }

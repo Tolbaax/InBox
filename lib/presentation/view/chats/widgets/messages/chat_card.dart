@@ -50,7 +50,7 @@ class ChatCard extends StatelessWidget {
         ),
         child: Container(
           height: 65.h,
-          padding: EdgeInsetsDirectional.only(start: 12.w, top: 8.h, end: 13.w),
+          padding: EdgeInsetsDirectional.only(start: 12.w, top: 6.h, end: 13.w),
           decoration: BoxDecoration(
             color: isSelected
                 ? AppColors.primary.withOpacity(0.2)

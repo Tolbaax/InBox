@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+
 import 'config/routes/app_router.dart';
-import 'core/injection/injector.dart';
 import 'config/theme/app_theme.dart';
+import 'core/injection/injector.dart';
 import 'presentation/controllers/post/post_cubit.dart';
 import 'presentation/controllers/user/user_cubit.dart';
 

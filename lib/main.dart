@@ -5,6 +5,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:inbox/core/injection/injector.dart' as di;
 import 'package:timeago/timeago.dart' as timeago;
+
 import 'app.dart';
 import 'core/error/crashlytics.dart';
 import 'core/shared/bloc_observer.dart';

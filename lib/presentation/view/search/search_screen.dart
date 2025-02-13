@@ -1,4 +1,4 @@
-import 'dart:async'; // Add this import
+import 'dart:async';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -22,7 +22,7 @@ class SearchScreen extends StatefulWidget {
 class _SearchScreenState extends State<SearchScreen> {
   final searchController = TextEditingController();
   bool isTextFieldEmpty = false;
-  bool isConnected = true; // Flag to check internet connection
+  bool isConnected = true;
   Timer? _debounce; // Timer for debounce
 
   @override
@@ -121,6 +121,6 @@ class _SearchScreenState extends State<SearchScreen> {
   void dispose() {
     super.dispose();
     searchController.dispose();
-    _debounce?.cancel(); // Clean up the debounce timer
+    _debounce?.cancel();
   }
 }

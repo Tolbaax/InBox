@@ -1,18 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-
-import '../../../../../core/injection/injector.dart';
 import '../../../../../core/utils/app_strings.dart';
 import '../../../../components/text_fields/search_field.dart';
-import '../../../../controllers/messages/messages_cubit.dart';
+import 'package:inbox/presentation/controllers/messages/messages_cubit.dart';
 
-class MessageAppBar extends StatelessWidget implements PreferredSizeWidget {
-  const MessageAppBar({super.key});
+class MessagesAppBar extends StatelessWidget implements PreferredSizeWidget {
+  final MessagesCubit cubit;
+
+  const MessagesAppBar({super.key, required this.cubit});
 
   @override
   Widget build(BuildContext context) {
-    final cubit = sl<MessagesCubit>();
-
     return AppBar(
       toolbarHeight: 86.0.h,
       title: Column(

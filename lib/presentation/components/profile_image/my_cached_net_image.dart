@@ -33,24 +33,7 @@ class MyCachedNetImage extends StatelessWidget {
           radius: radius.sp + 0.5.sp,
           backgroundColor: AppColors.primary.withOpacity(0.1),
           child: ClipOval(
-            child: imageFile != null
-                ? Image.file(
-                    imageFile!,
-                    height: radius.sp * 2,
-                    width: radius.sp * 2,
-                    fit: BoxFit.cover,
-                  )
-                : CachedNetworkImage(
-                    imageUrl: imageUrl,
-                    height: radius.sp * 2,
-                    width: radius.sp * 2,
-                    placeholder: (context, url) => _buildPlaceholderWidget(),
-                    errorWidget: (context, url, error) =>
-                        Image.asset(ImgAssets.defaultProfilePic),
-                    fit: BoxFit.cover,
-                    fadeOutDuration: const Duration(seconds: 1),
-                    fadeInDuration: const Duration(seconds: 2),
-                  ),
+            child: _buildImage(),
           ),
         ),
         if (haveButton)
@@ -60,6 +43,38 @@ class MyCachedNetImage extends StatelessWidget {
             child: EditButton(onTap: onTap),
           ),
       ],
+    );
+  }
+
+  Widget _buildImage() {
+    if (imageFile != null) {
+      return Image.file(
+        imageFile!,
+        height: radius.sp * 2,
+        width: radius.sp * 2,
+        fit: BoxFit.cover,
+      );
+    }
+
+    if (imageUrl.isEmpty) {
+      return Image.asset(
+        ImgAssets.defaultProfilePic,
+        height: radius.sp * 2,
+        width: radius.sp * 2,
+        fit: BoxFit.cover,
+      );
+    }
+
+    return CachedNetworkImage(
+      imageUrl: imageUrl,
+      height: radius.sp * 2,
+      width: radius.sp * 2,
+      placeholder: (context, url) => _buildPlaceholderWidget(),
+      errorWidget: (context, url, error) =>
+          Image.asset(ImgAssets.defaultProfilePic),
+      fit: BoxFit.cover,
+      fadeOutDuration: const Duration(seconds: 1),
+      fadeInDuration: const Duration(seconds: 2),
     );
   }
 
