@@ -27,6 +27,15 @@ class MyProfileHeader extends StatelessWidget {
         }
       },
       builder: (context, state) {
+        String generateProfileLink() {
+          return 'https://www.inbox.com/profile/${user!.uID}';
+        }
+
+        void shareProfile() {
+          final link = generateProfileLink();
+          Share.share('Check out this profile: \n$link');
+        }
+
         return Padding(
           padding: EdgeInsetsDirectional.symmetric(horizontal: 15.0.sp),
           child: Column(
@@ -52,10 +61,7 @@ class MyProfileHeader extends StatelessWidget {
                   ),
                   Expanded(
                     child: ProfileButton(
-                      //TODO: upload app then use Dynamic Links
-                      onTap: () => Share.share(
-                        'Check out my github profile:\nhttps://github.com/Tolbaax',
-                      ),
+                      onTap: () => shareProfile(),
                       text: AppStrings.shareProfile,
                     ),
                   ),

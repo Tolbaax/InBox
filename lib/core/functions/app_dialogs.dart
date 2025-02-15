@@ -1,6 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:inbox/config/routes/app_routes.dart';
@@ -8,9 +10,11 @@ import 'package:inbox/core/extensions/media_query_extensions.dart';
 import 'package:inbox/core/functions/navigator.dart';
 import 'package:inbox/core/utils/app_strings.dart';
 import 'package:inbox/presentation/controllers/chat/chat_cubit.dart';
+import 'package:inbox/presentation/controllers/messages/messages_cubit.dart';
 import 'package:inbox/presentation/controllers/user/user_cubit.dart';
 
 import '../../presentation/components/buttons/profile_button.dart';
+import '../../presentation/controllers/messages/messages_states.dart';
 import '../../presentation/controllers/post/add_post/add_post_cubit.dart';
 import '../injection/injector.dart';
 import '../utils/app_colors.dart';
@@ -390,6 +394,82 @@ class AppDialogs {
                     ),
                   ]
                 ],
+              ),
+            ),
+          ),
+        );
+      },
+    );
+  }
+
+  static void showConfirmDeleteChat(
+    context, {
+    required GestureTapCallback onTap,
+    required int messageCount,
+  }) {
+    showModalBottomSheet(
+      backgroundColor: Colors.transparent,
+      elevation: 0.0,
+      context: context,
+      isScrollControlled: true,
+      builder: (BuildContext context) {
+        return AnimatedContainer(
+          duration: const Duration(milliseconds: 300),
+          curve: Curves.easeInOut,
+          height: context.height * 0.59,
+          child: SingleChildScrollView(
+            child: AlertDialog(
+              backgroundColor: AppColors.white,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(20.0.sp),
+              ),
+              contentPadding: EdgeInsetsDirectional.only(
+                  top: 15.0.sp, bottom: 18.0.sp, end: 12.0.sp, start: 12.0.sp),
+              content: BlocProvider.value(
+                value: sl<MessagesCubit>(),
+                child: BlocBuilder<MessagesCubit, MessagesState>(
+                  builder: (BuildContext context, state) {
+                    return Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        SizedBox(height: 5.0.h),
+                        Text(
+                          messageCount == 1
+                              ? 'Delete this chat?'
+                              : 'Delete $messageCount chats?',
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                            fontSize: 15.0.sp,
+                            fontWeight: FontWeight.w500,
+                          ),
+                        ),
+                        SizedBox(height: 13.0.h),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.end,
+                          children: [
+                            _buildTextButton(AppStrings.cancel,
+                                AppColors.primary, () => navigatePop(context)),
+                            state is DeleteChatLoadingState
+                                ? SizedBox(
+                                    width: 104.5.w,
+                                    child: SpinKitFadingCircle(
+                                        color: AppColors.primary,
+                                        size: 23.0.sp),
+                                  )
+                                : _buildTextButton(
+                                    messageCount == 1
+                                        ? AppStrings.deleteChat
+                                        : AppStrings.deleteChats,
+                                    AppColors.red,
+                                    onTap,
+                                  )
+                          ],
+                        ),
+                      ],
+                    );
+                  },
+                ),
               ),
             ),
           ),

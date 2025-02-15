@@ -296,4 +296,29 @@ class ChatRemoteDataSourceImpl implements ChatRemoteDataSource {
 
     await batch.commit();
   }
+
+  @override
+  Future<void> deleteChat(List<String> selectedChatIds) async {
+    final uID = auth.currentUser!.uid;
+    final firestore = FirebaseFirestore.instance;
+
+    final userChatsCollection =
+        firestore.collection('users').doc(uID).collection('chats');
+
+    for (String chatId in selectedChatIds) {
+      final messagesCollection =
+          userChatsCollection.doc(chatId).collection('messages');
+
+      final messagesSnapshot = await messagesCollection.get();
+      final batch = firestore.batch();
+
+      for (var messageDoc in messagesSnapshot.docs) {
+        batch.delete(messageDoc.reference);
+      }
+
+      await batch.commit();
+
+      await userChatsCollection.doc(chatId).delete();
+    }
+  }
 }

@@ -25,11 +25,7 @@ class UserProfileHeader extends StatelessWidget {
           ProfileHeader(user: user),
           Row(
             children: [
-              Expanded(
-                child: FollowButton(
-                  followUserID: user.uID,
-                ),
-              ),
+              Expanded(child: FollowButton(followUserID: user.uID)),
               SizedBox(
                 width: 12.0.w,
               ),

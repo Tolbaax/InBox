@@ -4,13 +4,14 @@ class MessagesInitial extends MessagesState {}
 
 class MessagesSearchUpdated extends MessagesState {}
 
-class DeleteMessageLoadingState extends MessagesState {}
+class DeleteChatLoadingState extends MessagesState {}
 
-class DeleteMessageSuccessState extends MessagesState {}
+class DeleteChatSuccessState extends MessagesState {}
 
-class DeleteMessageErrorState extends MessagesState {}
+class DeleteChatErrorState extends MessagesState {}
 
 class SelectChatState extends MessagesState {}
 
 class RemoveSelectedState extends MessagesState {}
 
+class ClearSearchState extends MessagesState {}

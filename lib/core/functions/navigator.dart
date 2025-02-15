@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:page_transition/page_transition.dart';
-
-import '../../domain/entities/user_entity.dart';
 import '../../presentation/view/profile/screens/user_profile_screen.dart';
 
 void navigatePop(
@@ -44,12 +42,16 @@ void navigateAndReplace(
   );
 }
 
-navigateToUserProfile(BuildContext context, UserEntity user, bool fromSearch) {
+navigateToUserProfile({
+  required BuildContext context,
+  required String uID,
+  bool fromSearch = false,
+}) {
   Navigator.of(context).push(
     PageTransition(
       type:
           fromSearch ? PageTransitionType.fade : PageTransitionType.rightToLeft,
-      child: UserProfile(user: user),
+      child: UserProfile(uID: uID),
     ),
   );
 }

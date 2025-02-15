@@ -4,7 +4,6 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:inbox/core/extensions/media_query_extensions.dart';
 import 'package:inbox/presentation/components/post_item/widgets/video_manager.dart';
-import 'package:inbox/presentation/controllers/user/user_cubit.dart';
 import '../../../../../config/routes/app_routes.dart';
 import '../../../../../core/functions/format_post_time.dart';
 import '../../../../../core/functions/navigator.dart';
@@ -40,8 +39,6 @@ class PostItemHeader extends StatelessWidget {
 
             final currentUser = firebaseAuth.currentUser;
             sl<VideoManager>().stopCurrentVideo();
-            final userEntity =
-                await UserCubit.get(context).getUserById(post.uID);
 
             if (currentUser != null && post.uID == currentUser.uid) {
               if (!tapFromMyProfile) {
@@ -52,7 +49,7 @@ class PostItemHeader extends StatelessWidget {
             } else {
               if (!tapFromUserProfile) {
                 if (context.mounted) {
-                  navigateToUserProfile(context, userEntity, false);
+                  navigateToUserProfile(context: context, uID: post.uID);
                 }
               }
             }

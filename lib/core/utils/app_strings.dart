@@ -112,6 +112,8 @@ class AppStrings {
   static const String delete = 'Delete';
   static const String deleteForMe = 'Delete for me';
   static const String deleteForEvery = 'Delete for everyone';
+  static const String deleteChat = 'Delete Chat';
+  static const String deleteChats = 'Delete Chats';
   static const String sureDeletePost =
       'Are you sure you want to delete this post?';
   static const String postSaved = 'Post Saved Successfully';

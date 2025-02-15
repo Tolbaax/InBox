@@ -51,5 +51,13 @@
 		<true/>
 		<key>UIStatusBarHidden</key>
 		<false/>
+		<key>FirebaseDynamicLinksCustomDomains</key>
+        <array>
+        <string>https://inboxx.page.link/</string>
+        </array>
+        <key>Associated Domains</key>
+        <array>
+        <string>applinks:inboxx.page.link</string>
+        </array>
 	</dict>
 </plist>

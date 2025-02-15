@@ -84,9 +84,12 @@ class _AddPostAppBarState extends State<AddPostAppBar> {
               child: SizedBox(
                 width: 75.0.sp,
                 child: state is AddPostLoadingState
-                    ? SpinKitFadingCircle(
-                        color: AppColors.primary,
-                        size: 32.0.sp,
+                    ? Padding(
+                        padding: EdgeInsetsDirectional.only(start: 35.w),
+                        child: SpinKitFadingCircle(
+                          color: AppColors.primary,
+                          size: 28.0.sp,
+                        ),
                       )
                     : ProfileButton(
                         onTap: () async {

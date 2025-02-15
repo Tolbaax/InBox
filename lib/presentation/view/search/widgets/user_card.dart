@@ -39,7 +39,8 @@ class UserCard extends StatelessWidget {
               navigateTo(context, Routes.profile, arguments: true);
             } else {
               // Navigate to selected user's profile page
-              navigateToUserProfile(context, user, true);
+              navigateToUserProfile(
+                  context: context, uID: user.uID, fromSearch: true);
             }
           },
           child: Row(

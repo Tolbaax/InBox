@@ -10,10 +10,10 @@ import '../../../../../../core/injection/injector.dart';
 import '../../../../../../core/utils/app_colors.dart';
 import '../../../../../controllers/chat/chat_cubit.dart';
 
-class SelectionModeAppBar extends StatelessWidget {
+class MessageSelectionModeAppBar extends StatelessWidget {
   final ChatCubit cubit;
 
-  const SelectionModeAppBar({super.key, required this.cubit});
+  const MessageSelectionModeAppBar({super.key, required this.cubit});
 
   @override
   Widget build(BuildContext context) {

@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:inbox/core/functions/deep_link_listener.dart';
 import 'package:page_transition/page_transition.dart';
 
 import '../../core/injection/injector.dart';
@@ -66,7 +67,7 @@ class AppRouter {
           type: PageTransitionType.fade,
           child: BlocProvider(
             create: (context) => LayoutCubit(),
-            child: const LayoutScreen(),
+            child: const DeepLinkListener(child: LayoutScreen()),
           ),
         );
 
@@ -194,7 +195,7 @@ class AppRouter {
     return MaterialPageRoute(
       builder: (context) => BlocProvider(
         create: (context) => LayoutCubit(),
-        child: const LayoutScreen(),
+        child: const DeepLinkListener(child: LayoutScreen()),
       ),
     );
   }

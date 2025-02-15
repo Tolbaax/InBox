@@ -48,7 +48,6 @@ mixin MessagesMixin on Cubit<MessagesState> {
       } else {
         selectedChatIds.add(chatId);
       }
-
       if (selectedChatIds.isEmpty) {
         isChatSelecting = false;
       }

@@ -13,7 +13,6 @@ import '../../../../../../core/utils/app_colors.dart';
 import '../../../../../../core/utils/app_strings.dart';
 import '../../../../../components/common/custom_shimmer.dart';
 import '../../../../../components/profile_image/my_cached_net_image.dart';
-import '../../../../../controllers/user/user_cubit.dart';
 
 class UserInfoAppBar extends StatefulWidget {
   final String receiverId;
@@ -53,11 +52,11 @@ class _UserInfoAppBarState extends State<UserInfoAppBar> {
 
     return GestureDetector(
       onTap: () async {
-        final user = await sl<UserCubit>().getUserById(widget.receiverId);
         if (context.mounted) {
           isMe
               ? navigateTo(context, Routes.profile, arguments: true)
-              : navigateToUserProfile(context, user, true);
+              : navigateToUserProfile(
+                  context: context, uID: widget.receiverId, fromSearch: true);
         }
       },
       child: Row(
@@ -75,7 +74,7 @@ class _UserInfoAppBarState extends State<UserInfoAppBar> {
                 ),
                 SizedBox(height: 1.8.h),
 
-                /// **Listen for updates only when `isOnline` or `lastSeen` changes**
+                //Listen for updates only when `isOnline` or `lastSeen` changes
                 ValueListenableBuilder<Map<String, dynamic>>(
                   valueListenable: lastSeenNotifier,
                   builder: (context, state, _) {

@@ -12,9 +12,9 @@ import '../../../controllers/post/add_post/add_post_cubit.dart';
 class AddPostDraggableSheet extends StatelessWidget {
   const AddPostDraggableSheet({super.key});
 
-  final double initialChildSize = 0.4;
-  final double minChildSize = 0.094;
-  final double maxChildSize = 0.41;
+  final double initialChildSize = 0.27;
+  final double minChildSize = 0.095;
+  final double maxChildSize = 0.27;
 
   @override
   Widget build(BuildContext context) {
@@ -45,7 +45,7 @@ class AddPostDraggableSheet extends StatelessWidget {
             children: [
               Column(
                 children: [
-                  SizedBox(height: 5.0.h),
+                  SizedBox(height: 7.0.h),
                   Container(
                     height: 3.5.h,
                     width: context.width * 0.14,
@@ -84,22 +84,22 @@ class AddPostDraggableSheet extends StatelessWidget {
                 text: AppStrings.gif,
                 iconSize: 25.0.sp,
               ),
-              Divider(height: 0.0, color: AppColors.gray.withOpacity(0.4)),
-              _buildListTile(
-                onTap: () {},
-                icon: FontAwesomeIcons.music,
-                color: Colors.pink,
-                text: AppStrings.music,
-              ),
-              Divider(height: 0.0, color: AppColors.gray.withOpacity(0.4)),
-              _buildListTile(
-                onTap: () {},
-                icon: Icons.location_on,
-                color: AppColors.red,
-                text: AppStrings.location,
-                iconSize: 25.0.sp,
-              ),
-              Divider(height: 0.0, color: AppColors.gray.withOpacity(0.4)),
+              // Divider(height: 0.0, color: AppColors.gray.withOpacity(0.4)),
+              // _buildListTile(
+              //   onTap: () {},
+              //   icon: FontAwesomeIcons.music,
+              //   color: Colors.pink,
+              //   text: AppStrings.music,
+              // ),
+              // Divider(height: 0.0, color: AppColors.gray.withOpacity(0.4)),
+              // _buildListTile(
+              //   onTap: () {},
+              //   icon: Icons.location_on,
+              //   color: AppColors.red,
+              //   text: AppStrings.location,
+              //   iconSize: 25.0.sp,
+              // ),
+              // Divider(height: 0.0, color: AppColors.gray.withOpacity(0.4)),
             ],
           ),
         );

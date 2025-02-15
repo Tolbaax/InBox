@@ -6,6 +6,10 @@ import '../../core/utils/app_colors.dart';
 import '../../core/utils/app_strings.dart';
 
 ThemeData appTheme() {
+  // Lock the screen orientation to landscape
+  SystemChrome.setPreferredOrientations(
+      [DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]);
+
   _setSystemUIOverlayStyle();
 
   return ThemeData(

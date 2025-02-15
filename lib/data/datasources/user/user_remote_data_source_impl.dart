@@ -211,28 +211,20 @@ class UserRemoteDataSourceImpl implements UserRemoteDataSource {
       final uID = await getCurrentUID();
       final batch = firestore.batch();
 
-      // Delete user's comments on posts
-      await _deleteComments(uID, batch);
+      // Run deletions in parallel to improve efficiency
+      await Future.wait([
+        _deleteComments(uID, batch),
+        _removeUserFromFollowersAndFollowing(uID, batch),
+        _deletePostsAndRelatedData(uID, batch),
+        _deleteProfilePicture(uID),
+        _deleteUserChats(uID, batch),
+      ]);
 
-      // Remove user from followers and following lists
-      await _removeUserFromFollowersAndFollowing(uID, batch);
-
-      // Delete user's posts and related data
-      await _deletePostsAndRelatedData(uID, batch);
-
-      // Delete user's profile picture
-      await _deleteProfilePicture(uID);
-
-      // Delete user's Chats
-      await _deleteUserChats(uID, batch);
-
-      // Delete user's collection
+      // Delete the user's Firestore document
       await firestore.collection('users').doc(uID).delete();
 
-      // Delete the user's account
+      // Delete the user's Firebase Authentication account
       await auth.currentUser!.delete();
-
-      await batch.commit();
     } catch (e) {
       if (kDebugMode) {
         print('Error deleting user account: $e');

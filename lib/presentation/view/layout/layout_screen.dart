@@ -49,7 +49,7 @@ class _LayoutScreenState extends State<LayoutScreen>
     return BlocConsumer<LayoutCubit, LayoutStates>(
       listener: (context, state) {
         if (state is ChangeBottomNavState &&
-            LayoutCubit.get(context).selectedIndex == 3) {
+            context.read<LayoutCubit>().selectedIndex == 3) {
           _userCubit.getCurrentUser();
         }
       },

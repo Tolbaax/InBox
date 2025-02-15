@@ -24,4 +24,6 @@ abstract class ChatRepository {
   Stream<int> getNumOfMessageNotSeen(String senderId);
 
   Future<Either<Failure, void>> deleteMessages(DeleteMessageParams parameters);
+
+  Future<Either<Failure, void>> deleteChat(List<String> selectedChatIds);
 }

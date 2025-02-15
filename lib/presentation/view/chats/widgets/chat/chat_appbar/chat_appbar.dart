@@ -6,7 +6,7 @@ import 'package:inbox/presentation/controllers/chat/chat_cubit.dart';
 
 import '../../../../../../../core/utils/app_colors.dart';
 import '../../../../../controllers/chat/chat_states.dart';
-import 'selection_mode_app_bar.dart';
+import 'message_selection_mode_app_bar.dart';
 import 'user_info_app_bar.dart';
 
 class ChatAppBar extends StatelessWidget implements PreferredSizeWidget {
@@ -43,14 +43,9 @@ class ChatAppBar extends StatelessWidget implements PreferredSizeWidget {
           titleSpacing: 0.0,
           toolbarHeight: kToolbarHeight,
           title: cubit.isSelecting
-              ? SelectionModeAppBar(
-                  cubit: cubit,
-                )
+              ? MessageSelectionModeAppBar(cubit: cubit)
               : UserInfoAppBar(
-                  receiverId: receiverId,
-                  name: name,
-                  imageUrl: imageUrl,
-                ),
+                  receiverId: receiverId, name: name, imageUrl: imageUrl),
         );
       },
     );

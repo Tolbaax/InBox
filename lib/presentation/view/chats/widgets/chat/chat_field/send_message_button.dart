@@ -40,9 +40,9 @@ class SendMessageButton extends StatelessWidget {
         radius: 21.5.sp,
         backgroundColor: AppColors.primary,
         child: Icon(
-          isMessageEmpty || messageController.text.trim().isEmpty
-              ? Icons.mic
-              : Icons.send,
+          // isMessageEmpty || messageController.text.trim().isEmpty
+          //     ? Icons.mic :
+          Icons.send,
           color: AppColors.white,
         ),
       ),

@@ -10,7 +10,6 @@ import '../../../../../../config/routes/app_routes.dart';
 import '../../../../../../core/functions/navigator.dart';
 import '../../../../../core/injection/injector.dart';
 import '../../../../../domain/entities/comment_entity.dart';
-import '../../../../controllers/user/user_cubit.dart';
 import '../../../profile_image/my_cached_net_image.dart';
 
 class CommentCard extends StatelessWidget {
@@ -33,8 +32,6 @@ class CommentCard extends StatelessWidget {
               GestureDetector(
                 onTap: () async {
                   final currentUser = firebaseAuth.currentUser;
-                  final userEntity =
-                      await sl<UserCubit>().getUserById(comment.uID);
 
                   if (currentUser != null && comment.uID == currentUser.uid) {
                     if (context.mounted) {
@@ -42,7 +39,7 @@ class CommentCard extends StatelessWidget {
                     }
                   } else {
                     if (context.mounted) {
-                      navigateToUserProfile(context, userEntity, false);
+                      navigateToUserProfile(context: context, uID: comment.uID);
                     }
                   }
                 },

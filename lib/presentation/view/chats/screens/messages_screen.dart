@@ -79,11 +79,8 @@ class MessagesScreen extends StatelessWidget {
                       MessageCard(chat: snapshot.data![index]),
                 )
               : const NoMessagesYet(),
-          fallback: (context) => Padding(
-            padding:
-                EdgeInsetsDirectional.only(start: 12.w, top: 8.h, end: 13.w),
-            child: const ShimmerUserCard(),
-          ),
+          fallback: (context) =>
+              const Center(child: CircularProgressIndicator(strokeWidth: 1.2)),
         );
       },
     );

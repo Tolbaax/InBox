@@ -79,4 +79,15 @@ class ChatRepositoryImpl implements ChatRepository {
       return Left(ServerFailure(failure.message!));
     }
   }
+
+  @override
+  Future<Either<Failure, void>> deleteChat(List<String> selectedChatIds) async {
+    final result = await _chatRemoteDataSource.deleteChat(selectedChatIds);
+    try {
+      return Right(result);
+    } on FirebaseAuthException catch (failure) {
+      return Left(ServerFailure(failure.message!));
+    }
+  }
+
 }
