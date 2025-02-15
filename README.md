@@ -56,7 +56,7 @@
 - [ ] Group chat functionality
 - [ ] Video and voice calling in group chat
 - [ ] Send posts in chat
-- [ ] Share profiles via chat and external apps
+- [x] Share profiles via chat and external apps
 - [x] Control dimensions of selected images & videos
 - [ ] Dark mode for a comfortable viewing experience
 - [ ] Infinite scroll pagination for posts
@@ -67,8 +67,8 @@
 - [ ] 24-hour stories
 - [ ] Web platform optimization
 - [ ] Typing indicators in chat
-- [ ] Codebase cleanup and optimization
 - [ ] Deep linking support.
+- [ ] Codebase cleanup and optimization
 
 ## Getting Started
 
