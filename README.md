@@ -68,6 +68,7 @@
 - [ ] Web platform optimization
 - [ ] Typing indicators in chat
 - [ ] Codebase cleanup and optimization
+- [ ] Deep linking support.
 
 ## Getting Started
 
