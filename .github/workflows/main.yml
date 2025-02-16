@@ -4,9 +4,6 @@ on:
   push:
     branches:
       - master
-  pull_request:
-    branches:
-      - master
 
 jobs:
   test:
@@ -16,8 +13,6 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
-        with:
-          token: ${{ secrets.TOKEN }} # Use token for private repos
 
       - name: Set up Flutter
         uses: subosito/flutter-action@v2
@@ -35,8 +30,6 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
-        with:
-          token: ${{ secrets.TOKEN }} # Use token for private repos
 
       - name: Set up Flutter
         uses: subosito/flutter-action@v2
@@ -47,6 +40,7 @@ jobs:
         uses: actions/setup-java@v3
         with:
           java-version: '11'
+          distribution: 'temurin'
 
       - name: Build Android APK
         run: flutter build apk --release
@@ -65,8 +59,6 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
-        with:
-          token: ${{ secrets.TOKEN }} # Use token for private repos
 
       - name: Set up Flutter
         uses: subosito/flutter-action@v2
@@ -85,4 +77,4 @@ jobs:
         uses: actions/upload-artifact@v3
         with:
           name: ios-app
-          path: build/ios/Release
+          path: build/ios/iphoneos

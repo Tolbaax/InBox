@@ -120,17 +120,17 @@ class MessageInputField extends StatelessWidget {
                       ),
                     ),
                   ),
-                  if (!isCameraRev)
-                    RotationTransition(
-                      turns: const AlwaysStoppedAnimation(-45 / 360),
-                      child: IconButton(
-                        onPressed: () {},
-                        splashRadius: 20.0.sp,
-                        icon: const Icon(Icons.attach_file),
-                        color: AppColors.black.withOpacity(0.5),
-                      ),
-                    ),
-                  if (isMessageEmpty)
+                  // if (!isCameraRev)
+                  //   RotationTransition(
+                  //     turns: const AlwaysStoppedAnimation(-45 / 360),
+                  //     child: IconButton(
+                  //       onPressed: () {},
+                  //       splashRadius: 20.0.sp,
+                  //       icon: const Icon(Icons.attach_file),
+                  //       color: AppColors.black.withOpacity(0.5),
+                  //     ),
+                  //   ),
+                  // if (isMessageEmpty)
                     IconButton(
                       onPressed: () async {
                         await navigateTo(context, Routes.camera,
