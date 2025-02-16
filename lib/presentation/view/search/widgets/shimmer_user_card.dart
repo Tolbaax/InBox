@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:inbox/core/extensions/media_query_extensions.dart';
+import 'package:inbox/presentation/components/common/custom_shimmer.dart';
 import 'package:shimmer/shimmer.dart';
 import '../../../../../core/utils/constants.dart';
-import '../../../components/profile_image/my_cached_net_image.dart';
 
 class ShimmerUserCard extends StatelessWidget {
   final AsyncSnapshot? snapshot;
@@ -33,13 +33,7 @@ class ShimmerUserCard extends StatelessWidget {
     return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Shimmer(
-          gradient: Constants.shimmerGradient,
-          child: MyCachedNetImage(
-            imageUrl: '',
-            radius: 28.0.sp,
-          ),
-        ),
+        CustomShimmer.profileImageShimmer(radius: 28.0.sp),
         SizedBox(
           width: 10.0.w,
         ),

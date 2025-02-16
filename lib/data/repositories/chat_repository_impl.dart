@@ -90,4 +90,7 @@ class ChatRepositoryImpl implements ChatRepository {
     }
   }
 
+  @override
+  Stream<int> getUnreadChatsCount() =>
+      _chatRemoteDataSource.getUnreadChatsCount();
 }

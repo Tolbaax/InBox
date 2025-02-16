@@ -39,7 +39,7 @@ class HomeScreen extends StatelessWidget {
                         return PostItem(
                           post: post,
                           lastItem: lastItem,
-                          lastItemHeight: context.height * 0.1,
+                          lastItemHeight: context.height * 0.075,
                         );
                       },
                       separatorBuilder: (context, index) {

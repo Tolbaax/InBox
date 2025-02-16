@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:inbox/presentation/controllers/messages/messages_cubit.dart';
 
 import '../../../../../core/utils/app_colors.dart';
 import '../../../../../core/utils/constants.dart';
+import '../../../../core/injection/injector.dart';
 
 class BottomNavItem extends StatelessWidget {
   final int index;
@@ -12,39 +14,45 @@ class BottomNavItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final orientation =
-        MediaQuery.of(context).orientation; // Get current orientation
-
-    final fontWeight = isActive ? FontWeight.w600 : FontWeight.w500;
     final color =
         isActive ? AppColors.primary : AppColors.black.withOpacity(0.5);
+    final double iconSize = isActive ? 17.0.sp : 16.5.sp;
 
-    double iconSize = isActive ? 18.0.sp : 16.5.sp;
+    return StreamBuilder<int>(
+      stream: sl<MessagesCubit>().getUnreadChatsCount(),
+      builder: (context, snapshot) {
+        final unreadChatsCount = snapshot.data ?? 0;
+        Widget iconWidget =
+            Icon(Constants.iconList[index], size: iconSize, color: color);
 
-    // Conditionally adjust icon size for landscape orientation
-    if (orientation == Orientation.landscape) {
-      iconSize *= 0.75;
-    }
+        if (index == 2 && unreadChatsCount > 0) {
+          iconWidget = Badge.count(
+            count: unreadChatsCount,
+            offset: const Offset(8, -5),
+            backgroundColor: AppColors.red,
+            child: iconWidget,
+          );
+        }
 
-    return Column(
-      mainAxisSize: MainAxisSize.min,
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        Padding(
-          padding: EdgeInsetsDirectional.only(end: index == 0 ? 4.5.w : 0.0),
-          child: Icon(
-            Constants.iconList[index],
-            size: iconSize,
-            color: color,
-          ),
-        ),
-        const SizedBox(height: 4),
-        Text(
-          Constants.titles[index],
-          maxLines: 1,
-          style: TextStyle(color: color, fontWeight: fontWeight),
-        )
-      ],
+        return Column(
+          mainAxisSize: MainAxisSize.min,
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Padding(
+              padding:
+                  EdgeInsetsDirectional.only(end: index == 0 ? 4.5.w : 0.0),
+              child: iconWidget,
+            ),
+            SizedBox(height: 1.h),
+            Text(
+              Constants.titles[index],
+              style: TextStyle(
+                  color: color,
+                  fontWeight: isActive ? FontWeight.w600 : FontWeight.w500),
+            ),
+          ],
+        );
+      },
     );
   }
 }

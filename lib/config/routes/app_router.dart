@@ -4,6 +4,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:inbox/core/functions/deep_link_listener.dart';
+import 'package:inbox/presentation/view/home/widgets/deep_link_post.dart';
 import 'package:page_transition/page_transition.dart';
 
 import '../../core/injection/injector.dart';
@@ -183,6 +184,15 @@ class AppRouter {
             name: name,
             videoFile: videoFile,
           ),
+        );
+
+      case Routes.deepLinkPost:
+        final arguments = settings.arguments as String;
+        final String postID = arguments;
+        return PageTransition(
+          type: PageTransitionType.fade,
+          curve: Curves.ease,
+          child: DeepLinkPostScreen(postID: postID),
         );
 
       default:

@@ -7,6 +7,7 @@ import 'package:inbox/domain/entities/post_entity.dart';
 import 'package:inbox/domain/usecases/post/delete_post_usecase.dart';
 import 'package:inbox/domain/usecases/post/get_my_posts_with_videos_usecase.dart';
 import 'package:inbox/domain/usecases/post/get_my_posts_without_videos_usecase.dart';
+import 'package:inbox/domain/usecases/post/get_post_by_post_id_usecase.dart';
 import 'package:inbox/domain/usecases/post/get_saved_posts_usecase.dart';
 import 'package:inbox/domain/usecases/post/is_post_in_drafts_usecase.dart';
 import 'package:inbox/domain/usecases/post/like_post_usecase.dart';
@@ -24,6 +25,7 @@ class PostCubit extends Cubit<PostStates> {
   final GetSavedPostsUseCase _getSavedPostsUseCase;
   final GetMyPostsWithoutVideos _getMyPostsWithoutVideos;
   final GetMyPostsWithVideos _getMyPostsWithVideos;
+  final GetPostByPostIDUseCase _getPostByPostIDUseCase;
 
   PostCubit(
     this._getPostsUseCase,
@@ -34,6 +36,7 @@ class PostCubit extends Cubit<PostStates> {
     this._getSavedPostsUseCase,
     this._getMyPostsWithoutVideos,
     this._getMyPostsWithVideos,
+    this._getPostByPostIDUseCase,
   ) : super(PostInitialStates());
 
   static PostCubit get(context) => BlocProvider.of(context);
@@ -84,10 +87,7 @@ class PostCubit extends Cubit<PostStates> {
   Future<bool> isPostInDrafts(String postID) async {
     final result = await _isPostInDraftsUseCase.call(postID);
 
-    return result.fold(
-      (l) => false,
-      (r) => r,
-    );
+    return result.fold((l) => false, (r) => r);
   }
 
   Stream<List<PostEntity>> getSavedPosts() {
@@ -113,6 +113,15 @@ class PostCubit extends Cubit<PostStates> {
       return _getMyPostsWithVideos.call(uID);
     } catch (error) {
       emit(GetMyPostsWithVideosError(msg: error.toString()));
+      return const Stream.empty();
+    }
+  }
+
+  Stream<PostEntity> getPostByPostID(String postID) {
+    try {
+      return _getPostByPostIDUseCase.call(postID);
+    } catch (error) {
+      emit(GetPostsErrorState(msg: error.toString()));
       return const Stream.empty();
     }
   }

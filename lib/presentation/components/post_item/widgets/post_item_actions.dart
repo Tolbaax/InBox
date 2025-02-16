@@ -10,6 +10,7 @@ import 'package:inbox/core/utils/app_strings.dart';
 import 'package:inbox/domain/entities/post_entity.dart';
 import 'package:inbox/presentation/components/post_item/widgets/post_action_icon.dart';
 import 'package:inbox/presentation/controllers/post/post_cubit.dart';
+import 'package:share_plus/share_plus.dart';
 
 import '../../../../../config/routes/app_routes.dart';
 import '../../../../../core/utils/app_colors.dart';
@@ -27,6 +28,14 @@ class PostItemActions extends StatelessWidget {
     final firebaseAuth = sl<FirebaseAuth>();
     final uID = firebaseAuth.currentUser!.uid;
     final isLiked = post.likes.contains(uID);
+    String generatePostLink() {
+      return 'https://www.inbox.com/post/${post.postID}';
+    }
+
+    void sharePost() {
+      final link = generatePostLink();
+      Share.share('Check out this post: \n$link');
+    }
 
     return Padding(
       padding: EdgeInsetsDirectional.only(
@@ -114,7 +123,7 @@ class PostItemActions extends StatelessWidget {
                 text: AppStrings.comment,
               ),
               PostActionIcon(
-                onTap: () {},
+                onTap: () => sharePost(),
                 icon: Icons.share,
                 text: AppStrings.share,
               ),

@@ -38,8 +38,9 @@ class _ChatMessagesListState extends State<ChatMessagesList> {
         }
       },
       builder: (context, state) {
+        final cubit  = context.read<ChatCubit>();
         return StreamBuilder<List<MessageEntity>>(
-          stream: ChatCubit.get(context).getChatMessages(widget.receiverId),
+          stream: cubit.getChatMessages(widget.receiverId),
           builder: (context, snapshot) {
             if (!snapshot.hasData || snapshot.data!.isEmpty) {
               return const SizedBox.shrink();
@@ -76,7 +77,7 @@ class _ChatMessagesListState extends State<ChatMessagesList> {
                   // Set chat message seen
                   if (!message.isSeen &&
                       message.receiverId != widget.receiverId) {
-                    ChatCubit.get(context).setChatMessageSeen(
+                    cubit.setChatMessageSeen(
                       SetChatMessageSeenParams(
                         receiverId: widget.receiverId,
                         messageId: message.messageId,

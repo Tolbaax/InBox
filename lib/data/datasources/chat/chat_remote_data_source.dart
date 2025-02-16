@@ -23,4 +23,6 @@ abstract class ChatRemoteDataSource {
   Future<void> deleteMessages(DeleteMessageParams parameters);
 
   Future<void> deleteChat(List<String> selectedChatIds);
+
+  Stream<int> getUnreadChatsCount();
 }

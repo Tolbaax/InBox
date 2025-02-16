@@ -15,14 +15,13 @@ class ProfileHeader extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Row(
           children: [
             Hero(
-              tag: user.uID,
+              tag: user.profilePic,
               child: ShowImageWithLongPress(
                 imageUrl: user.profilePic,
                 child: MyCachedNetImage(
@@ -34,7 +33,7 @@ class ProfileHeader extends StatelessWidget {
             if (isMe)
               MyProfileStatistics(user: user)
             else
-              UserProfileStatistics(user: user),
+              UserProfileStatistics(uID: user.uID),
           ],
         ),
         SizedBox(

@@ -130,7 +130,7 @@ class ChatCard extends StatelessWidget {
                 ),
                 const Spacer(),
                 if (uID != chat.lastMessageSenderId)
-                  unseenMessageCount > 0
+                  unseenMessageCount > 0 && !chat.isSeen
                       ? UnseenMessagesCircle(
                           unseenMessageCount: unseenMessageCount)
                       : const SizedBox.shrink(),

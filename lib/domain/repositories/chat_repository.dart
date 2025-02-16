@@ -26,4 +26,6 @@ abstract class ChatRepository {
   Future<Either<Failure, void>> deleteMessages(DeleteMessageParams parameters);
 
   Future<Either<Failure, void>> deleteChat(List<String> selectedChatIds);
+
+  Stream<int> getUnreadChatsCount();
 }

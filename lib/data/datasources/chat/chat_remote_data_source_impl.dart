@@ -219,44 +219,19 @@ class ChatRemoteDataSourceImpl implements ChatRemoteDataSource {
 
   @override
   Future<void> setChatMessageSeen(SetChatMessageSeenParams params) async {
-    final uID = auth.currentUser!.uid;
+    final uID = auth.currentUser?.uid;
+    if (uID == null) return;
+
     final batch = firestore.batch();
+    final paths = [
+      'users/$uID/chats/${params.receiverId}/messages/${params.messageId}',
+      'users/${params.receiverId}/chats/$uID/messages/${params.messageId}',
+      'users/$uID/chats/${params.receiverId}',
+      'users/${params.receiverId}/chats/$uID',
+    ];
 
-    final senderMessageReference = firestore
-        .collection('users')
-        .doc(uID)
-        .collection('chats')
-        .doc(params.receiverId)
-        .collection('messages')
-        .doc(params.messageId);
-
-    final receiverMessageReference = firestore
-        .collection('users')
-        .doc(params.receiverId)
-        .collection('chats')
-        .doc(uID)
-        .collection('messages')
-        .doc(params.messageId);
-
-    final receiverLastMessageRef = firestore
-        .collection('users')
-        .doc(params.receiverId)
-        .collection('chats')
-        .doc(uID);
-
-    // Check if documents exist before updating
-    final senderMessageDoc = await senderMessageReference.get();
-    final receiverMessageDoc = await receiverMessageReference.get();
-    final receiverLastMessageDoc = await receiverLastMessageRef.get();
-
-    if (senderMessageDoc.exists) {
-      batch.update(senderMessageReference, {'isSeen': true});
-    }
-    if (receiverMessageDoc.exists) {
-      batch.update(receiverMessageReference, {'isSeen': true});
-    }
-    if (receiverLastMessageDoc.exists) {
-      batch.update(receiverLastMessageRef, {'isSeen': true});
+    for (final path in paths) {
+      batch.update(firestore.doc(path), {'isSeen': true});
     }
 
     await batch.commit();
@@ -320,5 +295,28 @@ class ChatRemoteDataSourceImpl implements ChatRemoteDataSource {
 
       await userChatsCollection.doc(chatId).delete();
     }
+  }
+
+  @override
+  Stream<int> getUnreadChatsCount() {
+    final uID = auth.currentUser!.uid;
+
+    return firestore
+        .collection('users')
+        .doc(uID)
+        .collection('chats')
+        .orderBy('timeSent', descending: true)
+        .snapshots()
+        .map((snapshot) {
+      return snapshot.docs.where((doc) {
+        final chat = UserChatModel.fromJson(doc.data());
+
+        // Ensure the chat has messages
+        if (chat.lastMessage.isEmpty) return false;
+
+        // Ensure last message is not sent by the current user and is not seen
+        return chat.lastMessageSenderId != uID && !chat.isSeen;
+      }).length;
+    });
   }
 }

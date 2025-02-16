@@ -8,6 +8,8 @@ import 'package:inbox/data/repositories/chat_repository_impl.dart';
 import 'package:inbox/domain/repositories/chat_repository.dart';
 import 'package:inbox/domain/usecases/chat/delete_chat_usecase.dart';
 import 'package:inbox/domain/usecases/chat/delete_message_usecase.dart';
+import 'package:inbox/domain/usecases/chat/get_unread_chats_count_usecase.dart';
+import 'package:inbox/domain/usecases/post/get_post_by_post_id_usecase.dart';
 import 'package:inbox/presentation/controllers/chat/chat_cubit.dart';
 import 'package:inbox/data/datasources/auth/local/auth_local_data_source.dart';
 import 'package:inbox/data/datasources/auth/local/auth_local_data_source_impl.dart';
@@ -87,10 +89,10 @@ void registerCubits() {
   sl.registerLazySingleton(
       () => UserCubit(sl(), sl(), sl(), sl(), sl(), sl(), sl()));
   sl.registerLazySingleton(
-      () => PostCubit(sl(), sl(), sl(), sl(), sl(), sl(), sl(), sl()));
+      () => PostCubit(sl(), sl(), sl(), sl(), sl(), sl(), sl(), sl(), sl()));
   sl.registerLazySingleton(() => AddPostCubit(sl()));
   sl.registerLazySingleton(() => CommentCubit(sl(), sl()));
-  sl.registerLazySingleton(() => MessagesCubit(sl(), sl(), sl(), sl()));
+  sl.registerLazySingleton(() => MessagesCubit(sl(), sl(), sl(), sl(), sl()));
   sl.registerLazySingleton(() => ChatCubit(sl(), sl(), sl(), sl(), sl(), sl()));
 }
 
@@ -121,6 +123,7 @@ void registerUseCases() {
   sl.registerLazySingleton(() => GetSavedPostsUseCase(sl()));
   sl.registerLazySingleton(() => GetMyPostsWithoutVideos(sl()));
   sl.registerLazySingleton(() => GetMyPostsWithVideos(sl()));
+  sl.registerLazySingleton(() => GetPostByPostIDUseCase(sl()));
   // Chat
   sl.registerLazySingleton(() => GetChatMessagesUseCase(sl()));
   sl.registerLazySingleton(() => GetNumberOfMessageNotSeenUseCase(sl()));
@@ -131,6 +134,7 @@ void registerUseCases() {
   sl.registerLazySingleton(() => SetChatMessageSeenUseCase(sl()));
   sl.registerLazySingleton(() => DeleteMessagesUseCase(sl()));
   sl.registerLazySingleton(() => DeleteChatUseCase(sl()));
+  sl.registerLazySingleton(() => GetUnReadChatsCountUseCase(sl()));
 }
 
 // Register Repositories

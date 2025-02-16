@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:inbox/domain/usecases/chat/delete_chat_usecase.dart';
+import 'package:inbox/domain/usecases/chat/get_unread_chats_count_usecase.dart';
 import '../../../data/models/user_chat_model.dart';
 import '../../../domain/entities/message_entity.dart';
 import '../../../domain/entities/user_chat_entity.dart';
@@ -15,10 +16,15 @@ class MessagesCubit extends Cubit<MessagesState> with MessagesMixin {
   final GetUsersChatUseCase _getUsersChatUseCase;
   final GetNumberOfMessageNotSeenUseCase _getNumberOfMessageNotSeenUseCase;
   final DeleteChatUseCase _deleteChatUseCase;
+  final GetUnReadChatsCountUseCase _unReadChatsCountUseCase;
 
-  MessagesCubit(this._getChatMessagesUseCase, this._getUsersChatUseCase,
-      this._getNumberOfMessageNotSeenUseCase, this._deleteChatUseCase)
-      : super(MessagesInitial());
+  MessagesCubit(
+    this._getChatMessagesUseCase,
+    this._getUsersChatUseCase,
+    this._getNumberOfMessageNotSeenUseCase,
+    this._deleteChatUseCase,
+    this._unReadChatsCountUseCase,
+  ) : super(MessagesInitial());
 
   static MessagesCubit get(context) => BlocProvider.of(context);
 
@@ -29,6 +35,8 @@ class MessagesCubit extends Cubit<MessagesState> with MessagesMixin {
 
   Stream<int> getNumOfMessageNotSeen(String senderId) =>
       _getNumberOfMessageNotSeenUseCase.call(senderId);
+
+  Stream<int> getUnreadChatsCount() => _unReadChatsCountUseCase.call();
 
   String get searchQuery => searchController.text.trim();
 

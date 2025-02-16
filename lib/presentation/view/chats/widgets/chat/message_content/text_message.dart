@@ -32,27 +32,28 @@ class TextMessage extends StatelessWidget {
   }
 
   Widget _buildMessageText(String text) {
-    return text.contains(RegExp(r'https?://|www\.'))
+    return text.contains(RegExp(
+        r'https?://|www\.|[\w\.-]+@[\w\.-]+\.\w+'))
         ? SelectableLinkify(
-            text: text,
-            onOpen: (link) async {
-              final uri = Uri.parse(link.url);
-              if (await canLaunchUrl(uri)) {
-                await launchUrl(uri, mode: LaunchMode.externalApplication);
-              }
-            },
-            style:
-                TextStyle(fontWeight: FontWeight.w500, color: AppColors.black),
-            linkStyle: TextStyle(color: AppColors.primary))
+        text: text,
+        onOpen: (link) async {
+          final uri = Uri.parse(link.url);
+          if (await canLaunchUrl(uri)) {
+            await launchUrl(uri, mode: LaunchMode.externalApplication);
+          }
+        },
+        style:
+        TextStyle(fontWeight: FontWeight.w500, color: AppColors.black),
+        linkStyle: TextStyle(color: AppColors.primary))
         : ReadMoreText(
-            text,
-            trimLines: 24,
-            trimMode: TrimMode.Line,
-            trimExpandedText: ' ',
-            moreStyle: TextStyle(color: AppColors.primary),
-            textAlign: isArabic(text) ? TextAlign.end : TextAlign.start,
-            style:
-                TextStyle(fontWeight: FontWeight.w500, color: AppColors.black),
-          );
+      text,
+      trimLines: 24,
+      trimMode: TrimMode.Line,
+      trimExpandedText: ' ',
+      moreStyle: TextStyle(color: AppColors.primary),
+      textAlign: isArabic(text) ? TextAlign.end : TextAlign.start,
+      style:
+      TextStyle(fontWeight: FontWeight.w500, color: AppColors.black),
+    );
   }
 }

@@ -27,4 +27,6 @@ abstract class PostRemoteDataSource {
   Stream<List<PostEntity>> getMyPostsWithoutVideos(String uID);
 
   Stream<List<PostEntity>> getMyPostsWithVideos(String uID);
+
+  Stream<PostEntity> getPostByPostID(String postID);
 }

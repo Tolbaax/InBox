@@ -49,7 +49,7 @@ class PostItemHeader extends StatelessWidget {
             } else {
               if (!tapFromUserProfile) {
                 if (context.mounted) {
-                  navigateToUserProfile(context: context, uID: post.uID);
+                  navigateToUserProfile(context: context, uID: post.uID,);
                 }
               }
             }

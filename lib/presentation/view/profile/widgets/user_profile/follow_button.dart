@@ -1,72 +1,76 @@
+import 'dart:async';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:inbox/presentation/controllers/user/user_cubit.dart';
 import '../../../../../../core/utils/app_colors.dart';
 import '../../../../../../core/utils/app_strings.dart';
 import '../../../../../core/injection/injector.dart';
 import '../../../../components/buttons/profile_button.dart';
-import 'package:shimmer/shimmer.dart';
 
-class FollowButton extends StatelessWidget {
+class FollowButton extends StatefulWidget {
   final String followUserID;
 
   const FollowButton({super.key, required this.followUserID});
 
   @override
+  State<FollowButton> createState() => _FollowButtonState();
+}
+
+class _FollowButtonState extends State<FollowButton> {
+  final ValueNotifier<bool> isFollowing = ValueNotifier(false);
+  StreamSubscription<DocumentSnapshot>? _subscription;
+
+  @override
+  void initState() {
+    super.initState();
+    final cubit = context.read<UserCubit>();
+    final firestore = sl<FirebaseFirestore>();
+
+    _subscription = firestore
+        .collection('users')
+        .doc(cubit.userEntity?.uID)
+        .snapshots()
+        .listen((snapshot) {
+      final userData = snapshot.data();
+      final newFollowingState =
+          userData?['following']?.contains(widget.followUserID) ?? false;
+
+      // Update notifier only if there's an actual change
+      if (isFollowing.value != newFollowingState) {
+        isFollowing.value = newFollowingState;
+      }
+    });
+  }
+
+  @override
   Widget build(BuildContext context) {
     final cubit = context.read<UserCubit>();
 
-    final firestore = sl<FirebaseFirestore>();
-
-    final snapshot =
-    firestore.collection('users').doc(cubit.userEntity!.uID).snapshots();
-
-    return StreamBuilder(
-      stream: snapshot,
-      builder: (context, snapshot) {
-        if (snapshot.hasError) {
-          return Center(child: Text(snapshot.error.toString()));
-        }
-
-        final isLoading = snapshot.connectionState == ConnectionState.waiting;
-
-        if (isLoading) {
-          return _buildShimmerEffect();
-        }
-
-        final userData = snapshot.data?.data();
-        if (userData == null) return _buildShimmerEffect();
-
-        bool isFollowing = userData['following']?.contains(followUserID) ?? false;
-
+    return ValueListenableBuilder<bool>(
+      valueListenable: isFollowing,
+      builder: (context, following, child) {
         return ProfileButton(
-          onTap: () {
-            if (isFollowing) {
-              cubit.unFollowUser(followUserID);
+          onTap: () async {
+            if (following) {
+              await cubit.unFollowUser(widget.followUserID);
             } else {
-              cubit.followUser(followUserID);
+              await cubit.followUser(widget.followUserID);
             }
           },
-          text: isFollowing ? AppStrings.unFollow : AppStrings.follow,
-          color: !isFollowing ? AppColors.primary.withOpacity(0.94) : null,
+          text: following ? AppStrings.unFollow : AppStrings.follow,
+          color: following ? null : AppColors.primary.withOpacity(0.94),
         );
       },
     );
   }
 
-  Widget _buildShimmerEffect() {
-    return Shimmer.fromColors(
-      baseColor: Colors.grey[300]!,
-      highlightColor: Colors.grey[100]!,
-      child: Container(
-        height: 28.0.h,
-        decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(8),
-        ),
-      ),
-    );
+  @override
+  void dispose() {
+    _subscription?.cancel();
+    isFollowing.dispose();
+    super.dispose();
   }
 }
+

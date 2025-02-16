@@ -1,10 +1,12 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_linkify/flutter_linkify.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:inbox/core/extensions/media_query_extensions.dart';
 import 'package:inbox/core/utils/app_colors.dart';
 import 'package:readmore/readmore.dart';
 import 'package:timeago/timeago.dart' as timeago;
+import 'package:url_launcher/url_launcher.dart';
 
 import '../../../../../../config/routes/app_routes.dart';
 import '../../../../../../core/functions/navigator.dart';
@@ -92,16 +94,33 @@ class CommentCard extends StatelessWidget {
                               constraints: BoxConstraints(
                                 maxWidth: context.width * 0.75,
                               ),
-                              child: ReadMoreText(
-                                comment.commentText,
-                                trimLines: 13,
-                                trimMode: TrimMode.Line,
-                                trimExpandedText: ' ',
-                                style: TextStyle(
-                                  fontWeight: FontWeight.w500,
-                                  color: AppColors.black,
-                                ),
-                              ),
+                              child: comment.commentText.contains(RegExp(
+                                      r'https?://|www\.|[\w\.-]+@[\w\.-]+\.\w+'))
+                                  ? SelectableLinkify(
+                                      text: comment.commentText,
+                                      onOpen: (link) async {
+                                        final uri = Uri.parse(link.url);
+                                        if (await canLaunchUrl(uri)) {
+                                          await launchUrl(uri,
+                                              mode: LaunchMode
+                                                  .externalApplication);
+                                        }
+                                      },
+                                      style: TextStyle(
+                                          fontWeight: FontWeight.w500,
+                                          color: AppColors.black),
+                                      linkStyle:
+                                          TextStyle(color: AppColors.primary))
+                                  : ReadMoreText(
+                                      comment.commentText,
+                                      trimLines: 13,
+                                      trimMode: TrimMode.Line,
+                                      trimExpandedText: ' ',
+                                      style: TextStyle(
+                                        fontWeight: FontWeight.w500,
+                                        color: AppColors.black,
+                                      ),
+                                    ),
                             ),
                           ],
                         ),

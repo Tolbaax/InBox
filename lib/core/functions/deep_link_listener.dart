@@ -1,7 +1,6 @@
 import 'package:app_links/app_links.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-
 import '../../config/routes/app_routes.dart';
 import '../injection/injector.dart';
 import 'navigator.dart';
@@ -43,7 +42,7 @@ class _DeepLinkListenerState extends State<DeepLinkListener> {
         case 'post':
           if (pathSegments.length > 1) {
             final postId = pathSegments[1];
-            // context.go('/post/$postId');
+            navigateTo(context, Routes.deepLinkPost, arguments: postId);
           }
           break;
         default:

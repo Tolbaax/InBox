@@ -2,7 +2,9 @@ abstract class PostStates {}
 
 class PostInitialStates extends PostStates {}
 
-class GetPostsLoadingState extends PostStates {}
+class GetPostLoadingState extends PostStates {}
+
+class GetPostSuccessState extends PostStates {}
 
 class GetPostsErrorState extends PostStates {
   final String msg;

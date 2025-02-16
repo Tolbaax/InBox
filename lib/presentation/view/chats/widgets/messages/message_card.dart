@@ -22,19 +22,19 @@ class MessageCard extends StatelessWidget {
       stream: sl<MessagesCubit>().getNumOfMessageNotSeen(chat.userId),
       builder: (context, snapshot) {
         int unseenMessageCount = snapshot.data ?? 0;
-
         return Stack(
           alignment: AlignmentDirectional.topEnd,
           children: [
             ChatCard(chat: chat, unseenMessageCount: unseenMessageCount),
             Padding(
-              padding: EdgeInsetsDirectional.only(top: 13.h,end: 14.w),
+              padding: EdgeInsetsDirectional.only(top: 13.h, end: 14.w),
               child: Text(
                 chat.timeSent.chatContactTime,
                 maxLines: 1,
                 style: TextStyle(
                   color: unseenMessageCount > 0 &&
-                          uID != chat.lastMessageSenderId
+                          uID != chat.lastMessageSenderId &&
+                          !chat.isSeen
                       ? AppColors.primary
                       : AppColors.blackOlive.withOpacity(0.7),
                   fontSize: 11.1.sp,

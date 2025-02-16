@@ -77,6 +77,10 @@ class AppStrings {
   static const String noUsersFound = 'No Users Found!';
   static const String searchForUsers = 'Search For Users!';
   static const String discardChanges = 'Discard Changes?';
+  static const String copyProfileUrl = "Copy profile URL";
+  static const String shareThisProfile = "Share this profile";
+  static const String removeFollower = "Remove Follower";
+  static const String linkCopied = "Link Copied";
 
 
   //AddPost

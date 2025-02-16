@@ -2,21 +2,20 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:inbox/core/utils/app_strings.dart';
-import 'package:inbox/domain/entities/user_entity.dart';
 
 import '../../../../../core/injection/injector.dart';
 import '../common/statistics_column.dart';
 
 class UserProfileStatistics extends StatelessWidget {
-  final UserEntity user;
+  final String uID;
 
-  const UserProfileStatistics({super.key, required this.user});
+  const UserProfileStatistics({super.key, required this.uID});
 
   @override
   Widget build(BuildContext context) {
     final firestore = sl<FirebaseFirestore>();
 
-    final snapshot = firestore.collection('users').doc(user.uID).snapshots();
+    final snapshot = firestore.collection('users').doc(uID).snapshots();
 
     return StreamBuilder(
       stream: snapshot,

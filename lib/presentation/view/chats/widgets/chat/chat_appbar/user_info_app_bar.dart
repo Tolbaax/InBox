@@ -1,5 +1,4 @@
 import 'dart:async';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -31,12 +30,12 @@ class UserInfoAppBar extends StatefulWidget {
 }
 
 class _UserInfoAppBarState extends State<UserInfoAppBar> {
-  final lastSeenNotifier = LastSeenNotifier();
+  late final LastSeenNotifier lastSeenNotifier;
 
   @override
   void initState() {
     super.initState();
-    lastSeenNotifier.listenToLastSeen(widget.receiverId);
+    lastSeenNotifier = LastSeenNotifier()..listenToLastSeen(widget.receiverId);
   }
 
   @override
@@ -48,16 +47,15 @@ class _UserInfoAppBarState extends State<UserInfoAppBar> {
   @override
   Widget build(BuildContext context) {
     final firebaseAuth = sl<FirebaseAuth>();
-    final isMe = widget.receiverId == firebaseAuth.currentUser!.uid;
+    final isMe = widget.receiverId == firebaseAuth.currentUser?.uid;
 
     return GestureDetector(
-      onTap: () async {
-        if (context.mounted) {
-          isMe
-              ? navigateTo(context, Routes.profile, arguments: true)
-              : navigateToUserProfile(
-                  context: context, uID: widget.receiverId, fromSearch: true);
-        }
+      onTap: () {
+        if (!context.mounted) return;
+        isMe
+            ? navigateTo(context, Routes.profile, arguments: true)
+            : navigateToUserProfile(
+            context: context, uID: widget.receiverId, fromSearch: true);
       },
       child: Row(
         children: [
@@ -73,33 +71,31 @@ class _UserInfoAppBarState extends State<UserInfoAppBar> {
                   style: TextStyle(color: AppColors.white, fontSize: 16.sp),
                 ),
                 SizedBox(height: 1.8.h),
-
-                //Listen for updates only when `isOnline` or `lastSeen` changes
                 ValueListenableBuilder<Map<String, dynamic>>(
                   valueListenable: lastSeenNotifier,
                   builder: (context, state, _) {
-                    final bool isLoading = state.isEmpty;
-                    final bool isOnline = state['isOnline'] ?? false;
-                    final DateTime? lastSeen = state['lastSeen'] != null
+                    final isLoading = state.isEmpty;
+                    final isOnline = state['isOnline'] ?? false;
+                    final lastSeen = state['lastSeen'] != null
                         ? DateTime.fromMicrosecondsSinceEpoch(state['lastSeen'])
                         : null;
+
                     return SizedBox(
                       height: context.height * 0.017,
                       child: isLoading
-                          ? CustomShimmer.shimmerText(
-                              width: 140.w, height: 12.h)
+                          ? CustomShimmer.shimmerText(width: 140.w, height: 12.h)
                           : Text(
-                              isMe
-                                  ? AppStrings.messageYourself
-                                  : (isOnline
-                                      ? AppStrings.online
-                                      : lastSeen?.lastSeen ?? ''),
-                              style: TextStyle(
-                                color: AppColors.white,
-                                fontSize: isMe ? 11.sp : 10.sp,
-                                fontWeight: FontWeight.w500,
-                              ),
-                            ),
+                        isMe
+                            ? AppStrings.messageYourself
+                            : (isOnline
+                            ? AppStrings.online
+                            : lastSeen?.lastSeen ?? ''),
+                        style: TextStyle(
+                          color: AppColors.white,
+                          fontSize: isMe ? 11.sp : 10.sp,
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
                     );
                   },
                 ),
@@ -114,7 +110,7 @@ class _UserInfoAppBarState extends State<UserInfoAppBar> {
 
 class LastSeenNotifier extends ValueNotifier<Map<String, dynamic>> {
   LastSeenNotifier() : super({});
-  StreamSubscription? _subscription;
+  StreamSubscription<DocumentSnapshot>? _subscription;
 
   void listenToLastSeen(String receiverId) {
     _subscription = sl<FirebaseFirestore>()
@@ -130,7 +126,6 @@ class LastSeenNotifier extends ValueNotifier<Map<String, dynamic>> {
         'lastSeen': data['lastSeen'],
       };
 
-      // Only update ValueNotifier if there’s a real change
       if (value.isEmpty ||
           value['isOnline'] != newState['isOnline'] ||
           value['lastSeen'] != newState['lastSeen']) {

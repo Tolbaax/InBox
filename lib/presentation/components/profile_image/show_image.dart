@@ -38,9 +38,12 @@ class ShowImageWithLongPress extends StatelessWidget {
                       ),
                       // Centered image
                       Center(
-                        child: MyCachedNetImage(
-                          radius: 110.0.r,
-                          imageUrl: imageUrl,
+                        child: Hero(
+                          tag: imageUrl,
+                          child: MyCachedNetImage(
+                            radius: 110.0.r,
+                            imageUrl: imageUrl,
+                          ),
                         ),
                       ),
                     ],

@@ -27,31 +27,20 @@ class HomeAppBar extends StatelessWidget implements PreferredSizeWidget {
           ),
         ),
         actions: [
-          Stack(
-            children: [
-              IconButton(
-                onPressed: () {},
-                icon: Icon(
-                  CupertinoIcons.bell,
-                  color: AppColors.blackOlive,
-                  size: 25.0.sp,
-                ),
+          Badge.count(
+            count: 12,
+            offset: const Offset(-8, 7),
+            backgroundColor: AppColors.red,
+            child: IconButton(
+              onPressed: () {},
+              icon: Icon(
+                CupertinoIcons.bell,
+                color: AppColors.blackOlive,
+                size: 25.0.sp,
               ),
-              Positioned(
-                top: 3.5.h,
-                left: 4.5.w,
-                child: CircleAvatar(
-                  radius: 8.0.sp,
-                  backgroundColor: Colors.red,
-                  child: Text(
-                    '3',
-                    style: TextStyle(color: AppColors.white, fontSize: 11.5.sp),
-                  ),
-                ),
-              ),
-            ],
+            ),
           ),
-          SizedBox(width: 3.5.w),
+          SizedBox(width: 7.w),
         ],
       ),
     );

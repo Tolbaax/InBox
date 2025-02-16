@@ -99,4 +99,8 @@ class PostRepositoryImpl implements PostRepository {
   @override
   Stream<List<PostEntity>> getMyPostsWithVideos(String uID) =>
       postRemoteDataSource.getMyPostsWithVideos(uID);
+
+  @override
+  Stream<PostEntity> getPostByPostID(String postID)  =>
+       postRemoteDataSource.getPostByPostID(postID);
 }

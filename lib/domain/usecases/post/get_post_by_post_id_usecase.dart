@@ -1,16 +1,11 @@
-import 'package:dartz/dartz.dart';
-import 'package:inbox/core/error/failure.dart';
-import 'package:inbox/core/usecase/usecase.dart';
+import 'package:inbox/domain/entities/post_entity.dart';
 
 import '../../repositories/post_repository.dart';
 
-class DeletePostUseCase implements UseCase<void, String> {
+class GetPostByPostIDUseCase {
   final PostRepository _repository;
 
-  DeletePostUseCase(this._repository);
+  GetPostByPostIDUseCase(this._repository);
 
-  @override
-  Future<Either<Failure, void>> call(String postID) async {
-    return await _repository.deletePost(postID);
-  }
+  Stream<PostEntity> call(String postID) => _repository.getPostByPostID(postID);
 }

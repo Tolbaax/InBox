@@ -14,7 +14,9 @@ import '../../screens/edit_profile_screen.dart';
 import '../common/profile_header.dart';
 
 class MyProfileHeader extends StatelessWidget {
-  const MyProfileHeader({super.key});
+  final bool isLoading;
+
+  const MyProfileHeader({super.key, this.isLoading = false});
 
   @override
   Widget build(context) {

@@ -296,4 +296,11 @@ class PostRemoteDataSourceImpl implements PostRemoteDataSource {
       return myPosts;
     });
   }
+
+  @override
+  Stream<PostEntity> getPostByPostID(String postID) {
+    return firestore.collection('posts').doc(postID).snapshots().map((postDoc) {
+      return PostModel.fromJson(postDoc.data()!);
+    });
+  }
 }

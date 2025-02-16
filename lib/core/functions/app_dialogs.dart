@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
@@ -12,6 +13,7 @@ import 'package:inbox/core/utils/app_strings.dart';
 import 'package:inbox/presentation/controllers/chat/chat_cubit.dart';
 import 'package:inbox/presentation/controllers/messages/messages_cubit.dart';
 import 'package:inbox/presentation/controllers/user/user_cubit.dart';
+import 'package:share_plus/share_plus.dart';
 
 import '../../presentation/components/buttons/profile_button.dart';
 import '../../presentation/controllers/messages/messages_states.dart';
@@ -475,6 +477,85 @@ class AppDialogs {
           ),
         );
       },
+    );
+  }
+
+  static void showProfileOptionsSheet(BuildContext context,
+      {required String uID}) {
+    String generateProfileLink() {
+      return 'https://www.inbox.com/profile/$uID';
+    }
+
+    void shareProfile() {
+      final link = generateProfileLink();
+      Share.share('Check out this profile: \n$link');
+    }
+
+    showModalBottomSheet(
+      context: context,
+      backgroundColor: Colors.transparent,
+      isScrollControlled: true,
+      builder: (context) {
+        return Container(
+          decoration: BoxDecoration(
+            color: AppColors.white,
+            borderRadius: BorderRadius.vertical(top: Radius.circular(15.0.sp)),
+          ),
+          padding: EdgeInsets.symmetric(vertical: 15.h, horizontal: 20.w),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Container(
+                height: 3.h,
+                width: 30.w,
+                decoration: BoxDecoration(
+                  color: AppColors.blackOlive,
+                  borderRadius: BorderRadius.circular(12.r),
+                ),
+              ),
+              _buildOptionItem(
+                text: AppStrings.copyProfileUrl,
+                onTap: () {
+                  Clipboard.setData(ClipboardData(text: generateProfileLink()));
+                  AppDialogs.showToast(
+                    msg: AppStrings.linkCopied,
+                    gravity: ToastGravity.CENTER,
+                  );
+                  navigatePop(context);
+                },
+              ),
+              _buildOptionItem(
+                text: AppStrings.shareProfile,
+                onTap: () {
+                  shareProfile();
+                  navigatePop(context);
+                },
+              ),
+            ],
+          ),
+        );
+      },
+    );
+  }
+
+  static Widget _buildOptionItem(
+      {required String text, required VoidCallback onTap}) {
+    return InkWell(
+      onTap: onTap,
+      child: Padding(
+        padding: EdgeInsets.symmetric(vertical: 12.h),
+        child: Row(
+          children: [
+            Text(
+              text,
+              style: TextStyle(
+                  fontSize: 14.sp,
+                  fontWeight: FontWeight.w500,
+                  color: AppColors.black),
+            ),
+          ],
+        ),
+      ),
     );
   }
 
