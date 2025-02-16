@@ -36,7 +36,7 @@ class DeepLinkPostScreen extends StatelessWidget {
             return const Center(
                 child: CircularProgressIndicator(strokeWidth: 1.2));
           } else if (snapshot.hasError || snapshot.data == null) {
-            return const Center(child: Text('Error loading post'));
+            return const Center(child: Text('Post not found'));
           }
 
           final post = snapshot.data!;
