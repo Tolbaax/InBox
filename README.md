@@ -61,7 +61,7 @@
 - [ ] Dark mode for a comfortable viewing experience
 - [ ] Infinite scroll pagination for posts
 - [ ] Custom gallery display
-- [ ] Post sharing
+- [x] Post sharing
 - [ ] Reply, like, and delete comments
 - [ ] Support for GIFs, music, and location in posts
 - [ ] 24-hour stories
