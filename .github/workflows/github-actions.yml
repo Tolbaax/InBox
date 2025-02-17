@@ -62,10 +62,11 @@ jobs:
           name: ios-app
           path: build/ios/iphoneos
 
+
   release:
     name: Create GitHub Release
     runs-on: ubuntu-latest
-    needs: [ build-android, build-fghj ]
+    needs: [ build-android, build-ios ]
 
     steps:
       - name: Checkout code
