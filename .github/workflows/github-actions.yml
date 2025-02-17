@@ -35,28 +35,27 @@ jobs:
 
       - name: Get Branch Name
         id: branch_name
-        run: echo branch_name=${GITHUB_REF#refs/heads/} >> $GITHUB_OUTPUT
+        run: echo "branch_name=${GITHUB_REF#refs/heads/}" >> $GITHUB_ENV
 
       - name: Get Project Name
         id: project_name
-        run: echo project_name=${GITHUB_REPOSITORY#*/} >> $GITHUB_OUTPUT
+        run: echo "project_name=${GITHUB_REPOSITORY#*/}" >> $GITHUB_ENV
 
       - name: Get Commit Author
         id: commit_author
-        run: echo commit_author=$(git log -1 --pretty=%an) >> $GITHUB_OUTPUT
+        run: echo "commit_author=$(git log -1 --pretty=%an)" >> $GITHUB_ENV
 
       - name: Get Commit Author Email
         id: commit_author_email
-        run: echo commit_author_email=$(git log -1 --pretty=%ae) >> $GITHUB_OUTPUT
+        run: echo "commit_author_email=$(git log -1 --pretty=%ae)" >> $GITHUB_ENV
 
       - name: Get Commit Formatted Date
         id: date_time
-        run: echo date_time=$(git log -1 --pretty=%cd --date=format:'%B %d, %Y %I:%M %p') >> $GITHUB_OUTPUT
+        run: echo "date_time=$(git log -1 --pretty=%cd --date=format:'%B %d, %Y %I:%M %p')" >> $GITHUB_ENV
 
       - name: Get Commit Date For Url
         id: date_url
-        run: echo date_url=$(git log -1 --pretty=%cd --date=format:'%Y-%m-%d') >> $GITHUB_OUTPUT
-
+        run: echo "date_url=$(git log -1 --pretty=%cd --date=format:'%Y-%m-%d')" >> $GITHUB_ENV
 
   build-android-apk:
     name: Build Android APK
@@ -70,8 +69,8 @@ jobs:
         with:
           distribution: 'adopt'
           java-version: '17'
-      -
-        name: Set up Flutter
+
+      - name: Set up Flutter
         uses: subosito/flutter-action@v2
         with:
           flutter-version: 3.24.5
@@ -83,7 +82,6 @@ jobs:
       - name: Build APK
         run: flutter build apk --release --no-tree-shake-icons
 
-
   upload-apk:
     runs-on: ubuntu-latest
     needs: [get-info, delete-artifacts, build-android-apk]
@@ -94,7 +92,7 @@ jobs:
 
       # Determine the Google Drive folder based on branch
       - id: folder_id
-        run: echo "value=${{ secrets[ needs.get-info.outputs.branch == 'master' && 'MASTER_FOLDER_ID' || 'TEST_FOLDER_ID' ] }}" >> $GITHUB_OUTPUT
+        run: echo "value=${{ secrets[ needs.get-info.outputs.branch == 'master' && 'MASTER_FOLDER_ID' || 'TEST_FOLDER_ID' ] }}" >> $GITHUB_ENV
 
       # Compress files before uploading
       - run: zip -r archive.zip *
@@ -139,5 +137,5 @@ jobs:
             
             Regards,  
             **${{ needs.get-info.outputs.author }}**  
-            Flutter Developer, IX Solutions Company  
+            Flutter Developer, InBox App 
             Email: ${{ needs.get-info.outputs.email }}
