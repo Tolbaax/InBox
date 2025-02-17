@@ -50,14 +50,57 @@ jobs:
 
       - name: Install CocoaPods
         run: |
-          sudo gem install cocoapods
+          sudo gem install cocoapods    
           pod setup
 
+      # This step compiles the iOS app and builds it for release without code signing (useful for CI)
       - name: Build iOS App
         run: flutter build ios --release --no-codesign
 
+      # Upload iOS artifact after build
       - name: Upload iOS artifact
         uses: actions/upload-artifact@v4
         with:
           name: ios-app
           path: build/ios/iphoneos
+
+  release:
+    name: Create GitHub Release
+    runs-on: ubuntu-latest
+    needs: [build-android, build-ios]
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Download Android APK artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: android-apk
+          path: release-assets
+
+      - name: Download iOS artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: ios-app
+          path: release-assets
+
+      - name: Verify downloaded artifacts
+        run: ls -R release-assets
+
+      - name: Create Git Tag
+        run: |
+          git tag v1.0.${{ github.run_number }}
+          git push origin v1.0.${{ github.run_number }}
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v1
+        with:
+          tag_name: v1.0.${{ github.run_number }}
+          name: Release v1.0.${{ github.run_number }}
+          body: "Automated release of the latest build."
+          draft: false
+          prerelease: false
+          files: release-assets/**
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
