@@ -1,5 +1,5 @@
 name: Flutter CI/CD
-run-name: ${{ github.actor }} is testing out GitHub Actions 🚀
+run-name: ${{ github.actor }} is testing Flutter CI/CD 🚀
 
 on:
   push:
@@ -10,7 +10,6 @@ jobs:
   build-android:
     name: Build Android APK
     runs-on: ubuntu-latest
-    needs: test
 
     steps:
       - name: Checkout code
@@ -21,11 +20,11 @@ jobs:
         with:
           flutter-version: '3.24.5'
 
-      - name: Set up JDK
+      - name: Set up Java
         uses: actions/setup-java@v3
         with:
-          java-version: '17'
           distribution: 'temurin'
+          java-version: '17'
 
       - name: Build Android APK
         run: flutter build apk --release
@@ -39,7 +38,6 @@ jobs:
   build-ios:
     name: Build iOS App
     runs-on: macos-latest
-    needs: test
 
     steps:
       - name: Checkout code
@@ -54,6 +52,7 @@ jobs:
         run: |
           sudo gem install cocoapods
           pod setup
+
       - name: Build iOS App
         run: flutter build ios --release --no-codesign
 
