@@ -4,16 +4,19 @@ import 'package:inbox/core/params/auth/signin_params.dart';
 import 'package:inbox/core/params/auth/signup_params.dart';
 import '../../../models/user_model.dart';
 import 'firebase_remote_auth_data_source.dart';
-import 'package:get_it/get_it.dart';
 
 class FirebaseRemoteAuthDataSourceImpl implements FirebaseRemoteAuthDataSource {
-  final FirebaseAuth auth = GetIt.instance<FirebaseAuth>();
-  final FirebaseFirestore firestore = GetIt.instance<FirebaseFirestore>();
+  final FirebaseAuth auth;
+  final FirebaseFirestore firestore;
+
+  FirebaseRemoteAuthDataSourceImpl(this.auth, this.firestore);
 
   @override
   Future<void> signIn(SignInParams params) async =>
       await auth.signInWithEmailAndPassword(
-          email: params.email, password: params.password);
+        email: params.email,
+        password: params.password,
+      );
 
   @override
   Future<void> signOut() async => auth.signOut();
@@ -21,7 +24,9 @@ class FirebaseRemoteAuthDataSourceImpl implements FirebaseRemoteAuthDataSource {
   @override
   Future<void> signUp(SignUpParams params) async {
     final result = await auth.createUserWithEmailAndPassword(
-        email: params.email, password: params.password);
+      email: params.email,
+      password: params.password,
+    );
 
     final uID = result.user!.uid;
 
