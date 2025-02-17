@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'package:app_links/app_links.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -15,17 +16,23 @@ class DeepLinkListener extends StatefulWidget {
 }
 
 class _DeepLinkListenerState extends State<DeepLinkListener> {
+  late final AppLinks appLinks;
+  StreamSubscription<Uri?>? _linkSubscription;
+
   @override
   void initState() {
-    final appLinks = AppLinks(); // AppLinks is singleton
-
-    // Subscribe to all events (initial link and further)
-    appLinks.uriLinkStream.listen((uri) => _handleDeepLink(uri));
-
     super.initState();
+    appLinks = AppLinks();
+
+    // Subscribe to deep link stream
+    _linkSubscription = appLinks.uriLinkStream.listen((uri) {
+      if (mounted) _handleDeepLink(uri);
+    });
   }
 
   void _handleDeepLink(Uri uri) {
+    if (!mounted) return; // Prevent using context after unmounting
+
     final firebaseAuth = sl<FirebaseAuth>();
     final pathSegments = uri.pathSegments;
     if (pathSegments.isNotEmpty) {
@@ -33,10 +40,12 @@ class _DeepLinkListenerState extends State<DeepLinkListener> {
         case 'profile':
           if (pathSegments.length > 1) {
             final userId = pathSegments[1];
-            final isMe = userId == firebaseAuth.currentUser!.uid;
-            isMe
-                ? navigateTo(context, Routes.profile, arguments: true)
-                : navigateToUserProfile(context: context, uID: userId);
+            final isMe = userId == firebaseAuth.currentUser?.uid;
+            if (isMe) {
+              navigateTo(context, Routes.profile, arguments: true);
+            } else {
+              navigateToUserProfile(context: context, uID: userId);
+            }
           }
           break;
         case 'post':
@@ -49,6 +58,12 @@ class _DeepLinkListenerState extends State<DeepLinkListener> {
           debugPrint('Unknown deep link: $uri');
       }
     }
+  }
+
+  @override
+  void dispose() {
+    _linkSubscription?.cancel();
+    super.dispose();
   }
 
   @override

@@ -211,24 +211,33 @@ class UserRemoteDataSourceImpl implements UserRemoteDataSource {
       final uID = await getCurrentUID();
       final batch = firestore.batch();
 
-      // Run deletions in parallel to improve efficiency
+      // Fetch user document first to ensure user exists
+      final userRef = firestore.collection('users').doc(uID);
+      final userSnapshot = await userRef.get();
+
+      if (!userSnapshot.exists) {
+        throw Exception("User document not found.");
+      }
+
+      // Execute all deletions in parallel
       await Future.wait([
         _deleteComments(uID, batch),
         _removeUserFromFollowersAndFollowing(uID, batch),
         _deletePostsAndRelatedData(uID, batch),
-        _deleteProfilePicture(uID),
+        _deleteProfilePicture(userSnapshot.data() as Map<String, dynamic>),
         _deleteUserChats(uID, batch),
       ]);
 
-      // Delete the user's Firestore document
-      await firestore.collection('users').doc(uID).delete();
+      await batch.commit();
 
-      // Delete the user's Firebase Authentication account
-      await auth.currentUser!.delete();
+      await userRef.delete();
+
+      await auth.currentUser?.delete();
     } catch (e) {
       if (kDebugMode) {
         print('Error deleting user account: $e');
       }
+      throw Exception("Failed to delete user account.");
     }
   }
 
@@ -247,7 +256,7 @@ class UserRemoteDataSourceImpl implements UserRemoteDataSource {
         await _deleteFileFromFirebase(post['videoUrl']);
       }
 
-      postDoc.reference.delete();
+      batch.delete(postDoc.reference);
     }
 
     final likesSnapshot = await firestore
@@ -256,25 +265,21 @@ class UserRemoteDataSourceImpl implements UserRemoteDataSource {
         .get();
 
     for (final postDoc in likesSnapshot.docs) {
-      batch.update(
-        postDoc.reference,
-        {
-          'likes': FieldValue.arrayRemove([uID])
-        },
-      );
+      batch.update(postDoc.reference, {
+        'likes': FieldValue.arrayRemove([uID])
+      });
     }
   }
 
-  Future<void> _deleteProfilePicture(String uID) async {
-    final userSnapshot = await firestore.collection('users').doc(uID).get();
-    final userData = userSnapshot.data() as Map<String, dynamic>;
-
+// Deletes profile picture if it exists
+  Future<void> _deleteProfilePicture(Map<String, dynamic> userData) async {
     if (userData.containsKey('profilePic') &&
         userData['profilePic'].isNotEmpty) {
       await _deleteFileFromFirebase(userData['profilePic']);
     }
   }
 
+// Deletes all comments made by the user
   Future<void> _deleteComments(String uID, WriteBatch batch) async {
     final userCommentsQuery = await firestore
         .collectionGroup('comments')
@@ -282,65 +287,51 @@ class UserRemoteDataSourceImpl implements UserRemoteDataSource {
         .get();
 
     for (final commentDoc in userCommentsQuery.docs) {
-      commentDoc.reference.delete();
+      batch.delete(commentDoc.reference);
     }
   }
 
+// Removes user from followers & following lists
   Future<void> _removeUserFromFollowersAndFollowing(
       String uID, WriteBatch batch) async {
     final followersSnapshot = await firestore
         .collection('users')
         .where('following', arrayContains: uID)
         .get();
-
     for (final followerDoc in followersSnapshot.docs) {
-      batch.update(
-        followerDoc.reference,
-        {
-          'following': FieldValue.arrayRemove([uID])
-        },
-      );
+      batch.update(followerDoc.reference, {
+        'following': FieldValue.arrayRemove([uID])
+      });
     }
 
     final followingSnapshot = await firestore
         .collection('users')
         .where('followers', arrayContains: uID)
         .get();
-
     for (final followingDoc in followingSnapshot.docs) {
-      batch.update(
-        followingDoc.reference,
-        {
-          'followers': FieldValue.arrayRemove([uID])
-        },
-      );
+      batch.update(followingDoc.reference, {
+        'followers': FieldValue.arrayRemove([uID])
+      });
     }
   }
 
-  Future<void> _deleteUserChats(String uId, WriteBatch batch) async {
+// Deletes all user chats
+  Future<void> _deleteUserChats(String uID, WriteBatch batch) async {
     final userChatsRef =
-        firestore.collection('users').doc(uId).collection('chats');
-
+        firestore.collection('users').doc(uID).collection('chats');
     final chatDocs = await userChatsRef.get();
 
-    if (chatDocs.docs.isEmpty) return; // No chats to delete
-
     for (final chatDoc in chatDocs.docs) {
-      String otherUserId = chatDoc.id; // The other user's ID in this chat
+      String otherUserId = chatDoc.id;
 
-      // Delete the chat document from the deleted user's collection
       batch.delete(chatDoc.reference);
 
-      // Delete the corresponding chat from the other user's collection
       final otherUserChatRef = firestore
           .collection('users')
           .doc(otherUserId)
           .collection('chats')
-          .doc(uId);
-
+          .doc(uID);
       batch.delete(otherUserChatRef);
     }
-
-    await batch.commit();
   }
 }

@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:inbox/core/extensions/media_query_extensions.dart';
 import 'package:inbox/presentation/view/add_post/widgets/gif_container.dart';
+import '../../../../core/injection/injector.dart';
 import '../../../components/profile_image/my_cached_net_image.dart';
 import '../../../controllers/post/add_post/add_post_cubit.dart';
 import '../../../controllers/post/add_post/add_post_states.dart';
@@ -17,8 +18,8 @@ class AddPostHeader extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final formKey = GlobalKey<FormState>();
-    final user = UserCubit.get(context).userEntity;
-    final cubit = AddPostCubit.get(context);
+    final user = sl<UserCubit>().userEntity;
+    final cubit = context.read<AddPostCubit>();
 
     return BlocConsumer<AddPostCubit, AddPostStates>(
       listener: (context, state) {},

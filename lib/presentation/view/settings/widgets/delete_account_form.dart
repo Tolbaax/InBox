@@ -10,6 +10,7 @@ import 'package:inbox/core/utils/app_colors.dart';
 import '../../../../../config/routes/app_routes.dart';
 import '../../../../../core/shared/common.dart';
 import '../../../../../core/utils/app_strings.dart';
+import '../../../../core/injection/injector.dart';
 import '../../../../domain/entities/user_entity.dart';
 import '../../../components/text_fields/custom_text_field.dart';
 import '../../../controllers/user/user_cubit.dart';
@@ -28,27 +29,30 @@ class _DeleteAccountFormState extends State<DeleteAccountForm> {
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<UserCubit, UserStates>(
-      builder: (context, state) {
-        final user = UserCubit.get(context).userEntity;
+    return BlocProvider(
+      create: (BuildContext context) => sl<UserCubit>(),
+      child: BlocBuilder<UserCubit, UserStates>(
+        builder: (context, state) {
+          final user = context.read<UserCubit>().userEntity;
 
-        return Padding(
-          padding: EdgeInsetsDirectional.only(start: context.width * 0.11),
-          child: Form(
-            key: formKey,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                _buildDeleteAccountConfirmText(),
-                SizedBox(height: context.height * 0.04),
-                _buildEmailTextField(user),
-                SizedBox(height: context.height * 0.05),
-                _buildDeleteAccountButton(),
-              ],
+          return Padding(
+            padding: EdgeInsetsDirectional.only(start: context.width * 0.11),
+            child: Form(
+              key: formKey,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  _buildDeleteAccountConfirmText(),
+                  SizedBox(height: context.height * 0.04),
+                  _buildEmailTextField(user),
+                  SizedBox(height: context.height * 0.05),
+                  _buildDeleteAccountButton(),
+                ],
+              ),
             ),
-          ),
-        );
-      },
+          );
+        },
+      ),
     );
   }
 

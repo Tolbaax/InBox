@@ -2,6 +2,7 @@ import 'package:conditional_builder_null_safety/conditional_builder_null_safety.
 import 'package:flutter/material.dart';
 import 'package:inbox/core/extensions/media_query_extensions.dart';
 
+import '../../../../../core/injection/injector.dart';
 import '../../../../../domain/entities/post_entity.dart';
 import '../../../../components/post_item/post_item.dart';
 import '../../../../controllers/post/post_cubit.dart';
@@ -22,7 +23,7 @@ class GetMyPostsWithoutVideos extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return StreamBuilder<List<PostEntity>>(
-      stream: PostCubit.get(context).getMyPostsWithoutVideos(uID),
+      stream: sl<PostCubit>().getMyPostsWithoutVideos(uID),
       builder: (context, snapshot) {
         return ConditionalBuilder(
           condition: snapshot.hasData,

@@ -4,6 +4,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:inbox/core/functions/deep_link_listener.dart';
+import 'package:inbox/presentation/controllers/user/user_cubit.dart';
 import 'package:inbox/presentation/view/home/widgets/deep_link_post.dart';
 import 'package:page_transition/page_transition.dart';
 
@@ -78,7 +79,9 @@ class AppRouter {
           type: fromSearch
               ? PageTransitionType.fade
               : PageTransitionType.rightToLeft,
-          child: ProfileScreen(fromSearch: fromSearch),
+          child: BlocProvider.value(
+              value: sl<UserCubit>(),
+              child: ProfileScreen(fromSearch: fromSearch)),
         );
 
       case Routes.settings:

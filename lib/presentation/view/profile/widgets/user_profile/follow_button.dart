@@ -2,7 +2,6 @@ import 'dart:async';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:inbox/presentation/controllers/user/user_cubit.dart';
 import '../../../../../../core/utils/app_colors.dart';
 import '../../../../../../core/utils/app_strings.dart';
@@ -25,7 +24,7 @@ class _FollowButtonState extends State<FollowButton> {
   @override
   void initState() {
     super.initState();
-    final cubit = context.read<UserCubit>();
+    final cubit = sl<UserCubit>();
     final firestore = sl<FirebaseFirestore>();
 
     _subscription = firestore
@@ -46,7 +45,7 @@ class _FollowButtonState extends State<FollowButton> {
 
   @override
   Widget build(BuildContext context) {
-    final cubit = context.read<UserCubit>();
+    final cubit = sl<UserCubit>();
 
     return ValueListenableBuilder<bool>(
       valueListenable: isFollowing,

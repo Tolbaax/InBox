@@ -31,7 +31,7 @@ class CustomPubMenuButtonState extends State<CustomPubMenuButton> {
   Future<void> updatePostSavedStatus() async {
     if (!mounted) return;
 
-    final cubit = PostCubit.get(context);
+    final cubit = sl<PostCubit>();
     isPostSaved = await cubit.isPostInDrafts(widget.post.postID);
   }
 
@@ -50,7 +50,7 @@ class CustomPubMenuButtonState extends State<CustomPubMenuButton> {
 
   @override
   Widget build(BuildContext context) {
-    final cubit = PostCubit.get(context);
+    final cubit = sl<PostCubit>();
     final uID = firebaseAuth.currentUser!.uid;
     const String save = AppStrings.save;
     const String delete = AppStrings.delete;

@@ -17,7 +17,7 @@ class EditProfileForm extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final cubit = UserCubit.get(context);
+    final cubit = context.read<UserCubit>();
     var user = cubit.userEntity;
     final formKey = GlobalKey<FormState>();
     bool isUsernameTaken = false;
@@ -92,6 +92,7 @@ class EditProfileForm extends StatelessWidget {
                     condition: state is UpdateUserDataLoadingState,
                   ),
                 ),
+                SizedBox(height: context.height * 0.07),
               ],
             ),
           ),

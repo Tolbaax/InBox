@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:inbox/core/extensions/media_query_extensions.dart';
 import 'package:inbox/core/functions/validators.dart';
@@ -11,7 +12,8 @@ class AddPostTextFiled extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final controller = AddPostCubit.get(context).postTextController;
+    final controller = context.read<AddPostCubit>().postTextController;
+
     return SizedBox(
       width: context.width * 0.74,
       child: TextFormField(

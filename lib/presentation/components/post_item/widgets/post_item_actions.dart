@@ -1,7 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:inbox/core/extensions/media_query_extensions.dart';
 import 'package:inbox/core/functions/navigator.dart';
@@ -24,7 +23,7 @@ class PostItemActions extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final cubit = BlocProvider.of<PostCubit>(context);
+    final cubit = sl<PostCubit>();
     final firebaseAuth = sl<FirebaseAuth>();
     final uID = firebaseAuth.currentUser!.uid;
     final isLiked = post.likes.contains(uID);
