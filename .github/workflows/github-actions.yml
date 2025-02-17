@@ -52,8 +52,6 @@ jobs:
         run: |
           sudo gem install cocoapods
           pod setup
-          cd ios
-          pod install
 
       - name: Build iOS App
         run: flutter build ios --release --no-codesign
@@ -67,7 +65,7 @@ jobs:
   release:
     name: Create GitHub Release
     runs-on: ubuntu-latest
-    needs: [build-android, build-ios]
+    needs: [ build-android, build-fghj ]
 
     steps:
       - name: Checkout code
@@ -82,7 +80,7 @@ jobs:
       - name: Download iOS artifact
         uses: actions/download-artifact@v4
         with:
-          name: ios-app
+          name: fghj-app
           path: release-assets
 
       - name: Verify downloaded artifacts

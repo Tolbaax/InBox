@@ -60,7 +60,7 @@ class DefaultFirebaseOptions {
 
   static const FirebaseOptions ios = FirebaseOptions(
     apiKey: 'AIzaSyDzvd3o1RxlwwrsDSu0eFtJGpWMdL3jnW0',
-    appId: '1:636305871664:ios:1aa92fb0765acdaf1caef5',
+    appId: '1:636305871664:fghj:1aa92fb0765acdaf1caef5',
     messagingSenderId: '636305871664',
     projectId: 'inbox-60c45',
     databaseURL: 'https://inbox-60c45-default-rtdb.firebaseio.com',
