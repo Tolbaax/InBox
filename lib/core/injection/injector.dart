@@ -6,11 +6,10 @@ import 'package:inbox/data/datasources/chat/chat_remote_data_source.dart';
 import 'package:inbox/data/datasources/chat/chat_remote_data_source_impl.dart';
 import 'package:inbox/data/repositories/chat_repository_impl.dart';
 import 'package:inbox/domain/repositories/chat_repository.dart';
-import 'package:inbox/domain/usecases/chat/delete_chat_usecase.dart';
 import 'package:inbox/domain/usecases/chat/delete_message_usecase.dart';
-import 'package:inbox/domain/usecases/chat/get_unread_chats_count_usecase.dart';
-import 'package:inbox/domain/usecases/post/get_post_by_post_id_usecase.dart';
 import 'package:inbox/presentation/controllers/chat/chat_cubit.dart';
+import 'package:inbox/data/datasources/auth/local/auth_local_data_source.dart';
+import 'package:inbox/data/datasources/auth/local/auth_local_data_source_impl.dart';
 import 'package:inbox/data/datasources/auth/remote/firebase_remote_auth_data_source.dart';
 import 'package:inbox/data/datasources/auth/remote/firebase_remote_auth_data_source_impl.dart';
 import 'package:inbox/data/datasources/post/post_remote_data_source.dart';
@@ -60,6 +59,10 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '../../domain/repositories/firebase_auth_repository.dart';
 import '../../domain/repositories/post_repository.dart';
 import '../../domain/repositories/user_repository.dart';
+import '../../domain/usecases/chat/delete_chat_usecase.dart';
+import '../../domain/usecases/chat/get_unread_chats_count_usecase.dart';
+import '../../domain/usecases/post/get_post_by_post_id_usecase.dart';
+import '../../presentation/components/post_item/widgets/video_manager.dart';
 
 final sl = GetIt.instance;
 
@@ -71,9 +74,6 @@ Future<void> init() async {
   registerRepositories();
   registerDataSources();
   registerExternalDependencies();
-
-  // Register FirebaseAuth
-  sl.registerLazySingleton<FirebaseAuth>(() => FirebaseAuth.instance);
 }
 
 // Register shared preferences
@@ -86,19 +86,23 @@ Future<void> registerSharedPreferences() async {
 void registerCubits() {
   sl.registerLazySingleton(() => AuthCubit(sl(), sl(), sl()));
   sl.registerLazySingleton(() => LayoutCubit());
-  sl.registerLazySingleton(() => UserCubit(sl(), sl(), sl(), sl(), sl(), sl(), sl()));
-  sl.registerLazySingleton(() => PostCubit(sl(), sl(), sl(), sl(), sl(), sl(), sl(), sl(), sl()));
+  sl.registerLazySingleton(
+      () => UserCubit(sl(), sl(), sl(), sl(), sl(), sl(), sl()));
+  sl.registerLazySingleton(
+      () => PostCubit(sl(), sl(), sl(), sl(), sl(), sl(), sl(), sl(), sl()));
   sl.registerLazySingleton(() => AddPostCubit(sl()));
   sl.registerLazySingleton(() => CommentCubit(sl(), sl()));
-  sl.registerLazySingleton(() => MessagesCubit(sl(), sl(), sl(), sl(), sl()));
   sl.registerLazySingleton(() => ChatCubit(sl(), sl(), sl(), sl(), sl(), sl()));
+  sl.registerLazySingleton(() => MessagesCubit(sl(), sl(), sl(), sl(), sl()));
 }
 
 // Register UseCases
 void registerUseCases() {
+  // Auth UseCases
   sl.registerLazySingleton(() => SignInUseCase(sl()));
   sl.registerLazySingleton(() => SignOutUseCase(sl()));
   sl.registerLazySingleton(() => SignUpUseCase(sl()));
+  // User
   sl.registerLazySingleton(() => GetCurrentUIDUseCase(sl()));
   sl.registerLazySingleton(() => GetCurrentUserUseCase(sl()));
   sl.registerLazySingleton(() => SetUserStateUseCase(sl()));
@@ -107,6 +111,7 @@ void registerUseCases() {
   sl.registerLazySingleton(() => FollowUserUseCase(sl()));
   sl.registerLazySingleton(() => UnFollowUserUseCase(sl()));
   sl.registerLazySingleton(() => DeleteUserAccountUseCase(sl()));
+  // Post
   sl.registerLazySingleton(() => AddPostUseCase(sl()));
   sl.registerLazySingleton(() => GetPostsUseCase(sl()));
   sl.registerLazySingleton(() => LikePostUseCase(sl()));
@@ -118,7 +123,7 @@ void registerUseCases() {
   sl.registerLazySingleton(() => GetSavedPostsUseCase(sl()));
   sl.registerLazySingleton(() => GetMyPostsWithoutVideos(sl()));
   sl.registerLazySingleton(() => GetMyPostsWithVideos(sl()));
-  sl.registerLazySingleton(() => GetPostByPostIDUseCase(sl()));
+  // Chat
   sl.registerLazySingleton(() => GetChatMessagesUseCase(sl()));
   sl.registerLazySingleton(() => GetNumberOfMessageNotSeenUseCase(sl()));
   sl.registerLazySingleton(() => GetUsersChatUseCase(sl()));
@@ -127,6 +132,7 @@ void registerUseCases() {
   sl.registerLazySingleton(() => SendGifMessageUseCase(sl()));
   sl.registerLazySingleton(() => SetChatMessageSeenUseCase(sl()));
   sl.registerLazySingleton(() => DeleteMessagesUseCase(sl()));
+  sl.registerLazySingleton(() => GetPostByPostIDUseCase(sl()));
   sl.registerLazySingleton(() => DeleteChatUseCase(sl()));
   sl.registerLazySingleton(() => GetUnReadChatsCountUseCase(sl()));
 }
@@ -134,18 +140,36 @@ void registerUseCases() {
 // Register Repositories
 void registerRepositories() {
   sl.registerLazySingleton<FirebaseAuthRepository>(
-          () => FirebaseAuthRepositoryImpl(authDataSource: sl(), localDataSource: sl(), userRemoteDataSource: sl()));
-  sl.registerLazySingleton<UserRepository>(() => UserRepositoryImpl(userRemoteDataSource: sl()));
-  sl.registerLazySingleton<PostRepository>(() => PostRepositoryImpl(postRemoteDataSource: sl()));
+      () => FirebaseAuthRepositoryImpl(
+            authDataSource: sl(),
+            localDataSource: sl(),
+            userRemoteDataSource: sl(),
+          ));
+
+  sl.registerLazySingleton<UserRepository>(
+      () => UserRepositoryImpl(userRemoteDataSource: sl()));
+
+  sl.registerLazySingleton<PostRepository>(
+      () => PostRepositoryImpl(postRemoteDataSource: sl()));
+
   sl.registerLazySingleton<ChatRepository>(() => ChatRepositoryImpl(sl()));
 }
 
 // Register Data Sources
 void registerDataSources() {
-  sl.registerLazySingleton<FirebaseRemoteAuthDataSource>(() => FirebaseRemoteAuthDataSourceImpl(sl(), sl()));
-  sl.registerLazySingleton<UserRemoteDataSource>(() => UserRemoteDataSourceImpl(sl(), sl(), sl()));
-  sl.registerLazySingleton<PostRemoteDataSource>(() => PostRemoteDataSourceImpl(sl(), sl(), sl(), sl()));
-  sl.registerLazySingleton<ChatRemoteDataSource>(() => ChatRemoteDataSourceImpl(sl(), sl(), sl(), sl()));
+  // Remote Data Sources
+  sl.registerLazySingleton<FirebaseRemoteAuthDataSource>(
+      () => FirebaseRemoteAuthDataSourceImpl(sl(), sl()));
+  sl.registerLazySingleton<UserRemoteDataSource>(
+      () => UserRemoteDataSourceImpl(sl(), sl(), sl()));
+  sl.registerLazySingleton<PostRemoteDataSource>(
+      () => PostRemoteDataSourceImpl(sl(), sl(), sl(), sl()));
+  sl.registerLazySingleton<ChatRemoteDataSource>(
+      () => ChatRemoteDataSourceImpl(sl(), sl(), sl(), sl()));
+
+  // Local Data Source
+  sl.registerLazySingleton<AuthLocalDataSource>(
+      () => AuthLocalDataSourceImpl(preferences: sl()));
 }
 
 // Register External Dependencies
@@ -158,4 +182,6 @@ void registerExternalDependencies() {
   sl.registerLazySingleton(() => auth);
   sl.registerLazySingleton(() => firestore);
   sl.registerLazySingleton(() => firebaseStorage);
+
+  sl.registerLazySingleton(() => VideoManager());
 }

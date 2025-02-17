@@ -67,4 +67,5 @@ class DefaultFirebaseOptions {
     storageBucket: 'inbox-60c45.appspot.com',
     iosBundleId: 'com.example.inbox',
   );
+
 }

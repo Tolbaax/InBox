@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "636305871664",
+    "firebase_url": "https://inbox-60c45-default-rtdb.firebaseio.com",
+    "project_id": "inbox-60c45",
+    "storage_bucket": "inbox-60c45.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:636305871664:android:9a8439bcf59fd69b1caef5",
+        "android_client_info": {
+          "package_name": "com.example.inbox"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "636305871664-pdq8h09puga20sn580s8jrp5k6vj96jk.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDVnWMT0yQpOZwiZNhZoYHLFmdDWAGzxaU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "636305871664-pdq8h09puga20sn580s8jrp5k6vj96jk.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
