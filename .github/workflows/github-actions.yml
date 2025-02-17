@@ -1,4 +1,5 @@
 name: Flutter CI/CD
+run-name: ${{ github.actor }} is testing out GitHub Actions 🚀
 
 on:
   push:
@@ -21,6 +22,7 @@ jobs:
 
       - name: Run Flutter tests
         run: |
+          flutter clean
           flutter pub get
           flutter test
 
@@ -52,7 +54,6 @@ jobs:
         with:
           name: android-apk
           path: build/app/outputs/apk/release/app-release.apk
-
   build-ios:
     name: Build iOS App
     runs-on: macos-latest

@@ -159,7 +159,7 @@ void registerRepositories() {
 void registerDataSources() {
   // Remote Data Sources
   sl.registerLazySingleton<FirebaseRemoteAuthDataSource>(
-      () => FirebaseRemoteAuthDataSourceImpl(sl(), sl()));
+      () => FirebaseRemoteAuthDataSourceImpl());
   sl.registerLazySingleton<UserRemoteDataSource>(
       () => UserRemoteDataSourceImpl(sl(), sl(), sl()));
   sl.registerLazySingleton<PostRemoteDataSource>(
