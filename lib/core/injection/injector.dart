@@ -68,12 +68,14 @@ final sl = GetIt.instance;
 
 // Main initialization function
 Future<void> init() async {
-  await registerSharedPreferences();
+  registerSharedPreferences();
   registerCubits();
   registerUseCases();
   registerRepositories();
   registerDataSources();
   registerExternalDependencies();
+  ///Fix workflow issues
+  sl.registerLazySingleton<FirebaseAuth>(() => FirebaseAuth.instance);
 }
 
 // Register shared preferences
