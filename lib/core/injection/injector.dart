@@ -74,8 +74,6 @@ Future<void> init() async {
   registerRepositories();
   registerDataSources();
   registerExternalDependencies();
-  ///Fix workflow issues
-  sl.registerLazySingleton<FirebaseAuth>(() => FirebaseAuth.instance);
 }
 
 // Register shared preferences

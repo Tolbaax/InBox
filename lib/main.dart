@@ -17,9 +17,9 @@ void main() async {
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
   Bloc.observer = AppBlocObserver();
 
-  setupCrashlytics();
-
   await di.init();
+
+  setupCrashlytics();
 
   timeago.setLocaleMessages('en', timeago.EnShortMessages());
 

@@ -20,7 +20,9 @@ jobs:
           flutter-version: '3.24.5'
 
       - name: Run Flutter tests
-        run: flutter test
+        run: |
+          flutter pub get
+          flutter test
 
   build-android:
     name: Build Android APK
