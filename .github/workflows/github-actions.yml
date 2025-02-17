@@ -50,14 +50,14 @@ jobs:
 
       - name: Install CocoaPods
         run: |
-          sudo gem install cocoapods    
+          sudo gem install cocoapods
           pod setup
+          cd ios
+          pod install
 
-      # This step compiles the iOS app and builds it for release without code signing (useful for CI)
       - name: Build iOS App
         run: flutter build ios --release --no-codesign
 
-      # Upload iOS artifact after build
       - name: Upload iOS artifact
         uses: actions/upload-artifact@v4
         with:
