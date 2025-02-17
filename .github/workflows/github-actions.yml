@@ -78,11 +78,6 @@ jobs:
           name: android-apk
           path: release-assets
 
-      - name: Create Git Tag
-        run: |
-          git tag v1.0.${{ github.run_number }}
-          git push origin v1.0.${{ github.run_number }}
-
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v1
         with:
