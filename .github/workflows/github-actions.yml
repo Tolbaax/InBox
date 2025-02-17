@@ -78,15 +78,6 @@ jobs:
           name: android-apk
           path: release-assets
 
-      - name: Download iOS artifact
-        uses: actions/download-artifact@v4
-        with:
-          name: ios-app
-          path: release-assets
-
-      - name: Verify downloaded artifacts
-        run: ls -R release-assets
-
       - name: Create Git Tag
         run: |
           git tag v1.0.${{ github.run_number }}
