@@ -1,99 +1,143 @@
-name: Flutter CI/CD
+name: CI/CD Build APK & Notify 🚀
 
 on:
   push:
     branches:
       - master
+      - test
 
-  # Allows manual triggering of the workflow
+  # Allows manual trigger from GitHub UI or CLI
   workflow_dispatch:
 
-
 jobs:
-  build-android:
+  delete-artifacts:
+    runs-on: ubuntu-latest
+    steps:
+      # Remove old artifacts to free up space before generating new ones
+      - uses: kolpav/purge-artifacts-action@v1
+        with:
+          token: ${{ secrets.TOKEN_GITHUB }}
+          expire-in: 0days
+
+  get-info:
+    runs-on: ubuntu-latest
+    outputs:
+      branch: ${{ steps.branch.outputs.value }}
+      project: ${{ steps.project.outputs.value }}
+      author: ${{ steps.author.outputs.value }}
+      email: ${{ steps.email.outputs.value }}
+      datetime: ${{ steps.datetime.outputs.value }}
+      date_url: ${{ steps.date_url.outputs.value }}
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v2
+
+      - name: Get Branch Name
+        id: branch_name
+        run: echo branch_name=${GITHUB_REF#refs/heads/} >> $GITHUB_OUTPUT
+
+      - name: Get Project Name
+        id: project_name
+        run: echo project_name=${GITHUB_REPOSITORY#*/} >> $GITHUB_OUTPUT
+
+      - name: Get Commit Author
+        id: commit_author
+        run: echo commit_author=$(git log -1 --pretty=%an) >> $GITHUB_OUTPUT
+
+      - name: Get Commit Author Email
+        id: commit_author_email
+        run: echo commit_author_email=$(git log -1 --pretty=%ae) >> $GITHUB_OUTPUT
+
+      - name: Get Commit Formatted Date
+        id: date_time
+        run: echo date_time=$(git log -1 --pretty=%cd --date=format:'%B %d, %Y %I:%M %p') >> $GITHUB_OUTPUT
+
+      - name: Get Commit Date For Url
+        id: date_url
+        run: echo date_url=$(git log -1 --pretty=%cd --date=format:'%Y-%m-%d') >> $GITHUB_OUTPUT
+
+
+  build-android-apk:
     name: Build Android APK
     runs-on: ubuntu-latest
-
+    needs: [get-info, delete-artifacts]
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v3
-
-      - name: Set up Flutter
-        uses: subosito/flutter-action@v2
-        with:
-          flutter-version: '3.24.5'
+      - uses: actions/checkout@v2
 
       - name: Set up Java
-        uses: actions/setup-java@v3
+        uses: actions/setup-java@v2
         with:
-          distribution: 'temurin'
+          distribution: 'adopt'
           java-version: '17'
-
-      - name: Build Android APK
-        run: flutter build apk --release
-
-      - name: Upload APK artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: android-apk
-          path: build/app/outputs/apk/release/app-release.apk
-
-  build-ios:
-    name: Build iOS App
-    runs-on: macos-latest
-
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v3
-
-      - name: Set up Flutter
+      -
+        name: Set up Flutter
         uses: subosito/flutter-action@v2
         with:
-          flutter-version: '3.24.5'
+          flutter-version: 3.24.5
+          channel: 'stable'
 
-      - name: Install CocoaPods
-        run: |
-          sudo gem install cocoapods
-          pod setup
+      - name: Clean project and fetch dependencies
+        run: flutter clean && flutter pub get
 
-      - name: Build iOS App
-        run: flutter build ios --release --no-codesign
-
-      - name: Upload iOS artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: ios-app
-          path: build/ios/iphoneos
+      - name: Build APK
+        run: flutter build apk --release --no-tree-shake-icons
 
 
-  release:
-    name: Create GitHub Release
+  upload-apk:
     runs-on: ubuntu-latest
-    needs: [ build-android ]
-
+    needs: [get-info, delete-artifacts, build-android-apk]
+    outputs:
+      folder_id: ${{ steps.folder_id.outputs.value }}
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v3
+      - uses: actions/checkout@v2
 
-      - name: Download Android APK artifact
-        uses: actions/download-artifact@v4
+      # Determine the Google Drive folder based on branch
+      - id: folder_id
+        run: echo "value=${{ secrets[ needs.get-info.outputs.branch == 'master' && 'MASTER_FOLDER_ID' || 'TEST_FOLDER_ID' ] }}" >> $GITHUB_OUTPUT
+
+      # Compress files before uploading
+      - run: zip -r archive.zip *
+
+      # Upload APK to Google Drive
+      - uses: adityak74/google-drive-upload-git-action@main
         with:
-          name: android-apk
-          path: release-assets
+          credentials: "${{ secrets.GOOGLE_DRIVE_CREDENTIALS }}"
+          filename: "build/app/outputs/flutter-apk/app-release.apk"
+          folderId: ${{ steps.folder_id.outputs.value }}
+          name: "${{ needs.get-info.outputs.branch }}_apk_${{ needs.get-info.outputs.datetime }}.apk"
+          overwrite: "true"
+          mimeType: "application/vnd.android.package-archive"
 
-      - name: Create Git Tag
-        run: |
-          git tag v1.0.${{ github.run_number }}
-          git push origin v1.0.${{ github.run_number }}
+  notify:
+    runs-on: ubuntu-latest
+    needs: [get-info, delete-artifacts, build-android-apk, upload-apk]
+    steps:
+      - uses: actions/checkout@v2
 
-      - name: Create GitHub Release
-        uses: softprops/action-gh-release@v1
+      # Send email notification with build details
+      - uses: dawidd6/action-send-mail@v3
         with:
-          tag_name: v1.0.${{ github.run_number }}
-          name: Release v1.0.${{ github.run_number }}
-          body: "Automated release of the latest build."
-          draft: false
-          prerelease: false
-          files: release-assets/**
-        env:
-          GITHUB_TOKEN: ${{ secrets.TOKEN }}
+          server_address: smtp.gmail.com
+          server_port: 465
+          username: ${{ secrets.GMAIL_USERNAME }}
+          password: ${{ secrets.GMAIL_PASSWORD }}
+          from: ${{ needs.get-info.outputs.email }}
+          to: tolbaax@gmail.com
+          subject: "CI 👉🏻 New APK Build Uploaded"
+          convert_markdown: true
+          body: |
+            **Dear Sir,**
+            
+            A new APK build has been successfully uploaded to Google Drive.
+            
+            - **Project:** ${{ needs.get-info.outputs.project }}
+            - **Branch:** ${{ needs.get-info.outputs.branch }}
+            - **Date:** ${{ needs.get-info.outputs.datetime }}
+            
+            📂 [Download APK](https://drive.google.com/drive/folders/${{ needs.upload-apk.outputs.folder_id }})
+            
+            Regards,  
+            **${{ needs.get-info.outputs.author }}**  
+            Flutter Developer, IX Solutions Company  
+            Email: ${{ needs.get-info.outputs.email }}
