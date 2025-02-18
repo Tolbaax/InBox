@@ -15,7 +15,7 @@ class BottomNavItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final color =
-    isActive ? AppColors.primary : AppColors.black.withOpacity(0.5);
+        isActive ? AppColors.primary : AppColors.black.withOpacity(0.5);
     final double iconSize = isActive ? 17.0.sp : 16.5.sp;
 
     return Column(
@@ -23,13 +23,14 @@ class BottomNavItem extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
         Padding(
-          padding:
-          EdgeInsetsDirectional.only(end: index == 0 ? 4.5.w : 0.0),
-          child: index == 2 ? UnreadChatsBadge(index: index) : Icon(
-            Constants.iconList[index],
-            size: iconSize,
-            color: color,
-          ),
+          padding: EdgeInsetsDirectional.only(end: index == 0 ? 4.5.w : 0.0),
+          child: index == 2
+              ? UnreadChatsBadge(index: index, color: color)
+              : Icon(
+                  Constants.iconList[index],
+                  size: iconSize,
+                  color: color,
+                ),
         ),
         SizedBox(height: 1.h),
         Text(
@@ -44,11 +45,11 @@ class BottomNavItem extends StatelessWidget {
   }
 }
 
-
 class UnreadChatsBadge extends StatelessWidget {
   final int index;
+  final Color color;
 
-  const UnreadChatsBadge({super.key, required this.index});
+  const UnreadChatsBadge({super.key, required this.index, required this.color});
 
   @override
   Widget build(BuildContext context) {
@@ -65,7 +66,7 @@ class UnreadChatsBadge extends StatelessWidget {
             child: Icon(
               Constants.iconList[index],
               size: 17.0.sp,
-              color: AppColors.primary,
+              color: color,
             ),
           );
         }
@@ -73,7 +74,7 @@ class UnreadChatsBadge extends StatelessWidget {
         return Icon(
           Constants.iconList[index],
           size: 17.0.sp,
-          color: AppColors.primary,
+          color: color,
         );
       },
     );

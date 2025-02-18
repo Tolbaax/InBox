@@ -41,11 +41,11 @@ class SettingsScreen extends StatelessWidget {
                   icon: FontAwesomeIcons.bookmark,
                   title: AppStrings.saved,
                 ),
-                SettingsOption(
-                  onTap: () {},
-                  icon: FontAwesomeIcons.sun,
-                  title: AppStrings.theme,
-                ),
+                // SettingsOption(
+                //   onTap: () {},
+                //   icon: FontAwesomeIcons.sun,
+                //   title: AppStrings.theme,
+                // ),
                 SettingsOption(
                   onTap: () => launchUrl(
                     Uri.parse(AppStrings.privacyPolicyUrl),

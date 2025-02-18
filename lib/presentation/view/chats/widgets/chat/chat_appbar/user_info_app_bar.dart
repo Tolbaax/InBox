@@ -55,7 +55,7 @@ class _UserInfoAppBarState extends State<UserInfoAppBar> {
         isMe
             ? navigateTo(context, Routes.profile, arguments: true)
             : navigateToUserProfile(
-            context: context, uID: widget.receiverId, fromSearch: true);
+                context: context, uID: widget.receiverId, fromSearch: true);
       },
       child: Row(
         children: [
@@ -83,19 +83,20 @@ class _UserInfoAppBarState extends State<UserInfoAppBar> {
                     return SizedBox(
                       height: context.height * 0.017,
                       child: isLoading
-                          ? CustomShimmer.shimmerText(width: 140.w, height: 12.h)
+                          ? CustomShimmer.shimmerText(
+                              width: 140.w, height: 12.h)
                           : Text(
-                        isMe
-                            ? AppStrings.messageYourself
-                            : (isOnline
-                            ? AppStrings.online
-                            : lastSeen?.lastSeen ?? ''),
-                        style: TextStyle(
-                          color: AppColors.white,
-                          fontSize: isMe ? 11.sp : 10.sp,
-                          fontWeight: FontWeight.w500,
-                        ),
-                      ),
+                              isMe
+                                  ? AppStrings.messageYourself
+                                  : (isOnline
+                                      ? AppStrings.online
+                                      : lastSeen?.lastSeen ?? ''),
+                              style: TextStyle(
+                                color: AppColors.white,
+                                fontSize: isMe ? 11.sp : 10.sp,
+                                fontWeight: FontWeight.w500,
+                              ),
+                            ),
                     );
                   },
                 ),

@@ -27,31 +27,20 @@ Future<File?> pickImageFile(BuildContext context,
   File? image;
 
   try {
-    // Request permissions based on the platform and source
-    if (imageSource == ImageSource.gallery) {
-      await Permission.photos.request();
-    } else if (imageSource == ImageSource.camera) {
-      await Permission.camera.request();
-    }
 
-    // Check if the permissions are granted
-    if (await Permission.photos.isGranted ||
-        await Permission.camera.isGranted) {
-      final pickedImage = await ImagePicker().pickImage(source: imageSource);
-
-      if (pickedImage != null) {
-        image = File(pickedImage.path);
-      } else {
-        AppDialogs.showToast(msg: 'No image selected');
-      }
+    // Pick image
+    final pickedImage = await ImagePicker().pickImage(source: imageSource);
+    if (pickedImage != null) {
+      image = File(pickedImage.path);
     } else {
-      AppDialogs.showToast(msg: 'Permission denied');
+      AppDialogs.showToast(msg: 'No image selected');
     }
   } catch (e) {
     AppDialogs.showToast(msg: 'Error picking image: ${e.toString()}');
   }
   return image;
 }
+
 
 Future<CroppedFile?> cropImage(String path,
     {String? title, bool isProfile = false}) async {
