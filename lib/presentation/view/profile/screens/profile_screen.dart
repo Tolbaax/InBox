@@ -26,36 +26,33 @@ class ProfileScreen extends StatelessWidget {
 
     final uID = user.uid;
 
-    return BlocProvider.value(
-      value: sl<UserCubit>(),
-      child: BlocBuilder<UserCubit, UserStates>(
-        builder: (context, state) {
-          final userCubit = sl<UserCubit>();
+    return BlocBuilder<UserCubit, UserStates>(
+      builder: (context, state) {
+        final userCubit = sl<UserCubit>();
 
-          if (userCubit.userEntity == null) {
-            return const Scaffold(
-              body: Center(child: CircularProgressIndicator(strokeWidth: 1.2)),
-            );
-          }
-
-          return Scaffold(
-            appBar: ProfileAppBar(fromSearch: fromSearch),
-            body: NestedScrollView(
-              physics: const RangeMaintainingScrollPhysics(),
-              headerSliverBuilder: (context, innerBoxIsScrolled) {
-                return [
-                  const SliverToBoxAdapter(child: MyProfileHeader()),
-                ];
-              },
-              body: PostsTabBar(
-                uID: uID,
-                tapFromMyProfile: true,
-                tapFromUserProfile: false,
-              ),
-            ),
+        if (userCubit.userEntity == null) {
+          return const Scaffold(
+            body: Center(child: CircularProgressIndicator(strokeWidth: 1.2)),
           );
-        },
-      ),
+        }
+
+        return Scaffold(
+          appBar: ProfileAppBar(fromSearch: fromSearch),
+          body: NestedScrollView(
+            physics: const RangeMaintainingScrollPhysics(),
+            headerSliverBuilder: (context, innerBoxIsScrolled) {
+              return [
+                const SliverToBoxAdapter(child: MyProfileHeader()),
+              ];
+            },
+            body: PostsTabBar(
+              uID: uID,
+              tapFromMyProfile: true,
+              tapFromUserProfile: false,
+            ),
+          ),
+        );
+      },
     );
   }
 }

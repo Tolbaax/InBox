@@ -102,10 +102,7 @@ class PostItemActions extends StatelessWidget {
             children: [
               PostActionIcon(
                 onTap: () async => await cubit.likePost(
-                  LikePostParams(
-                    postID: post.postID,
-                    likes: post.likes,
-                  ),
+                  LikePostParams(postID: post.postID, likes: post.likes),
                 ),
                 icon: isLiked
                     ? CupertinoIcons.heart_circle_fill

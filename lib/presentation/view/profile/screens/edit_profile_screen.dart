@@ -19,46 +19,43 @@ class EditProfileScreen extends StatelessWidget {
     final cubit = sl<UserCubit>();
     final user = cubit.userEntity;
 
-    return BlocProvider.value(
-      value: cubit,
-      child: BlocConsumer<UserCubit, UserStates>(
-        listener: (context, state) async {
-          if (state is UpdateUserDataSuccessState) {
-            navigatePop(context);
-            await cubit.getCurrentUser();
-            cubit.disposeProfileImage();
-          }
-        },
-        builder: (context, state) {
-          return PopScope(
-            canPop: false,
-            onPopInvokedWithResult: (didPop, result) async {
-              await _onPopInvokedWithResult(context, cubit, didPop, user);
-            },
-            child: Scaffold(
-              appBar: AppBar(
-                leading: BackButton(color: AppColors.blackOlive),
-                title: const Text(AppStrings.editProfile),
-              ),
-              body: SingleChildScrollView(
-                child: Column(
-                  children: [
-                    MyCachedNetImage(
-                      onTap: () => cubit.selectProfileImageFromGallery(context),
-                      imageUrl: user?.profilePic ?? '',
-                      radius: 55.0.sp,
-                      haveButton: true,
-                      imageFile: cubit.profileImageFile,
-                    ),
-                    SizedBox(height: 35.0.h),
-                    const EditProfileForm(),
-                  ],
-                ),
+    return BlocConsumer<UserCubit, UserStates>(
+      listener: (context, state) async {
+        if (state is UpdateUserDataSuccessState) {
+          navigatePop(context);
+          await cubit.getCurrentUser();
+          cubit.disposeProfileImage();
+        }
+      },
+      builder: (context, state) {
+        return PopScope(
+          canPop: false,
+          onPopInvokedWithResult: (didPop, result) async {
+            await _onPopInvokedWithResult(context, cubit, didPop, user);
+          },
+          child: Scaffold(
+            appBar: AppBar(
+              leading: BackButton(color: AppColors.blackOlive),
+              title: const Text(AppStrings.editProfile),
+            ),
+            body: SingleChildScrollView(
+              child: Column(
+                children: [
+                  MyCachedNetImage(
+                    onTap: () => cubit.selectProfileImageFromGallery(context),
+                    imageUrl: user?.profilePic ?? '',
+                    radius: 55.0.sp,
+                    haveButton: true,
+                    imageFile: cubit.profileImageFile,
+                  ),
+                  SizedBox(height: 35.0.h),
+                  const EditProfileForm(),
+                ],
               ),
             ),
-          );
-        },
-      ),
+          ),
+        );
+      },
     );
   }
 

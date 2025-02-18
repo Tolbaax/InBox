@@ -32,12 +32,12 @@ class UserProfileStatistics extends StatelessWidget {
                 number: isLoading ? 0 : userData?['postsCount'] ?? 0,
                 text: AppStrings.posts,
               ),
-              SizedBox(width: 23.5.w),
+              SizedBox(width: 23.0.w),
               StatisticsColumn(
                 number: isLoading ? 0 : userData?['followers']?.length ?? 0,
                 text: AppStrings.followers,
               ),
-              SizedBox(width: 23.5.w),
+              SizedBox(width: 23.0.w),
               StatisticsColumn(
                 number: isLoading ? 0 : userData?['following']?.length ?? 0,
                 text: AppStrings.following,

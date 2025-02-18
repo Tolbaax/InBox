@@ -1,9 +1,10 @@
 import 'dart:io';
 import 'package:flutter/cupertino.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:giphy_get/giphy_get.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:video_player/video_player.dart';
 
 import '../../../../../core/functions/app_dialogs.dart';
@@ -21,45 +22,64 @@ mixin AddPostMixin on Cubit<AddPostStates> {
   File? video;
 
   Future<void> pickImage(BuildContext context) async {
-    final pickedFile = await pickImageFile(context);
-    if (pickedFile != null) {
-      await deleteFile(postImage); // Delete previous image
-      if (video != null) disposeVideo();
-      if (gif != null) disposeGif();
+    if (!await requestPermission(Permission.storage)) {
+      AppDialogs.showToast(
+          msg: 'Storage permission denied', gravity: ToastGravity.BOTTOM);
+      return;
+    }
 
-      cropImage(pickedFile.path, title: 'Post Image').then((value) {
-        if (value != null) {
-          postImage = File(value.path);
-          emit(PickPostImageSuccessState());
-        }
-      });
+    if (context.mounted) {
+      final pickedFile = await pickImageFile(context);
+      if (pickedFile != null) {
+        await deleteFile(postImage);
+        if (video != null) disposeVideo();
+        if (gif != null) disposeGif();
+
+        cropImage(pickedFile.path, title: 'Post Image').then((value) {
+          if (value != null) {
+            postImage = File(value.path);
+            emit(PickPostImageSuccessState());
+          }
+        });
+      }
     }
   }
 
   Future<void> getPostImageFromCamera(BuildContext context) async {
-    final pickedImage =
-        await pickImageFile(context, imageSource: ImageSource.camera);
-    if (pickedImage != null) {
-      await deleteFile(postImage);
-      if (video != null) disposeVideo();
-      if (gif != null) disposeGif();
+    if (!await requestPermission(Permission.camera)) {
+      AppDialogs.showToast(msg: 'Camera permission denied');
+      return;
+    }
 
-      cropImage(pickedImage.path, title: 'Post Image').then((value) {
-        if (value != null) {
-          postImage = File(value.path);
-          emit(PickPostImageSuccessState());
-        }
-      });
-    } else {
-      if (kDebugMode) print('Error: The pickedImage is null.');
+    if (context.mounted) {
+      final pickedImage =
+          await pickImageFile(context, imageSource: ImageSource.camera);
+      if (pickedImage != null) {
+        await deleteFile(postImage);
+        if (video != null) disposeVideo();
+        if (gif != null) disposeGif();
+
+        cropImage(pickedImage.path, title: 'Post Image').then((value) {
+          if (value != null) {
+            postImage = File(value.path);
+            emit(PickPostImageSuccessState());
+          }
+        });
+      }
     }
   }
 
   Future<void> pickVideo() async {
+    if (!await requestPermission(Permission.storage)) {
+      AppDialogs.showToast(msg: 'Storage permission denied');
+      return;
+    }
+
     final pickedFile = await ImagePicker().pickVideo(
       source: ImageSource.gallery,
       maxDuration: const Duration(seconds: 15),
     );
+
     if (pickedFile != null) {
       await deleteFile(video); // Delete previous video
       video = File(pickedFile.path);

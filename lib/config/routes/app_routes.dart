@@ -15,6 +15,5 @@ class Routes {
   static const String chat = '/chat';
   static const String camera = '/camera';
   static const String sendingImageViewRoute = '/sending-image-view';
-  static const String sendingVideoViewRoute = '/sending-video-view';
   static const String deepLinkPost = '/deepLinkPost';
 }

@@ -15,42 +15,65 @@ class BottomNavItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final color =
-        isActive ? AppColors.primary : AppColors.black.withOpacity(0.5);
+    isActive ? AppColors.primary : AppColors.black.withOpacity(0.5);
     final double iconSize = isActive ? 17.0.sp : 16.5.sp;
 
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Padding(
+          padding:
+          EdgeInsetsDirectional.only(end: index == 0 ? 4.5.w : 0.0),
+          child: index == 2 ? UnreadChatsBadge(index: index) : Icon(
+            Constants.iconList[index],
+            size: iconSize,
+            color: color,
+          ),
+        ),
+        SizedBox(height: 1.h),
+        Text(
+          Constants.titles[index],
+          style: TextStyle(
+            color: color,
+            fontWeight: isActive ? FontWeight.w600 : FontWeight.w500,
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+
+class UnreadChatsBadge extends StatelessWidget {
+  final int index;
+
+  const UnreadChatsBadge({super.key, required this.index});
+
+  @override
+  Widget build(BuildContext context) {
     return StreamBuilder<int>(
       stream: sl<MessagesCubit>().getUnreadChatsCount(),
       builder: (context, snapshot) {
         final unreadChatsCount = snapshot.data ?? 0;
-        Widget iconWidget =
-            Icon(Constants.iconList[index], size: iconSize, color: color);
 
         if (index == 2 && unreadChatsCount > 0) {
-          iconWidget = Badge.count(
+          return Badge.count(
             count: unreadChatsCount,
             offset: const Offset(8, -5),
             backgroundColor: AppColors.red,
-            child: iconWidget,
+            child: Icon(
+              Constants.iconList[index],
+              size: 17.0.sp,
+              color: AppColors.primary,
+            ),
           );
         }
 
-        return Column(
-          mainAxisSize: MainAxisSize.min,
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Padding(
-              padding:
-                  EdgeInsetsDirectional.only(end: index == 0 ? 4.5.w : 0.0),
-              child: iconWidget,
-            ),
-            SizedBox(height: 1.h),
-            Text(
-              Constants.titles[index],
-              style: TextStyle(
-                  color: color,
-                  fontWeight: isActive ? FontWeight.w600 : FontWeight.w500),
-            ),
-          ],
+        return Icon(
+          Constants.iconList[index],
+          size: 17.0.sp,
+          color: AppColors.primary,
         );
       },
     );

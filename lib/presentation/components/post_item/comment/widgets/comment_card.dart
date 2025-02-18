@@ -27,7 +27,7 @@ class CommentCard extends StatelessWidget {
     return Column(
       children: [
         Padding(
-          padding: EdgeInsetsDirectional.only(start: 10.0.sp, end: 15.0.sp),
+          padding: EdgeInsetsDirectional.only(start: 10.0.sp),
           child: Row(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [

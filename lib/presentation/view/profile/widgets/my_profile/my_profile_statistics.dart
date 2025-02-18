@@ -13,7 +13,7 @@ class MyProfileStatistics extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: EdgeInsetsDirectional.only(start: 25.0.sp, bottom: 10.0.sp),
+      padding: EdgeInsetsDirectional.only(start: 16.0.r, bottom: 10.0.r),
       child: Row(
         children: [
           StatisticsColumn(
@@ -21,14 +21,14 @@ class MyProfileStatistics extends StatelessWidget {
             text: AppStrings.posts,
           ),
           SizedBox(
-            width: 23.5.w,
+            width: 23.0.w,
           ),
           StatisticsColumn(
             number: user.followers.length,
             text: AppStrings.followers,
           ),
           SizedBox(
-            width: 23.5.w,
+            width: 23.0.w,
           ),
           StatisticsColumn(
             number: user.following.length,

@@ -15,17 +15,40 @@ import '../../presentation/controllers/chat/chat_cubit.dart';
 import '../injection/injector.dart';
 import '../params/chat/message_params.dart';
 
-Future<File?> pickImageFile(BuildContext context,
-    {imageSource = ImageSource.gallery}) async {
-  File? image;
-  try {
-    final pickedImage = await ImagePicker().pickImage(source: imageSource);
+import 'package:permission_handler/permission_handler.dart';
 
-    if (pickedImage != null) {
-      image = File(pickedImage.path);
+Future<bool> requestPermission(Permission permission) async {
+  final status = await permission.request();
+  return status.isGranted;
+}
+
+Future<File?> pickImageFile(BuildContext context,
+    {ImageSource imageSource = ImageSource.gallery}) async {
+  File? image;
+
+  try {
+    // Request permissions based on the platform and source
+    if (imageSource == ImageSource.gallery) {
+      await Permission.photos.request();
+    } else if (imageSource == ImageSource.camera) {
+      await Permission.camera.request();
+    }
+
+    // Check if the permissions are granted
+    if (await Permission.photos.isGranted ||
+        await Permission.camera.isGranted) {
+      final pickedImage = await ImagePicker().pickImage(source: imageSource);
+
+      if (pickedImage != null) {
+        image = File(pickedImage.path);
+      } else {
+        AppDialogs.showToast(msg: 'No image selected');
+      }
+    } else {
+      AppDialogs.showToast(msg: 'Permission denied');
     }
   } catch (e) {
-    AppDialogs.showToast(msg: e.toString());
+    AppDialogs.showToast(msg: 'Error picking image: ${e.toString()}');
   }
   return image;
 }

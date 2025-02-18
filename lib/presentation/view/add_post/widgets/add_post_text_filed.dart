@@ -15,7 +15,7 @@ class AddPostTextFiled extends StatelessWidget {
     final controller = context.read<AddPostCubit>().postTextController;
 
     return SizedBox(
-      width: context.width * 0.74,
+      width: context.width * 0.7,
       child: TextFormField(
         controller: controller,
         style: TextStyle(
