@@ -16,7 +16,7 @@ void main() async {
 
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
   Bloc.observer = AppBlocObserver();
-//Changeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee
+
   await di.init();
 
   setupCrashlytics();
