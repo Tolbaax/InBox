@@ -5,6 +5,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:inbox/core/enums/message_type.dart';
 import 'package:inbox/core/extensions/media_query_extensions.dart';
+import 'package:inbox/core/functions/navigator.dart';
 import 'package:inbox/presentation/controllers/chat/chat_cubit.dart';
 import '../../../../../../core/params/chat/message_params.dart';
 import '../../../../../../core/utils/app_colors.dart';
@@ -76,8 +77,9 @@ class SendingImageVideoBottomField extends StatelessWidget {
                       radius: 24,
                       backgroundColor: AppColors.primary,
                       child: GestureDetector(
-                        onTap: () {
-                          cubit.sendFileMessage(
+                        onTap: () async {
+                          if (context.mounted) navigatePop(context);
+                          await cubit.sendFileMessage(
                             MessageParams(
                               message: controller.text.trim(),
                               receiverId: receiverId,
@@ -87,9 +89,6 @@ class SendingImageVideoBottomField extends StatelessWidget {
                                   : File(cubit.messageImage!.path),
                             ),
                           );
-                          int count = 0;
-                          Navigator.of(context)
-                              .popUntil((route) => count++ >= 2);
                           cubit.messageImage = null;
                           controller.clear();
                         },

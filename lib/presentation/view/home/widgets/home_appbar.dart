@@ -15,7 +15,7 @@ class HomeAppBar extends StatelessWidget implements PreferredSizeWidget {
       child: AppBar(
         leadingWidth: context.width * 0.275,
         leading: Padding(
-          padding: const EdgeInsets.all(8.0),
+          padding: const EdgeInsetsDirectional.only(start: 8.0),
           child: Text(
             AppStrings.appName,
             style: TextStyle(

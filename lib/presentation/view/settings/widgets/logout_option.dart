@@ -23,14 +23,14 @@ class LogoutOption extends StatelessWidget {
         AppDialogs.showLogOutDialog(
             context: context,
             onPressed: () {
-              sl<UserCubit>().setUserState(isOnline: false);
               cubit.signOut().then((value) async {
                 await clearCache();
                 if (context.mounted) navigateAndRemove(context, Routes.login);
               });
+              UserCubit.get(context).setUserState(isOnline: false);
               cubit.clearSignInControllers();
               cubit.clearSignUpControllers();
-              sl<LayoutCubit>().selectedIndex = 0;
+              LayoutCubit.get(context).selectedIndex = 0;
             });
       },
       icon: FontAwesomeIcons.arrowRightFromBracket,

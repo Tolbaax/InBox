@@ -18,56 +18,51 @@ class DraftsScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final postsCubit = sl<PostCubit>();
-
     return Scaffold(
       appBar: AppBar(
         leading: BackButton(color: AppColors.blackOlive),
         title: const Text(AppStrings.savedPosts),
       ),
-      body: BlocProvider(
-        create: (BuildContext context) => postsCubit,
-        child: BlocConsumer<PostCubit, PostStates>(
-          listener: (context, state) {},
-          builder: (context, state) {
-            return StreamBuilder<List<PostEntity>>(
-              stream: postsCubit.getSavedPosts(),
-              builder: (context, snapshot) {
-                return ConditionalBuilder(
-                  condition: snapshot.hasData,
-                  builder: (context) {
-                    if (snapshot.hasData && snapshot.data!.isNotEmpty) {
-                      return ListView.separated(
-                        shrinkWrap: true,
-                        itemCount: snapshot.data!.length,
-                        itemBuilder: (context, index) {
-                          final post = snapshot.data![index];
-                          final lastItem = snapshot.data!.last;
+      body: BlocConsumer<PostCubit, PostStates>(
+        listener: (context, state) {},
+        builder: (context, state) {
+          return StreamBuilder<List<PostEntity>>(
+            stream: sl<PostCubit>().getSavedPosts(),
+            builder: (context, snapshot) {
+              return ConditionalBuilder(
+                condition: snapshot.hasData,
+                builder: (context) {
+                  if (snapshot.hasData && snapshot.data!.isNotEmpty) {
+                    return ListView.separated(
+                      shrinkWrap: true,
+                      itemCount: snapshot.data!.length,
+                      itemBuilder: (context, index) {
+                        final post = snapshot.data![index];
+                        final lastItem = snapshot.data!.last;
 
-                          return PostItem(
-                            post: post,
-                            lastItem: lastItem,
-                            lastItemHeight: context.height * 0.1,
-                          );
-                        },
-                        separatorBuilder: (context, index) {
-                          return const PostsDivider();
-                        },
-                      );
-                    } else {
-                      return const NoSavedPostsYet();
-                    }
-                  },
-                  fallback: (context) => Center(
-                    child: snapshot.hasError
-                        ? const NoSavedPostsYet()
-                        : const CircularProgressIndicator(strokeWidth: 1.2),
-                  ),
-                );
-              },
-            );
-          },
-        ),
+                        return PostItem(
+                          post: post,
+                          lastItem: lastItem,
+                          lastItemHeight: context.height * 0.1,
+                        );
+                      },
+                      separatorBuilder: (context, index) {
+                        return const PostsDivider();
+                      },
+                    );
+                  } else {
+                    return const NoSavedPostsYet();
+                  }
+                },
+                fallback: (context) => Center(
+                  child: snapshot.hasError
+                      ? const NoSavedPostsYet()
+                      : const CircularProgressIndicator(strokeWidth: 1.2),
+                ),
+              );
+            },
+          );
+        },
       ),
     );
   }

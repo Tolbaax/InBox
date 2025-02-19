@@ -33,7 +33,9 @@ class BottomChatFieldState extends State<BottomChatField> {
     super.initState();
     messageController.addListener(() {
       setState(() {
-        isMessageEmpty = messageController.text.trim().isEmpty;
+        isMessageEmpty = messageController.text
+            .trim()
+            .isEmpty;
       });
     });
   }

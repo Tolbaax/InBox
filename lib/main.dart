@@ -1,4 +1,3 @@
-import 'package:camera/camera.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -9,7 +8,6 @@ import 'app.dart';
 import 'core/error/crashlytics.dart';
 import 'core/shared/bloc_observer.dart';
 import 'firebase_options.dart';
-import 'presentation/view/chats/screens/camera_screen.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -22,8 +20,6 @@ void main() async {
   setupCrashlytics();
 
   timeago.setLocaleMessages('en', timeago.EnShortMessages());
-
-  cameras = await availableCameras();
 
   runApp(const MyApp());
 }

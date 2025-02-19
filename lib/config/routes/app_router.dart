@@ -4,7 +4,6 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:inbox/core/functions/deep_link_listener.dart';
-import 'package:inbox/presentation/controllers/user/user_cubit.dart';
 import 'package:inbox/presentation/view/home/widgets/deep_link_post.dart';
 import 'package:page_transition/page_transition.dart';
 
@@ -16,10 +15,8 @@ import '../../presentation/controllers/layout/layout_cubit.dart';
 import '../../presentation/controllers/post/add_post/add_post_cubit.dart';
 import '../../presentation/controllers/post/comment/comment_cubit.dart';
 import '../../presentation/view/add_post/add_post_screen.dart';
-import '../../presentation/view/chats/screens/camera_screen.dart';
 import '../../presentation/view/chats/screens/chat_screen.dart';
 import '../../presentation/view/chats/widgets/camera/sending_image_view_page.dart';
-import '../../presentation/view/chats/widgets/camera/sending_video_view_page.dart';
 import '../../presentation/view/forget_password/forget_password_screen.dart';
 import '../../presentation/view/layout/layout_screen.dart';
 import '../../presentation/view/login/screens/login_screen.dart';
@@ -79,9 +76,7 @@ class AppRouter {
           type: fromSearch
               ? PageTransitionType.fade
               : PageTransitionType.rightToLeft,
-          child: BlocProvider.value(
-              value: sl<UserCubit>(),
-              child: ProfileScreen(fromSearch: fromSearch)),
+          child: ProfileScreen(fromSearch: fromSearch),
         );
 
       case Routes.settings:
@@ -151,13 +146,6 @@ class AppRouter {
           child: ChatScreen(uID: uId, name: name, imageUrl: imageUrl),
         );
 
-      case Routes.camera:
-        final arguments = settings.arguments as Map<String, dynamic>;
-        final String uId = arguments['uId'];
-        final String name = arguments['name'];
-        return MaterialPageRoute(
-          builder: (_) => CameraScreen(receiverId: uId, name: name),
-        );
 
       case Routes.sendingImageViewRoute:
         final arguments = settings.arguments as Map<String, dynamic>;
@@ -171,21 +159,6 @@ class AppRouter {
             receiverId: uId,
             name: name,
             imageFile: imageFile,
-          ),
-        );
-
-      case Routes.sendingVideoViewRoute:
-        final arguments = settings.arguments as Map<String, dynamic>;
-        final String uId = arguments['uId'];
-        final String path = arguments['path'];
-        final String name = arguments['name'];
-        final File videoFile = arguments['videoFile'];
-        return MaterialPageRoute(
-          builder: (_) => SendingVideoViewPage(
-            path: path,
-            receiverId: uId,
-            name: name,
-            videoFile: videoFile,
           ),
         );
 

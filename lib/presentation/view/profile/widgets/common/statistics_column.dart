@@ -21,7 +21,7 @@ class StatisticsColumn extends StatelessWidget {
             maxLines: 1,
             textAlign: TextAlign.center,
             style: TextStyle(
-              fontSize: 17.0.sp,
+              fontSize: 16.5.sp,
               fontWeight: FontWeight.w600,
             ),
           ),
@@ -34,7 +34,7 @@ class StatisticsColumn extends StatelessWidget {
           style: TextStyle(
             fontWeight: FontWeight.w600,
             color: AppColors.blackOlive.withOpacity(0.8),
-            fontSize: 12.1.sp,
+            fontSize: 12.0.sp,
           ),
         ),
       ],

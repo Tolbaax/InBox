@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:inbox/config/routes/app_routes.dart';
 import 'package:inbox/core/extensions/media_query_extensions.dart';
-import 'package:inbox/core/functions/navigator.dart';
+import 'package:inbox/presentation/view/chats/widgets/camera/select_chat_image.dart';
 import '../../../../core/shared/common.dart';
 import '../../../../core/utils/app_colors.dart';
 import '../../../../core/utils/app_strings.dart';
@@ -120,26 +119,19 @@ class MessageInputField extends StatelessWidget {
                       ),
                     ),
                   ),
-                  // if (!isCameraRev)
-                  //   RotationTransition(
-                  //     turns: const AlwaysStoppedAnimation(-45 / 360),
-                  //     child: IconButton(
-                  //       onPressed: () {},
-                  //       splashRadius: 20.0.sp,
-                  //       icon: const Icon(Icons.attach_file),
-                  //       color: AppColors.black.withOpacity(0.5),
-                  //     ),
-                  //   ),
-                  // if (isMessageEmpty)
-                    IconButton(
-                      onPressed: () async {
-                        await navigateTo(context, Routes.camera,
-                            arguments: {'uId': receiverId, 'name': name});
-                      },
-                      splashRadius: 20.0.sp,
-                      icon: const Icon(Icons.camera_alt),
-                      color: AppColors.black.withOpacity(0.45),
+                  if (!isCameraRev)
+                    RotationTransition(
+                      turns: const AlwaysStoppedAnimation(-45 / 360),
+                      child: IconButton(
+                        onPressed: () {},
+                        splashRadius: 20.0.sp,
+                        icon: const Icon(Icons.attach_file),
+                        color: AppColors.black.withOpacity(0.5),
+                      ),
                     ),
+                  if (isMessageEmpty)
+                    SelectChatImage(
+                        receiverId: receiverId, name: name, isCamera: true),
                 ],
               ),
             ),

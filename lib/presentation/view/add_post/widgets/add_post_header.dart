@@ -30,7 +30,7 @@ class AddPostHeader extends StatelessWidget {
           child: Column(
             children: [
               Padding(
-                padding: EdgeInsetsDirectional.symmetric(horizontal: 15.0.sp),
+                padding: EdgeInsetsDirectional.only(start: 15.0.sp),
                 child: Form(
                   key: formKey,
                   child: Row(
