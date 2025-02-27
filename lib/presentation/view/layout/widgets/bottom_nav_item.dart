@@ -66,7 +66,7 @@ class UnreadChatsBadge extends StatelessWidget {
             child: Icon(
               Constants.iconList[index],
               size: 17.0.sp,
-              color: AppColors.primary,
+              color: color,
             ),
           );
         }

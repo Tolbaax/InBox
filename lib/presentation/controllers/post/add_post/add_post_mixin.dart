@@ -1,12 +1,9 @@
 import 'dart:io';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 import 'package:giphy_get/giphy_get.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:permission_handler/permission_handler.dart';
 import 'package:video_player/video_player.dart';
-
 import '../../../../../core/functions/app_dialogs.dart';
 import '../../../../../core/shared/common.dart';
 import '../../../../core/functions/navigator.dart';
@@ -22,12 +19,6 @@ mixin AddPostMixin on Cubit<AddPostStates> {
   File? video;
 
   Future<void> pickImage(BuildContext context) async {
-    if (!await requestPermission(Permission.storage)) {
-      AppDialogs.showToast(
-          msg: 'Storage permission denied', gravity: ToastGravity.BOTTOM);
-      return;
-    }
-
     if (context.mounted) {
       final pickedFile = await pickImageFile(context);
       if (pickedFile != null) {
@@ -46,11 +37,6 @@ mixin AddPostMixin on Cubit<AddPostStates> {
   }
 
   Future<void> getPostImageFromCamera(BuildContext context) async {
-    if (!await requestPermission(Permission.camera)) {
-      AppDialogs.showToast(msg: 'Camera permission denied');
-      return;
-    }
-
     if (context.mounted) {
       final pickedImage =
           await pickImageFile(context, imageSource: ImageSource.camera);
@@ -70,11 +56,6 @@ mixin AddPostMixin on Cubit<AddPostStates> {
   }
 
   Future<void> pickVideo() async {
-    if (!await requestPermission(Permission.storage)) {
-      AppDialogs.showToast(msg: 'Storage permission denied');
-      return;
-    }
-
     final pickedFile = await ImagePicker().pickVideo(
       source: ImageSource.gallery,
       maxDuration: const Duration(seconds: 15),
