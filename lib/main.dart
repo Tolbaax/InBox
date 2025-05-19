@@ -7,7 +7,7 @@ import 'package:timeago/timeago.dart' as timeago;
 import 'app.dart';
 import 'core/error/crashlytics.dart';
 import 'core/shared/bloc_observer.dart';
-import 'firebase_options.dart';
+import 'core/utils/firebase_options.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();

@@ -3,8 +3,7 @@ name: CI/CD Build APK & Notify 🚀
 on:
   push:
     branches:
-      - master
-      - test
+#      - master
 
   # Allows manual trigger from GitHub UI or CLI
   workflow_dispatch:
