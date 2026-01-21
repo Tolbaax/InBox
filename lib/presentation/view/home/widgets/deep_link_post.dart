@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:inbox/core/utils/app_strings.dart';
-import 'package:inbox/presentation/components/post_item/post_item.dart';
+import 'package:inbox/presentation/components/post_item/widgets/post_item.dart';
 import 'package:inbox/presentation/controllers/post/post_cubit.dart';
 import '../../../../core/injection/injector.dart';
 import '../../../../core/utils/app_colors.dart';

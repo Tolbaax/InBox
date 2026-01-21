@@ -38,7 +38,8 @@ class _ChatMessagesListState extends State<ChatMessagesList> {
         }
       },
       builder: (context, state) {
-        final cubit  = context.read<ChatCubit>();
+        final cubit = context.read<ChatCubit>();
+
         return StreamBuilder<List<MessageEntity>>(
           stream: cubit.getChatMessages(widget.receiverId),
           builder: (context, snapshot) {

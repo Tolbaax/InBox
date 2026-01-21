@@ -37,11 +37,7 @@ class ChatScreen extends StatelessWidget {
           ),
           child: Scaffold(
             backgroundColor: Colors.transparent,
-            appBar: ChatAppBar(
-              receiverId: uID,
-              name: name,
-              imageUrl: imageUrl,
-            ),
+            appBar: ChatAppBar(receiverId: uID, name: name, imageUrl: imageUrl),
             body: Column(
               mainAxisAlignment: MainAxisAlignment.end,
               crossAxisAlignment: CrossAxisAlignment.start,

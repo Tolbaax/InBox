@@ -17,7 +17,7 @@ ThemeData appTheme() {
     brightness: Brightness.light,
     fontFamily: AppStrings.montserratFont,
     scaffoldBackgroundColor: Colors.white,
-    dividerColor: AppColors.primary.withOpacity(0.4),
+    dividerColor: AppColors.primary.withValues(alpha: 0.4),
     appBarTheme: _appBarTheme(),
     progressIndicatorTheme: _progressIndicatorTheme(),
     popupMenuTheme: const PopupMenuThemeData(color: Colors.white),
@@ -75,8 +75,8 @@ BottomSheetThemeData _bottomSheetTheme() {
   );
 }
 
-TabBarTheme _tabBarTheme() {
-  return TabBarTheme(
+TabBarThemeData _tabBarTheme() {
+  return TabBarThemeData(
     unselectedLabelColor: AppColors.grayRegular,
     indicatorSize: TabBarIndicatorSize.tab,
     labelColor: AppColors.black,

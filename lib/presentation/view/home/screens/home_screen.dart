@@ -5,7 +5,8 @@ import 'package:inbox/core/extensions/media_query_extensions.dart';
 import 'package:inbox/domain/entities/post_entity.dart';
 import 'package:inbox/presentation/controllers/post/post_states.dart';
 import '../../../../core/injection/injector.dart';
-import '../../../components/post_item/post_item.dart';
+import '../../../components/post_item/widgets/post_item.dart';
+import '../../../components/post_item/widgets/post_item_shimmer.dart';
 import '../../../controllers/post/post_cubit.dart';
 import '../widgets/home_appbar.dart';
 import '../widgets/no_posts_yet.dart';
@@ -49,9 +50,7 @@ class HomeScreen extends StatelessWidget {
                     return const NoPotsYet();
                   }
                 },
-                fallback: (context) => const Center(
-                  child: CircularProgressIndicator(strokeWidth: 1.2),
-                ),
+                fallback: (context) => const HomeShimmerLoading(),
               );
             },
           );

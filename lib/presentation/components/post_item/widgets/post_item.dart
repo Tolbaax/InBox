@@ -2,12 +2,12 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
-import '../../../domain/entities/post_entity.dart';
-import 'widgets/post_item_actions.dart';
-import 'widgets/post_item_header.dart';
-import 'widgets/post_item_image.dart';
-import 'widgets/post_item_text.dart';
-import 'widgets/post_item_video.dart';
+import '../../../../domain/entities/post_entity.dart';
+import 'post_item_actions.dart';
+import 'post_item_header.dart';
+import 'post_item_image.dart';
+import 'post_item_text.dart';
+import 'post_item_video.dart';
 
 class PostItem extends StatelessWidget {
   final PostEntity post;

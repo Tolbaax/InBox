@@ -1,9 +1,10 @@
-name: CI/CD Build APK & Notify 🚀
+name: CI/CD Build APK & Distribute 🚀
 
 on:
   push:
-    branches:
-#      - master
+    branches: [ master, Development ]
+  pull_request:
+    branches: [ master ]
 
   # Allows manual trigger from GitHub UI or CLI
   workflow_dispatch:
@@ -26,39 +27,40 @@ jobs:
       author: ${{ steps.author.outputs.value }}
       email: ${{ steps.email.outputs.value }}
       datetime: ${{ steps.datetime.outputs.value }}
-      date_url: ${{ steps.date_url.outputs.value }}
+      commit_message: ${{ steps.commit_message.outputs.value }}
 
     steps:
       - name: Checkout Repository
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
 
       - name: Get Branch Name
-        id: branch_name
-        run: echo "branch_name=${GITHUB_REF#refs/heads/}" >> $GITHUB_ENV
+        id: branch
+        run: echo "value=${GITHUB_REF#refs/heads/}" >> $GITHUB_OUTPUT
 
       - name: Get Project Name
-        id: project_name
-        run: echo "project_name=${GITHUB_REPOSITORY#*/}" >> $GITHUB_ENV
+        id: project
+        run: echo "value=${GITHUB_REPOSITORY#*/}" >> $GITHUB_OUTPUT
 
       - name: Get Commit Author
-        id: commit_author
-        run: echo "commit_author=$(git log -1 --pretty=%an)" >> $GITHUB_ENV
+        id: author
+        run: echo "value=$(git log -1 --pretty=%an)" >> $GITHUB_OUTPUT
 
       - name: Get Commit Author Email
-        id: commit_author_email
-        run: echo "commit_author_email=$(git log -1 --pretty=%ae)" >> $GITHUB_ENV
+        id: email
+        run: echo "value=$(git log -1 --pretty=%ae)" >> $GITHUB_OUTPUT
 
       - name: Get Commit Formatted Date
-        id: date_time
-        run: echo "date_time=$(git log -1 --pretty=%cd --date=format:'%B %d, %Y %I:%M %p')" >> $GITHUB_ENV
+        id: datetime
+        run: echo "value=$(git log -1 --pretty=%cd --date=format:'%B %d, %Y %I:%M %p')" >> $GITHUB_OUTPUT
 
-      - name: Get Commit Date For Url
-        id: date_url
-        run: echo "date_url=$(git log -1 --pretty=%cd --date=format:'%Y-%m-%d')" >> $GITHUB_ENV
+      - name: Get Commit Message
+        id: commit_message
+        run: echo "value=$(git log -1 --pretty=%B)" >> $GITHUB_OUTPUT
 
-  build-android:
-    name: Build Android APK
+  build-and-distribute:
+    name: Build & Distribute Android APK
     runs-on: ubuntu-latest
+    needs: [get-info, delete-artifacts]
 
     steps:
       - name: Checkout code
@@ -68,6 +70,7 @@ jobs:
         uses: subosito/flutter-action@v2
         with:
           flutter-version: '3.24.5'
+          cache: true
 
       - name: Set up Java
         uses: actions/setup-java@v3
@@ -75,49 +78,40 @@ jobs:
           distribution: 'temurin'
           java-version: '17'
 
+      - name: Install dependencies
+        run: flutter pub get
+
       - name: Build Android APK
         run: flutter build apk --release
 
-      - name: Upload APK artifact
+      - name: Upload APK artifact to GitHub
         uses: actions/upload-artifact@v4
         with:
-          name: android-apk
+          name: android-apk-${{ needs.get-info.outputs.branch }}-${{ github.run_number }}
           path: build/app/outputs/apk/release/app-release.apk
+          retention-days: 7
 
-
-  upload-apk:
-    runs-on: ubuntu-latest
-    needs: [get-info, delete-artifacts, build-android]
-    outputs:
-      folder_id: ${{ steps.folder_id.outputs.value }}
-    steps:
-      - uses: actions/checkout@v2
-
-      # Determine the Google Drive folder based on branch
-      - id: folder_id
-        run: echo "value=${{ secrets[ needs.get-info.outputs.branch == 'master' && 'MASTER_FOLDER_ID' || 'TEST_FOLDER_ID' ] }}" >> $GITHUB_ENV
-
-      # Compress files before uploading
-      - run: zip -r archive.zip *
-
-      # Upload APK to Google Drive
-      - uses: adityak74/google-drive-upload-git-action@main
+      - name: Distribute to Firebase App Distribution
+        uses: wzieba/Firebase-Distribution-Github-Action@v1
         with:
-          credentials: "${{ secrets.GOOGLE_DRIVE_CREDENTIALS }}"
-          filename: "build/app/outputs/flutter-apk/app-release.apk"
-          folderId: ${{ steps.folder_id.outputs.value }}
-          name: "${{ needs.get-info.outputs.branch }}_apk_${{ needs.get-info.outputs.datetime }}.apk"
-          overwrite: "true"
-          mimeType: "application/vnd.android.package-archive"
+          appId: ${{ secrets.FIREBASE_APP_ID }}
+          serviceCredentialsFileContent: ${{ secrets.FIREBASE_SERVICE_ACCOUNT }}
+          groups: testers
+          file: build/app/outputs/apk/release/app-release.apk
+          releaseNotes: |
+            🚀 New Build from ${{ needs.get-info.outputs.branch }} branch
+            
+            📝 Commit: ${{ needs.get-info.outputs.commit_message }}
+            👤 Author: ${{ needs.get-info.outputs.author }}
+            📅 Date: ${{ needs.get-info.outputs.datetime }}
 
   notify:
     runs-on: ubuntu-latest
-    needs: [get-info, delete-artifacts, build-android, upload-apk]
+    needs: [get-info, build-and-distribute]
+    if: always()
     steps:
-      - uses: actions/checkout@v2
-
-      # Send email notification with build details
-      - uses: dawidd6/action-send-mail@v3
+      - name: Send email notification
+        uses: dawidd6/action-send-mail@v3
         with:
           server_address: smtp.gmail.com
           server_port: 465
@@ -125,18 +119,20 @@ jobs:
           password: ${{ secrets.GMAIL_PASSWORD }}
           from: ${{ needs.get-info.outputs.email }}
           to: tolbaax@gmail.com
-          subject: "CI 👉🏻 New APK Build Uploaded"
+          subject: "CI 👉🏻 New APK Build Distributed via Firebase"
           convert_markdown: true
           body: |
             **Dear Sir,**
             
-            A new APK build has been successfully uploaded to Google Drive.
+            A new APK build has been successfully built and distributed via Firebase App Distribution.
             
             - **Project:** ${{ needs.get-info.outputs.project }}
             - **Branch:** ${{ needs.get-info.outputs.branch }}
             - **Date:** ${{ needs.get-info.outputs.datetime }}
+            - **Commit:** ${{ needs.get-info.outputs.commit_message }}
             
-            📂 [Download APK](https://drive.google.com/drive/folders/${{ needs.upload-apk.outputs.folder_id }})
+            🔥 Testers will receive automatic notifications with download links.
+            📱 [View in Firebase Console](https://console.firebase.google.com/project/inbox-60c45/appdistribution)
             
             Regards,  
             **${{ needs.get-info.outputs.author }}**  

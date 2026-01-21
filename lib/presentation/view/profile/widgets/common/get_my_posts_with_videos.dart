@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:inbox/core/extensions/media_query_extensions.dart';
 import '../../../../../core/injection/injector.dart';
 import '../../../../../domain/entities/post_entity.dart';
-import '../../../../components/post_item/post_item.dart';
+import '../../../../components/post_item/widgets/post_item.dart';
 import '../../../../controllers/post/post_cubit.dart';
 import '../../../home/widgets/posts_divider.dart';
 import 'tab_view_no_videos_yet.dart';
