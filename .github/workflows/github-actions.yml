@@ -86,21 +86,31 @@ jobs:
           flutter --version
           echo "Flutter setup completed ✓"
 
-      # STEP 6: Install dependencies
+
+      # STEP 6: Generate Firebase Options
+      - name: Generate Firebase Options
+        run: |
+          mkdir -p lib/core/utils
+          cat > lib/core/utils/firebase_options.dart << 'EOF'
+          ${{ secrets.FIREBASE_OPTIONS_DART }}
+          EOF
+          echo "Firebase options file generated ✓"
+
+      # STEP 7: Install dependencies
       - name: Install Flutter dependencies
         run: |
           echo "Installing dependencies..."
           flutter pub get
           echo "Dependencies installed ✓"
 
-      # STEP 7: Build APK
+      # STEP 8: Build APK
       - name: Build Android APK (Release)
         run: |
           echo "Building APK..."
           flutter build apk --release
           echo "APK build completed ✓"
 
-      # STEP 8: Verify APK file
+      # STEP 9: Verify APK file
       - name: Verify APK file exists
         run: |
           echo "Verifying APK file..."
@@ -114,7 +124,7 @@ jobs:
             exit 1
           fi
 
-      # STEP 9: Upload to GitHub Artifacts
+      # STEP 10: Upload to GitHub Artifacts
       - name: Upload APK to GitHub Artifacts
         uses: actions/upload-artifact@v4
         with:
@@ -123,7 +133,7 @@ jobs:
           retention-days: 7
           if-no-files-found: error
 
-      # STEP 10: Distribute to Firebase
+      # STEP 11: Distribute to Firebase
       - name: Distribute to Firebase App Distribution
         uses: wzieba/Firebase-Distribution-Github-Action@v1
         with:
