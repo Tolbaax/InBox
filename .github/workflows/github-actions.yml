@@ -5,14 +5,9 @@ on:
     branches: [ master, Development ]
   pull_request:
     branches: [ master ]
-
-  # Allows manual trigger from GitHub UI or CLI
   workflow_dispatch:
 
 jobs:
-  delete-artifacts:
-    runs-on: ubuntu-latest
-
   get-info:
     runs-on: ubuntu-latest
     outputs:
@@ -54,7 +49,7 @@ jobs:
   build-and-distribute:
     name: Build & Distribute Android APK
     runs-on: ubuntu-latest
-    needs: [get-info, delete-artifacts]
+    needs: get-info
 
     steps:
       - name: Checkout code
@@ -63,7 +58,7 @@ jobs:
       - name: Set up Flutter
         uses: subosito/flutter-action@v2
         with:
-          flutter-version: '3.24.5'
+          flutter-version: '3.35.6'
           cache: true
 
       - name: Set up Java
@@ -111,24 +106,73 @@ jobs:
           server_port: 465
           username: ${{ secrets.GMAIL_USERNAME }}
           password: ${{ secrets.GMAIL_PASSWORD }}
-          from: ${{ needs.get-info.outputs.email }}
+          from: ${{ secrets.GMAIL_USERNAME }}  # Fixed: Use Gmail username instead of commit email
           to: tolbaax@gmail.com
           subject: "CI 👉🏻 New APK Build Distributed via Firebase"
-          convert_markdown: true
+          html: true  # Changed from convert_markdown to html
           body: |
-            **Dear Sir,**
+            <!DOCTYPE html>
+            <html>
+            <body style="font-family: Arial, sans-serif; line-height: 1.6; color: #333; max-width: 600px; margin: 0 auto;">
             
-            A new APK build has been successfully built and distributed via Firebase App Distribution.
+              <div style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); padding: 20px; text-align: center; color: white; border-radius: 8px 8px 0 0;">
+                <h1 style="margin: 0;">🚀 New APK Build Deployed</h1>
+                <p style="margin: 10px 0 0 0; opacity: 0.9;">Flutter CI/CD Pipeline Notification</p>
+              </div>
             
-            - **Project:** ${{ needs.get-info.outputs.project }}
-            - **Branch:** ${{ needs.get-info.outputs.branch }}
-            - **Date:** ${{ needs.get-info.outputs.datetime }}
-            - **Commit:** ${{ needs.get-info.outputs.commit_message }}
+              <div style="padding: 25px; background: #f9f9f9; border-radius: 0 0 8px 8px;">
+                <p style="font-size: 16px;"><strong>Dear Sir,</strong></p>
             
-            🔥 Testers will receive automatic notifications with download links.
-            📱 [View in Firebase Console](https://console.firebase.google.com/project/inbox-60c45/appdistribution)
+                <p>A new APK build has been successfully built and distributed via Firebase App Distribution.</p>
             
-            Regards,  
-            **${{ needs.get-info.outputs.author }}**  
-            Flutter Developer, InBox App 
-            Email: ${{ needs.get-info.outputs.email }}
+                <div style="background: white; padding: 20px; border-radius: 6px; margin: 20px 0; border-left: 4px solid #667eea;">
+                  <h3 style="margin-top: 0; color: #333;">Build Details</h3>
+            
+                  <table style="width: 100%; border-collapse: collapse;">
+                    <tr>
+                      <td style="padding: 8px 0; border-bottom: 1px solid #eee; width: 30%;"><strong>Project:</strong></td>
+                      <td style="padding: 8px 0; border-bottom: 1px solid #eee;">${{ needs.get-info.outputs.project }}</td>
+                    </tr>
+                    <tr>
+                      <td style="padding: 8px 0; border-bottom: 1px solid #eee;"><strong>Branch:</strong></td>
+                      <td style="padding: 8px 0; border-bottom: 1px solid #eee;">${{ needs.get-info.outputs.branch }}</td>
+                    </tr>
+                    <tr>
+                      <td style="padding: 8px 0; border-bottom: 1px solid #eee;"><strong>Date:</strong></td>
+                      <td style="padding: 8px 0; border-bottom: 1px solid #eee;">${{ needs.get-info.outputs.datetime }}</td>
+                    </tr>
+                    <tr>
+                      <td style="padding: 8px 0;"><strong>Commit:</strong></td>
+                      <td style="padding: 8px 0;">${{ needs.get-info.outputs.commit_message }}</td>
+                    </tr>
+                  </table>
+                </div>
+            
+                <div style="background: #e8f4fd; padding: 15px; border-radius: 6px; margin: 20px 0; border: 1px solid #b6d7e8;">
+                  <h4 style="margin-top: 0; color: #0c5460;">🔥 Distribution Status</h4>
+                  <p>Testers will receive automatic notifications with download links via Firebase App Distribution.</p>
+                </div>
+            
+                <div style="margin: 30px 0; text-align: center;">
+                  <a href="https://console.firebase.google.com/project/inbox-60c45/appdistribution" 
+                     style="background: #667eea; color: white; padding: 12px 24px; text-decoration: none; border-radius: 4px; display: inline-block; font-weight: bold;">
+                    📱 View in Firebase Console
+                  </a>
+                </div>
+            
+                <div style="margin-top: 30px; padding-top: 20px; border-top: 1px solid #ddd; color: #666;">
+                  <p>Best regards,<br>
+                  <strong>${{ needs.get-info.outputs.author }}</strong><br>
+                  Flutter Developer, InBox App<br>
+                  Email: ${{ needs.get-info.outputs.email }}</p>
+                </div>
+            
+              </div>
+            
+              <div style="text-align: center; margin-top: 20px; color: #999; font-size: 12px;">
+                <p>This is an automated notification from your CI/CD pipeline.</p>
+                <p>Build #${{ github.run_number }} | Run ID: ${{ github.run_id }}</p>
+              </div>
+            
+            </body>
+            </html>
