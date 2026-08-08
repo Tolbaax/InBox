@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:inbox/presentation/controllers/post/post_cubit.dart';
 import 'package:inbox/presentation/controllers/user/user_cubit.dart';
+
 import 'config/routes/app_router.dart';
 import 'config/theme/app_theme.dart';
 import 'core/injection/injector.dart';
@@ -23,6 +24,10 @@ class MyApp extends StatelessWidget {
             debugShowCheckedModeBanner: false,
             theme: appTheme(),
             onGenerateRoute: AppRouter.onGenerateRoute,
+            builder: (context, child) => ColoredBox(
+              color: Colors.white,
+              child: SafeArea(child: child!),
+            ),
           ),
         );
       },

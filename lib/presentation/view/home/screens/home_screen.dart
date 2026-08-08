@@ -19,42 +19,44 @@ class HomeScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: const HomeAppBar(),
-      body: BlocConsumer<PostCubit, PostStates>(
-        listener: (context, state) {},
-        builder: (context, state) {
-          return StreamBuilder<List<PostEntity>>(
-            stream: sl<PostCubit>().getPosts(),
-            builder: (context, snapshot) {
-              return ConditionalBuilder(
-                condition: snapshot.hasData,
-                builder: (context) {
-                  if (snapshot.hasData && snapshot.data!.isNotEmpty) {
-                    return ListView.separated(
-                      shrinkWrap: true,
-                      itemCount: snapshot.data!.length,
-                      itemBuilder: (context, index) {
-                        final post = snapshot.data![index];
-                        final lastItem = snapshot.data!.last;
+      body: SafeArea(
+        child: BlocConsumer<PostCubit, PostStates>(
+          listener: (context, state) {},
+          builder: (context, state) {
+            return StreamBuilder<List<PostEntity>>(
+              stream: sl<PostCubit>().getPosts(),
+              builder: (context, snapshot) {
+                return ConditionalBuilder(
+                  condition: snapshot.hasData,
+                  builder: (context) {
+                    if (snapshot.hasData && snapshot.data!.isNotEmpty) {
+                      return ListView.separated(
+                        shrinkWrap: true,
+                        itemCount: snapshot.data!.length,
+                        itemBuilder: (context, index) {
+                          final post = snapshot.data![index];
+                          final lastItem = snapshot.data!.last;
 
-                        return PostItem(
-                          post: post,
-                          lastItem: lastItem,
-                          lastItemHeight: context.height * 0.075,
-                        );
-                      },
-                      separatorBuilder: (context, index) {
-                        return const PostsDivider();
-                      },
-                    );
-                  } else {
-                    return const NoPotsYet();
-                  }
-                },
-                fallback: (context) => const HomeShimmerLoading(),
-              );
-            },
-          );
-        },
+                          return PostItem(
+                            post: post,
+                            lastItem: lastItem,
+                            lastItemHeight: context.height * 0.075,
+                          );
+                        },
+                        separatorBuilder: (context, index) {
+                          return const PostsDivider();
+                        },
+                      );
+                    } else {
+                      return const NoPotsYet();
+                    }
+                  },
+                  fallback: (context) => const HomeShimmerLoading(),
+                );
+              },
+            );
+          },
+        ),
       ),
     );
   }

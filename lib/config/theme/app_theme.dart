@@ -29,13 +29,14 @@ ThemeData appTheme() {
   );
 }
 
+const SystemUiOverlayStyle _systemOverlayStyle = SystemUiOverlayStyle(
+  statusBarColor: Colors.transparent,
+  statusBarIconBrightness: Brightness.dark, // dark icons for light mode
+  statusBarBrightness: Brightness.light, // iOS: light status bar background
+);
+
 void _setSystemUIOverlayStyle() {
-  SystemChrome.setSystemUIOverlayStyle(
-    SystemUiOverlayStyle.light.copyWith(
-      statusBarColor: Colors.transparent,
-      statusBarIconBrightness: Brightness.dark,
-    ),
-  );
+  SystemChrome.setSystemUIOverlayStyle(_systemOverlayStyle);
 }
 
 AppBarTheme _appBarTheme() {
@@ -43,6 +44,7 @@ AppBarTheme _appBarTheme() {
     centerTitle: true,
     elevation: 0.0,
     backgroundColor: Colors.transparent,
+    systemOverlayStyle: _systemOverlayStyle,
     titleTextStyle: TextStyle(
       color: AppColors.black,
       fontSize: 18.5.sp,

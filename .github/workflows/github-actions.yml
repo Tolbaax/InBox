@@ -135,6 +135,7 @@ jobs:
 
       # STEP 11: Distribute to Firebase
       - name: Distribute to Firebase App Distribution
+        continue-on-error: true
         uses: wzieba/Firebase-Distribution-Github-Action@v1
         with:
           appId: ${{ secrets.FIREBASE_APP_ID }}
@@ -164,7 +165,7 @@ jobs:
             echo "icon=❌" >> $GITHUB_OUTPUT
           fi
 
-      - name: Send simple email notification
+      - name: Send email notification
         uses: dawidd6/action-send-mail@v3
         with:
           server_address: smtp.gmail.com

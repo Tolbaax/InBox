@@ -3,18 +3,8 @@
 #
 
 list(APPEND FLUTTER_PLUGIN_LIST
-  app_links
-  cloud_firestore
-  connectivity_plus
-  emoji_picker_flutter
-  file_selector_windows
-  firebase_auth
   firebase_core
-  firebase_storage
   permission_handler_windows
-  rive_common
-  share_plus
-  url_launcher_windows
 )
 
 list(APPEND FLUTTER_FFI_PLUGIN_LIST

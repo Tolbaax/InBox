@@ -91,11 +91,11 @@ class _CustomCachedNetworkImageState extends State<CustomCachedNetworkImage> {
       width: double.infinity,
       height: 200.h, // Default height while loading
       decoration: BoxDecoration(
-        color: AppColors.gray.withOpacity(0.3),
+        color: AppColors.gray.withValues(alpha: 0.3),
         borderRadius: BorderRadius.circular(10.sp),
       ),
       child: Center(
-        child: SpinKitPulse(color: AppColors.primary.withOpacity(0.5)),
+        child: SpinKitPulse(color: AppColors.primary.withValues(alpha: 0.5)),
       ),
     );
   }
@@ -105,7 +105,7 @@ class _CustomCachedNetworkImageState extends State<CustomCachedNetworkImage> {
       width: double.infinity,
       height: 180.h,
       decoration: BoxDecoration(
-        color: AppColors.gray.withOpacity(0.3),
+        color: AppColors.gray.withValues(alpha: 0.3),
         borderRadius: BorderRadius.circular(10.sp),
       ),
       child: Center(
