@@ -92,16 +92,14 @@ jobs:
           flutter build apk \
             --release \
             --obfuscate \
-            --split-debug-info=build/debug-info \
-            --no-pub
+            --split-debug-info=build/debug-info
 
       - name: Build App Bundle (release)
         run: |
           flutter build appbundle \
             --release \
             --obfuscate \
-            --split-debug-info=build/debug-info \
-            --no-pub
+            --split-debug-info=build/debug-info
 
       - name: Verify build outputs
         run: |
