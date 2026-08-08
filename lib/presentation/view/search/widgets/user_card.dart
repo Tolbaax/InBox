@@ -30,7 +30,7 @@ class UserCard extends StatelessWidget {
 
         return InkWell(
           overlayColor: WidgetStateProperty.all(
-            AppColors.gray.withOpacity(0.15),
+            AppColors.gray.withValues(alpha: 0.15),
           ),
           onTap: () async {
             final currentUser = firebaseAuth.currentUser;

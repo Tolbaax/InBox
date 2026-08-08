@@ -12,7 +12,7 @@ class PostsDivider extends StatelessWidget {
       height: 10.0.h,
       child: Divider(
         thickness: 5.0.sp,
-        color: AppColors.gray.withOpacity(0.3),
+        color: AppColors.gray.withValues(alpha: 0.3),
       ),
     );
   }

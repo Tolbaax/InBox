@@ -33,7 +33,7 @@ class AddPostDraggableSheet extends StatelessWidget {
             ),
             boxShadow: [
               BoxShadow(
-                color: AppColors.black.withOpacity(0.15),
+                color: AppColors.black.withValues(alpha: 0.15),
                 spreadRadius: 4.sp,
                 blurRadius: 8.sp,
                 offset: const Offset(0, 3),
@@ -50,7 +50,7 @@ class AddPostDraggableSheet extends StatelessWidget {
                     height: 3.5.h,
                     width: context.width * 0.14,
                     decoration: BoxDecoration(
-                      color: AppColors.blackOlive.withOpacity(0.8),
+                      color: AppColors.blackOlive.withValues(alpha: 0.8),
                       borderRadius: BorderRadius.circular(10.0.sp),
                     ),
                   ),
@@ -63,14 +63,14 @@ class AddPostDraggableSheet extends StatelessWidget {
                   ),
                 ],
               ),
-              Divider(height: 0.0, color: AppColors.gray.withOpacity(0.4)),
+              Divider(height: 0.0, color: AppColors.gray.withValues(alpha: 0.4)),
               _buildListTile(
                 onTap: () => cubit.getPostImageFromCamera(context),
                 icon: FontAwesomeIcons.camera,
                 color: AppColors.nickel,
                 text: AppStrings.camera,
               ),
-              Divider(height: 0.0, color: AppColors.gray.withOpacity(0.4)),
+              Divider(height: 0.0, color: AppColors.gray.withValues(alpha: 0.4)),
               _buildListTile(
                 onTap: () async {
                   if (await checkInternetConnectivity()) {
@@ -84,14 +84,14 @@ class AddPostDraggableSheet extends StatelessWidget {
                 text: AppStrings.gif,
                 iconSize: 25.0.sp,
               ),
-              // Divider(height: 0.0, color: AppColors.gray.withOpacity(0.4)),
+              // Divider(height: 0.0, color: AppColors.gray.withValues(alpha: 0.4)),
               // _buildListTile(
               //   onTap: () {},
               //   icon: FontAwesomeIcons.music,
               //   color: Colors.pink,
               //   text: AppStrings.music,
               // ),
-              // Divider(height: 0.0, color: AppColors.gray.withOpacity(0.4)),
+              // Divider(height: 0.0, color: AppColors.gray.withValues(alpha: 0.4)),
               // _buildListTile(
               //   onTap: () {},
               //   icon: Icons.location_on,
@@ -99,7 +99,7 @@ class AddPostDraggableSheet extends StatelessWidget {
               //   text: AppStrings.location,
               //   iconSize: 25.0.sp,
               // ),
-              // Divider(height: 0.0, color: AppColors.gray.withOpacity(0.4)),
+              // Divider(height: 0.0, color: AppColors.gray.withValues(alpha: 0.4)),
             ],
           ),
         );

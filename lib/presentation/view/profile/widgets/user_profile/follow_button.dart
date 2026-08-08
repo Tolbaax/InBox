@@ -59,7 +59,7 @@ class _FollowButtonState extends State<FollowButton> {
             }
           },
           text: following ? AppStrings.unFollow : AppStrings.follow,
-          color: following ? null : AppColors.primary.withOpacity(0.94),
+          color: following ? null : AppColors.primary.withValues(alpha: 0.94),
         );
       },
     );
@@ -72,4 +72,3 @@ class _FollowButtonState extends State<FollowButton> {
     super.dispose();
   }
 }
-

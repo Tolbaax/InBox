@@ -28,9 +28,9 @@ class DeleteAccountOption extends StatelessWidget {
           icon: FontAwesomeIcons.trashCan,
           title: AppStrings.deleteAccount,
           bottom: 8.0.h,
-          titleColor: AppColors.red.withOpacity(0.8),
-          leadingColor: AppColors.red.withOpacity(0.6),
-          trailingColor: AppColors.red.withOpacity(0.6),
+          titleColor: AppColors.red.withValues(alpha: 0.8),
+          leadingColor: AppColors.red.withValues(alpha: 0.6),
+          trailingColor: AppColors.red.withValues(alpha: 0.6),
         ),
         Text(
           AppStrings.ifDeleteAccountNow,

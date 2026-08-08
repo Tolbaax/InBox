@@ -15,7 +15,7 @@ class BottomNavItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final color =
-        isActive ? AppColors.primary : AppColors.black.withOpacity(0.5);
+        isActive ? AppColors.primary : AppColors.black.withValues(alpha: 0.5);
     final double iconSize = isActive ? 17.0.sp : 16.5.sp;
 
     return Column(

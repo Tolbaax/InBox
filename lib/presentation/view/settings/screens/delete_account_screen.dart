@@ -50,7 +50,7 @@ class DeleteAccountScreen extends StatelessWidget {
               const UnorderedListItem(text: AppStrings.deleteAccountInfo3),
               const UnorderedListItem(text: AppStrings.deleteAccountInfo4),
               Divider(
-                color: AppColors.grayRegular.withOpacity(0.7),
+                color: AppColors.grayRegular.withValues(alpha: 0.7),
                 indent: context.width * 0.11,
               ),
               SizedBox(height: context.height * 0.03),

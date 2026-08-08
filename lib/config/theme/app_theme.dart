@@ -17,8 +17,9 @@ ThemeData appTheme() {
     brightness: Brightness.light,
     fontFamily: AppStrings.montserratFont,
     scaffoldBackgroundColor: Colors.white,
-    dividerColor: AppColors.primary.withOpacity(0.4),
+    dividerColor: AppColors.primary.withValues(alpha: 0.4),
     appBarTheme: _appBarTheme(),
+    useMaterial3: true,
     progressIndicatorTheme: _progressIndicatorTheme(),
     popupMenuTheme: const PopupMenuThemeData(color: Colors.white),
     textTheme: const TextTheme(),
@@ -29,20 +30,24 @@ ThemeData appTheme() {
   );
 }
 
+const SystemUiOverlayStyle _systemOverlayStyle = SystemUiOverlayStyle(
+  statusBarColor: Colors.transparent,
+  statusBarIconBrightness: Brightness.dark, // dark icons for light mode
+  statusBarBrightness: Brightness.light, // iOS: light status bar background
+);
+
 void _setSystemUIOverlayStyle() {
-  SystemChrome.setSystemUIOverlayStyle(
-    SystemUiOverlayStyle.light.copyWith(
-      statusBarColor: Colors.transparent,
-      statusBarIconBrightness: Brightness.dark,
-    ),
-  );
+  SystemChrome.setSystemUIOverlayStyle(_systemOverlayStyle);
 }
 
 AppBarTheme _appBarTheme() {
   return AppBarTheme(
     centerTitle: true,
     elevation: 0.0,
-    backgroundColor: Colors.transparent,
+    scrolledUnderElevation: 0.0,
+    surfaceTintColor: Colors.transparent,
+    backgroundColor: Colors.white,
+    systemOverlayStyle: _systemOverlayStyle,
     titleTextStyle: TextStyle(
       color: AppColors.black,
       fontSize: 18.5.sp,
@@ -75,8 +80,8 @@ BottomSheetThemeData _bottomSheetTheme() {
   );
 }
 
-TabBarTheme _tabBarTheme() {
-  return TabBarTheme(
+TabBarThemeData _tabBarTheme() {
+  return TabBarThemeData(
     unselectedLabelColor: AppColors.grayRegular,
     indicatorSize: TabBarIndicatorSize.tab,
     labelColor: AppColors.black,

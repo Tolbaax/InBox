@@ -63,7 +63,7 @@ class CommentCard extends StatelessWidget {
                         maxWidth: context.width - 40.0.sp * 2,
                       ),
                       decoration: BoxDecoration(
-                        color: Colors.blueGrey.withOpacity(0.06),
+                        color: Colors.blueGrey.withValues(alpha: 0.06),
                         borderRadius: BorderRadius.circular(10.0.sp),
                       ),
                       child: Padding(

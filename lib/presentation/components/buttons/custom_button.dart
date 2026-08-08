@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:inbox/core/utils/app_colors.dart';
 import 'package:inbox/core/extensions/media_query_extensions.dart';
+import 'package:inbox/core/utils/app_colors.dart';
 
 class CustomButton extends StatelessWidget {
   final GestureTapCallback? onTap;
@@ -38,7 +38,7 @@ class CustomButton extends StatelessWidget {
           borderRadius: BorderRadius.circular(20.0.r),
           boxShadow: [
             BoxShadow(
-              color: AppColors.primary.withOpacity(0.5),
+              color: AppColors.primary.withValues(alpha: 0.5),
               blurRadius: 3.0.sp,
               offset: const Offset(0, 3),
             ),

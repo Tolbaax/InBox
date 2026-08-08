@@ -31,7 +31,7 @@ class MyCachedNetImage extends StatelessWidget {
       children: [
         CircleAvatar(
           radius: radius.sp + 0.5.sp,
-          backgroundColor: AppColors.primary.withOpacity(0.1),
+          backgroundColor: AppColors.primary.withValues(alpha: 0.1),
           child: ClipOval(
             child: _buildImage(),
           ),
@@ -86,7 +86,7 @@ class MyCachedNetImage extends StatelessWidget {
           height: radius.sp * 2,
           width: radius.sp * 2,
           decoration: BoxDecoration(
-            color: AppColors.grayRegular.withOpacity(0.4),
+            color: AppColors.grayRegular.withValues(alpha: 0.4),
             shape: BoxShape.circle,
           ),
         ),

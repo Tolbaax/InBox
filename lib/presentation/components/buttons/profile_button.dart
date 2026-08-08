@@ -17,7 +17,7 @@ class ProfileButton extends StatelessWidget {
       child: Container(
         height: 28.0.h,
         decoration: BoxDecoration(
-          color: color ?? AppColors.gray.withOpacity(0.28),
+          color: color ?? AppColors.gray.withValues(alpha: 0.28),
           borderRadius: BorderRadius.circular(9.0.r),
         ),
         child: Center(

@@ -34,7 +34,7 @@ class NoPotsYet extends StatelessWidget {
               textAlign: TextAlign.center,
               style: TextStyle(
                 fontSize: 14.5.sp,
-                color: AppColors.blackOlive.withOpacity(0.8),
+                color: AppColors.blackOlive.withValues(alpha: 0.8),
                 fontWeight: FontWeight.w500,
               ),
             ),

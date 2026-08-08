@@ -33,7 +33,7 @@ class MessageReplyCard extends StatelessWidget {
         padding: EdgeInsets.only(
             left: 9.0.sp, right: 5.0.sp, top: 4.5.sp, bottom: 7.5.sp),
         decoration: BoxDecoration(
-          color: Colors.black.withOpacity(0.03),
+          color: Colors.black.withValues(alpha: 0.03),
           border: Border(
             left: BorderSide(
               color: isMe ? AppColors.primary : AppColors.amethyst,
@@ -56,7 +56,7 @@ class MessageReplyCard extends StatelessWidget {
                       fontWeight: FontWeight.bold,
                       fontSize: 12.1.sp,
                       color: isMe
-                          ? AppColors.primary.withOpacity(0.8)
+                          ? AppColors.primary.withValues(alpha: 0.8)
                           : AppColors.amethyst,
                     ),
                   ),

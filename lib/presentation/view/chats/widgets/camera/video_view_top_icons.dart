@@ -18,7 +18,7 @@ class VideoViewTopRowWidget extends StatelessWidget {
             iconSize: 25.0.sp,
             onPressed: () => navigatePop(context),
             icon: CircleAvatar(
-              backgroundColor: AppColors.black.withOpacity(0.5),
+              backgroundColor: AppColors.black.withValues(alpha: 0.5),
               child: Icon(Icons.clear, color: AppColors.white),
             ),
           ),

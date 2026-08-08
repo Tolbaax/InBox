@@ -15,7 +15,7 @@ class AppBarBackButton extends StatelessWidget {
         navigatePop(context);
       },
       splashRadius: 20.0.sp,
-      splashColor: AppColors.lightBlue.withOpacity(0.38),
+      splashColor: AppColors.lightBlue.withValues(alpha: 0.38),
       icon: Icon(
         CupertinoIcons.back,
         color: AppColors.black,

@@ -71,7 +71,7 @@ class _AddPostAppBarState extends State<AddPostAppBar> {
           title: Text(
             AppStrings.createPost,
             style: TextStyle(
-              color: AppColors.blackOlive.withOpacity(0.8),
+              color: AppColors.blackOlive.withValues(alpha: 0.8),
               fontWeight: FontWeight.w600,
               fontSize: 15.0.sp,
             ),

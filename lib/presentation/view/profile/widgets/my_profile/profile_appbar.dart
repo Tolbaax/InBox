@@ -35,7 +35,7 @@ class ProfileAppBar extends StatelessWidget implements PreferredSizeWidget {
                 navigateTo(context, Routes.settings);
                 sl<VideoManager>().stopCurrentVideo();
               },
-              splashColor: AppColors.lightBlue.withOpacity(0.38),
+              splashColor: AppColors.lightBlue.withValues(alpha: 0.38),
               splashRadius: 20.0.sp,
               icon: Icon(
                 FontAwesomeIcons.bars,

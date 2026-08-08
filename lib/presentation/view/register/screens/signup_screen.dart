@@ -29,39 +29,39 @@ class SignUpScreen extends StatelessWidget {
         builder: (context, state) {
           final cubit = context.read<AuthCubit>();
           return Scaffold(
-            body: SingleChildScrollView(
-              child: Padding(
-                padding: EdgeInsetsDirectional.only(
-                  start: 20.0.w,
-                  end: 20.0.w,
-                  top: 40.0.h,
-                ),
-                child: Column(
-                  children: [
-                    SafeArea(
-                      child: Image.asset(
-                        ImgAssets.logo,
-                        height: 70.h,
+            body: SafeArea(
+              child: SingleChildScrollView(
+                child: Padding(
+                  padding: EdgeInsetsDirectional.only(
+                    start: 20.0.w,
+                    end: 20.0.w,
+                    top: 40.0.h,
+                  ),
+                  child: Column(
+                    children: [
+                      SafeArea(
+                        child: Image.asset(
+                          ImgAssets.logo,
+                          height: 70.h,
+                        ),
                       ),
-                    ),
-                    SizedBox(
-                      height: 15.0.h,
-                    ),
-                    Text(
-                      AppStrings.signUp,
-                      style: TextStyle(
-                        fontSize: 33.0.sp,
-                        color: AppColors.primary,
-                        letterSpacing: 4.5.sp,
-                        fontFamily: AppStrings.economicaFont,
-                        fontWeight: FontWeight.bold,
+                      SizedBox(
+                        height: 15.0.h,
                       ),
-                    ),
-                    SizedBox(
-                      height: 40.0.h,
-                    ),
-                    RegisterForm(cubit: cubit, state: state),
-                  ],
+                      Text(
+                        AppStrings.signUp,
+                        style: TextStyle(
+                          fontSize: 33.0.sp,
+                          color: AppColors.primary,
+                          letterSpacing: 4.5.sp,
+                          fontFamily: AppStrings.economicaFont,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      SizedBox(height: 30.0.h),
+                      RegisterForm(cubit: cubit, state: state),
+                    ],
+                  ),
                 ),
               ),
             ),

@@ -8,17 +8,12 @@
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:636305871664:android:9a8439bcf59fd69b1caef5",
+        "mobilesdk_app_id": "1:636305871664:android:c75ef4499aec4e461caef5",
         "android_client_info": {
-          "package_name": "com.example.inbox"
+          "package_name": "com.inbox1.app"
         }
       },
-      "oauth_client": [
-        {
-          "client_id": "636305871664-pdq8h09puga20sn580s8jrp5k6vj96jk.apps.googleusercontent.com",
-          "client_type": 3
-        }
-      ],
+      "oauth_client": [],
       "api_key": [
         {
           "current_key": "AIzaSyDVnWMT0yQpOZwiZNhZoYHLFmdDWAGzxaU"
@@ -26,12 +21,7 @@
       ],
       "services": {
         "appinvite_service": {
-          "other_platform_oauth_client": [
-            {
-              "client_id": "636305871664-pdq8h09puga20sn580s8jrp5k6vj96jk.apps.googleusercontent.com",
-              "client_type": 3
-            }
-          ]
+          "other_platform_oauth_client": []
         }
       }
     }

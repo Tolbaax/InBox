@@ -96,7 +96,7 @@ class PostItemActions extends StatelessWidget {
               ],
             ),
           ),
-          Divider(color: Colors.grey.withOpacity(0.4)),
+          Divider(color: Colors.grey.withValues(alpha: 0.4)),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [

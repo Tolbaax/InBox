@@ -33,7 +33,7 @@ class StatisticsColumn extends StatelessWidget {
           text,
           style: TextStyle(
             fontWeight: FontWeight.w600,
-            color: AppColors.blackOlive.withOpacity(0.8),
+            color: AppColors.blackOlive.withValues(alpha: 0.8),
             fontSize: 12.0.sp,
           ),
         ),

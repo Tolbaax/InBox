@@ -14,7 +14,7 @@ class ReplayMessageContent extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final textStyle = TextStyle(
-      color: AppColors.black.withOpacity(0.65),
+      color: AppColors.black.withValues(alpha: 0.65),
       fontSize: 14,
       fontWeight: FontWeight.w500,
     );
@@ -31,7 +31,7 @@ class ReplayMessageContent extends StatelessWidget {
         return Row(
           children: [
             Icon(Icons.image,
-                color: AppColors.black.withOpacity(0.6), size: 16.0.sp),
+                color: AppColors.black.withValues(alpha: 0.6), size: 16.0.sp),
             const SizedBox(width: 4),
             Text(
               'Photo',
@@ -43,7 +43,7 @@ class ReplayMessageContent extends StatelessWidget {
         return Row(
           children: [
             Icon(Icons.gif_box_sharp,
-                color: AppColors.black.withOpacity(0.6), size: 16.0.sp),
+                color: AppColors.black.withValues(alpha: 0.6), size: 16.0.sp),
             const SizedBox(width: 4),
             Text(
               'GIF',
@@ -55,7 +55,7 @@ class ReplayMessageContent extends StatelessWidget {
         return Row(
           children: [
             Icon(Icons.videocam,
-                color: AppColors.black.withOpacity(0.6), size: 16.0.sp),
+                color: AppColors.black.withValues(alpha: 0.6), size: 16.0.sp),
             const SizedBox(width: 4),
             Text(
               'Video',
@@ -67,7 +67,7 @@ class ReplayMessageContent extends StatelessWidget {
         return Row(
           children: [
             Icon(Icons.mic,
-                color: AppColors.black.withOpacity(0.6), size: 16.0.sp),
+                color: AppColors.black.withValues(alpha: 0.6), size: 16.0.sp),
             const SizedBox(width: 4),
             Text(
               'Voice message',

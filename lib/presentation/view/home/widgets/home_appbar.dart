@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:inbox/core/extensions/media_query_extensions.dart';
+import 'package:inbox/presentation/components/common/app_bar_gradient.dart';
 
 import '../../../../../core/utils/app_colors.dart';
 import '../../../../../core/utils/app_strings.dart';
@@ -12,6 +13,8 @@ class HomeAppBar extends StatelessWidget implements PreferredSizeWidget {
   Widget build(BuildContext context) {
     return SafeArea(
       child: AppBar(
+        backgroundColor: Colors.transparent,
+        flexibleSpace: const AppBarGradient(),
         leadingWidth: context.width * 0.275,
         leading: Padding(
           padding: const EdgeInsetsDirectional.only(start: 8.0),

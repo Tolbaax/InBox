@@ -94,7 +94,7 @@ class CustomPubMenuButtonState extends State<CustomPubMenuButton> {
           isPostSaved
               ? FontAwesomeIcons.solidBookmark
               : FontAwesomeIcons.bookmark,
-          color: AppColors.blackOlive.withOpacity(0.7),
+          color: AppColors.blackOlive.withValues(alpha: 0.7),
           size: 18.0.sp,
         ),
         SizedBox(
@@ -113,7 +113,7 @@ class CustomPubMenuButtonState extends State<CustomPubMenuButton> {
       children: [
         Icon(
           FontAwesomeIcons.trashCan,
-          color: AppColors.blackOlive.withOpacity(0.7),
+          color: AppColors.blackOlive.withValues(alpha: 0.7),
           size: 18.0.sp,
         ),
         SizedBox(

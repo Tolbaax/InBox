@@ -32,7 +32,7 @@ class ShowImageWithLongPress extends StatelessWidget {
                         child: BackdropFilter(
                           filter: ImageFilter.blur(sigmaX: 5.5, sigmaY: 2.5),
                           child: Container(
-                            color: AppColors.black.withOpacity(0.4),
+                            color: AppColors.black.withValues(alpha: 0.4),
                           ),
                         ),
                       ),
