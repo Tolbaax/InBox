@@ -29,7 +29,7 @@ class UserProfileAppBar extends StatelessWidget implements PreferredSizeWidget {
         IconButton(
           onPressed: () =>
               AppDialogs.showProfileOptionsSheet(context, uID: uID),
-          splashColor: AppColors.lightBlue.withOpacity(0.38),
+          splashColor: AppColors.lightBlue.withValues(alpha: 0.38),
           splashRadius: 20.0.sp,
           icon: Icon(
             FontAwesomeIcons.ellipsisVertical,

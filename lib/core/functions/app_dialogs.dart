@@ -121,7 +121,7 @@ class AppDialogs {
                 navigatePop(context);
               },
               child: CircleAvatar(
-                backgroundColor: AppColors.primary.withOpacity(0.85),
+                backgroundColor: AppColors.primary.withValues(alpha: 0.85),
                 radius: 30.0.sp,
                 child: Icon(
                   FontAwesomeIcons.video,

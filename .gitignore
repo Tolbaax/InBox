@@ -43,3 +43,7 @@ app.*.map.json
 /android/app/release
 /lib/core/utils/firebase_options.dart
 /shorebird.yaml
+
+
+android/key.properties
+android/*.jks

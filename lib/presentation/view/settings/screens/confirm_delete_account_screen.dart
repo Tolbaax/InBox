@@ -41,7 +41,7 @@ class ConfirmDeleteAccountScreen extends StatelessWidget {
                   SizedBox(height: context.height * 0.05),
                   CircleAvatar(
                     radius: 62.0.r,
-                    backgroundColor: AppColors.red.withOpacity(0.14),
+                    backgroundColor: AppColors.red.withValues(alpha: 0.14),
                     child: Icon(
                       FontAwesomeIcons.triangleExclamation,
                       color: AppColors.red,

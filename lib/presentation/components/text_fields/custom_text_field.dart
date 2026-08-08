@@ -68,7 +68,7 @@ class CustomTextField extends StatelessWidget {
         prefixIcon: prefixIcon != null
             ? Icon(
                 prefixIcon,
-                color: AppColors.black.withOpacity(0.35),
+                color: AppColors.black.withValues(alpha: 0.35),
                 size: 17.5.sp,
               )
             : null,
@@ -77,7 +77,7 @@ class CustomTextField extends StatelessWidget {
                 onTap: suffixTab,
                 child: Icon(
                   suffixIcon,
-                  color: AppColors.black.withOpacity(0.4),
+                  color: AppColors.black.withValues(alpha: 0.4),
                   size: 21.0.sp,
                 ),
               )

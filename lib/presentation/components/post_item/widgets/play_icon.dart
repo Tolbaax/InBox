@@ -15,7 +15,7 @@ class PlayIcon extends StatelessWidget {
         Icons.play_arrow,
         shadows: [
           BoxShadow(
-            color: AppColors.blackOlive.withOpacity(0.8),
+            color: AppColors.blackOlive.withValues(alpha: 0.8),
             blurRadius: 5.0.sp,
             spreadRadius: 5.0.sp,
             offset: const Offset(2, 2),

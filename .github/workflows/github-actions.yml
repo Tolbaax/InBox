@@ -1,4 +1,4 @@
-name: CI/CD Build APK & Distribute 🚀
+name: CI/CD Build & Distribute 🚀
 
 on:
   push:
@@ -7,162 +7,166 @@ on:
     branches: [ master ]
   workflow_dispatch:
 
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
   get-info:
     runs-on: ubuntu-latest
     outputs:
-      branch: ${{ steps.branch.outputs.value }}
-      project: ${{ steps.project.outputs.value }}
-      author: ${{ steps.author.outputs.value }}
-      email: ${{ steps.email.outputs.value }}
-      datetime: ${{ steps.datetime.outputs.value }}
-      commit_message: ${{ steps.commit_message.outputs.value }}
-
+      branch: ${{ steps.meta.outputs.branch }}
+      project: ${{ steps.meta.outputs.project }}
+      author: ${{ steps.meta.outputs.author }}
+      datetime: ${{ steps.meta.outputs.datetime }}
+      commit_message: ${{ steps.meta.outputs.commit_message }}
     steps:
-      - name: Checkout Repository
-        uses: actions/checkout@v3
+      - uses: actions/checkout@v4
 
-      - name: Get Branch Name
-        id: branch
-        run: echo "value=${GITHUB_REF#refs/heads/}" >> $GITHUB_OUTPUT
-
-      - name: Get Project Name
-        id: project
-        run: echo "value=${GITHUB_REPOSITORY#*/}" >> $GITHUB_OUTPUT
-
-      - name: Get Commit Author
-        id: author
-        run: echo "value=$(git log -1 --pretty=%an)" >> $GITHUB_OUTPUT
-
-      - name: Get Commit Author Email
-        id: email
-        run: echo "value=$(git log -1 --pretty=%ae)" >> $GITHUB_OUTPUT
-
-      - name: Get Commit Formatted Date
-        id: datetime
-        run: echo "value=$(git log -1 --pretty=%cd --date=format:'%B %d, %Y %I:%M %p')" >> $GITHUB_OUTPUT
-
-      - name: Get Commit Message
-        id: commit_message
-        run: echo "value=$(git log -1 --pretty=%B)" >> $GITHUB_OUTPUT
+      - name: Collect metadata
+        id: meta
+        run: |
+          echo "branch=${GITHUB_REF#refs/heads/}" >> "$GITHUB_OUTPUT"
+          echo "project=${GITHUB_REPOSITORY#*/}" >> "$GITHUB_OUTPUT"
+          echo "author=$(git log -1 --pretty=%an)" >> "$GITHUB_OUTPUT"
+          echo "datetime=$(git log -1 --pretty=%cd --date=format:'%B %d, %Y %I:%M %p')" >> "$GITHUB_OUTPUT"
+          {
+            echo "commit_message<<EOF"
+            git log -1 --pretty=%B
+            echo "EOF"
+          } >> "$GITHUB_OUTPUT"
 
   build-and-distribute:
-    name: Build & Distribute Android APK
+    name: Build & Distribute
     runs-on: ubuntu-latest
     needs: get-info
-
     steps:
-      # STEP 1: Checkout code
-      - name: Checkout code
-        uses: actions/checkout@v3
-        with:
-          fetch-depth: 0
+      - uses: actions/checkout@v4
 
-      # STEP 2: Setup Java
       - name: Setup Java JDK 17
-        uses: actions/setup-java@v3
+        uses: actions/setup-java@v4
         with:
           distribution: 'temurin'
           java-version: '17'
 
-      # STEP 3: Verify Java installation
-      - name: Verify Java installation
-        run: |
-          echo "Checking Java version..."
-          java -version
-          echo "Java setup completed ✓"
-
-      # STEP 4: Setup Flutter
-      - name: Setup Flutter (Stable)
+      - name: Setup Flutter
         uses: subosito/flutter-action@v2
         with:
           channel: 'stable'
           cache: true
 
-      # STEP 5: Verify Flutter installation
-      - name: Verify Flutter installation
-        run: |
-          echo "Checking Flutter installation..."
-          flutter --version
-          echo "Flutter setup completed ✓"
+      - name: Cache Gradle
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.gradle/caches
+            ~/.gradle/wrapper
+          key: gradle-${{ runner.os }}-${{ hashFiles('android/**/*.gradle*') }}
+          restore-keys: gradle-${{ runner.os }}-
 
-
-      # STEP 6: Generate Firebase Options
       - name: Generate Firebase Options
         run: |
           mkdir -p lib/core/utils
           cat > lib/core/utils/firebase_options.dart << 'EOF'
           ${{ secrets.FIREBASE_OPTIONS_DART }}
           EOF
-          echo "Firebase options file generated ✓"
 
-      # STEP 7: Install dependencies
-      - name: Install Flutter dependencies
+      - name: Decode Keystore
+        run: echo "${{ secrets.KEYSTORE_BASE64 }}" | base64 -d > android/app/upload-keystore.jks
+
+      - name: Generate key.properties
         run: |
-          echo "Installing dependencies..."
-          flutter pub get
-          echo "Dependencies installed ✓"
+          cat > android/key.properties << EOF
+          storePassword=${{ secrets.KEYSTORE_PASSWORD }}
+          keyPassword=${{ secrets.KEY_PASSWORD }}
+          keyAlias=${{ secrets.KEY_ALIAS }}
+          storeFile=upload-keystore.jks
+          EOF
 
-      # STEP 8: Build APK
-      - name: Build Android APK (Release)
+      - name: Install dependencies
+        run: flutter pub get
+
+      - name: Build APK (release)
         run: |
-          echo "Building APK..."
-          flutter build apk --release
-          echo "APK build completed ✓"
+          flutter build apk \
+            --release \
+            --obfuscate \
+            --split-debug-info=build/debug-info \
+            --no-pub
 
-      # STEP 9: Verify APK file
-      - name: Verify APK file exists
+      - name: Build App Bundle (release)
         run: |
-          echo "Verifying APK file..."
-          if [ -f "build/app/outputs/apk/release/app-release.apk" ]; then
-            echo "✅ APK file created successfully"
-            echo "File location: build/app/outputs/apk/release/app-release.apk"
-            echo "File size: $(du -h build/app/outputs/apk/release/app-release.apk | cut -f1)"
-          else
-            echo "❌ APK file not found!"
-            ls -la build/app/outputs/apk/release/ || true
-            exit 1
-          fi
+          flutter build appbundle \
+            --release \
+            --obfuscate \
+            --split-debug-info=build/debug-info \
+            --no-pub
 
-      # STEP 10: Upload to GitHub Artifacts
-      - name: Upload APK to GitHub Artifacts
+      - name: Verify build outputs
+        run: |
+          APK="build/app/outputs/flutter-apk/app-release.apk"
+          AAB="build/app/outputs/bundle/release/app-release.aab"
+          for f in "$APK" "$AAB"; do
+            if [ ! -f "$f" ]; then echo "❌ Missing $f"; exit 1; fi
+            echo "✅ $f ($(du -h "$f" | cut -f1))"
+          done
+
+      - name: Upload debug symbols
         uses: actions/upload-artifact@v4
         with:
-          name: android-apk-${{ needs.get-info.outputs.branch }}-${{ github.run_number }}
-          path: build/app/outputs/apk/release/app-release.apk
+          name: debug-info-${{ needs.get-info.outputs.branch }}-${{ github.run_number }}
+          path: build/debug-info
+          retention-days: 90
+          if-no-files-found: error
+
+      - name: Cleanup signing files
+        if: always()
+        run: rm -f android/app/upload-keystore.jks android/key.properties
+
+      - name: Upload APK artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: apk-${{ needs.get-info.outputs.branch }}-${{ github.run_number }}
+          path: build/app/outputs/flutter-apk/app-release.apk
           retention-days: 7
           if-no-files-found: error
 
-      # STEP 11: Distribute to Firebase
-      - name: Distribute to Firebase App Distribution
+      - name: Upload AAB artifact (for Play Store upload)
+        uses: actions/upload-artifact@v4
+        with:
+          name: aab-${{ needs.get-info.outputs.branch }}-${{ github.run_number }}
+          path: build/app/outputs/bundle/release/app-release.aab
+          retention-days: 30
+          if-no-files-found: error
+
+      - name: Distribute APK to Firebase (testers)
         continue-on-error: true
         uses: wzieba/Firebase-Distribution-Github-Action@v1
         with:
           appId: ${{ secrets.FIREBASE_APP_ID }}
           serviceCredentialsFileContent: ${{ secrets.FIREBASE_SERVICE_ACCOUNT }}
           groups: testers
-          file: build/app/outputs/apk/release/app-release.apk
+          file: build/app/outputs/flutter-apk/app-release.apk
           releaseNotes: |
-            🚀 New Build from ${{ needs.get-info.outputs.branch }} branch
-            
-            📝 Commit: ${{ needs.get-info.outputs.commit_message }}
-            👤 Author: ${{ needs.get-info.outputs.author }}
-            📅 Date: ${{ needs.get-info.outputs.datetime }}
+            🚀 New build from ${{ needs.get-info.outputs.branch }} branch
+            📝 ${{ needs.get-info.outputs.commit_message }}
+            👤 ${{ needs.get-info.outputs.author }}
+            📅 ${{ needs.get-info.outputs.datetime }}
 
   notify:
     runs-on: ubuntu-latest
     needs: [get-info, build-and-distribute]
     if: always()
     steps:
-      - name: Determine build status
+      - name: Determine status
         id: status
         run: |
           if [ "${{ needs.build-and-distribute.result }}" == "success" ]; then
-            echo "status=SUCCESS" >> $GITHUB_OUTPUT
-            echo "icon=✅" >> $GITHUB_OUTPUT
+            echo "status=SUCCESS" >> "$GITHUB_OUTPUT"
+            echo "icon=✅" >> "$GITHUB_OUTPUT"
           else
-            echo "status=FAILED" >> $GITHUB_OUTPUT
-            echo "icon=❌" >> $GITHUB_OUTPUT
+            echo "status=FAILED" >> "$GITHUB_OUTPUT"
+            echo "icon=❌" >> "$GITHUB_OUTPUT"
           fi
 
       - name: Send email notification
@@ -177,16 +181,16 @@ jobs:
           subject: "${{ steps.status.outputs.icon }} Build ${{ steps.status.outputs.status }} - ${{ needs.get-info.outputs.project }}"
           body: |
             Build Status: ${{ steps.status.outputs.icon }} ${{ steps.status.outputs.status }}
-            
+
             Project: ${{ needs.get-info.outputs.project }}
             Branch: ${{ needs.get-info.outputs.branch }}
             Build #: ${{ github.run_number }}
-            
+
             Author: ${{ needs.get-info.outputs.author }}
             Date: ${{ needs.get-info.outputs.datetime }}
             Commit: ${{ needs.get-info.outputs.commit_message }}
-            
+
             View details: https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}
-            
+
             ---
             Automated notification from CI/CD pipeline

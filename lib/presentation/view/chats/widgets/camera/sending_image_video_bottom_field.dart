@@ -53,7 +53,7 @@ class SendingImageVideoBottomField extends StatelessWidget {
             Container(
               height: context.height * 0.074,
               width: context.width,
-              color: AppColors.black.withOpacity(0.45),
+              color: AppColors.black.withValues(alpha: 0.45),
               child: Padding(
                 padding: EdgeInsetsDirectional.symmetric(horizontal: 13.0.sp),
                 child: Row(

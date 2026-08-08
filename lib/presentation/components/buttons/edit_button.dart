@@ -20,7 +20,7 @@ class EditButton extends StatelessWidget {
           shape: BoxShape.circle,
           boxShadow: [
             BoxShadow(
-              color: AppColors.primary.withOpacity(0.4),
+              color: AppColors.primary.withValues(alpha: 0.4),
               offset: const Offset(1, 2),
               blurRadius: 1.5.sp,
             ),

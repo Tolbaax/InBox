@@ -46,14 +46,14 @@ class ChatCard extends StatelessWidget {
           }
         },
         overlayColor: WidgetStateProperty.all(
-          AppColors.gray.withOpacity(0.1),
+          AppColors.gray.withValues(alpha: 0.1),
         ),
         child: Container(
           height: 65.h,
           padding: EdgeInsetsDirectional.only(start: 12.w, top: 6.h, end: 13.w),
           decoration: BoxDecoration(
             color: isSelected
-                ? AppColors.primary.withOpacity(0.2)
+                ? AppColors.primary.withValues(alpha: 0.2)
                 : Colors.transparent,
           ),
           child: Center(
@@ -62,7 +62,7 @@ class ChatCard extends StatelessWidget {
               children: [
                 CircleAvatar(
                   radius: 28.0.sp,
-                  backgroundColor: AppColors.primary.withOpacity(0.5),
+                  backgroundColor: AppColors.primary.withValues(alpha: 0.5),
                   child: Hero(
                     tag: chat.userId,
                     child: MyCachedNetImage(
@@ -118,7 +118,7 @@ class ChatCard extends StatelessWidget {
                             chat.lastMessage,
                             maxLines: 1,
                             style: TextStyle(
-                              color: AppColors.blackOlive.withOpacity(0.85),
+                              color: AppColors.blackOlive.withValues(alpha: 0.85),
                               fontSize: 12.5.sp,
                               fontWeight: FontWeight.w500,
                             ),

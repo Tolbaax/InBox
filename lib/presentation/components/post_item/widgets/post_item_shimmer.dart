@@ -207,7 +207,7 @@ class PostItemShimmer extends StatelessWidget {
       ),
       child: Column(
         children: [
-          Divider(color: Colors.grey.withOpacity(0.4)),
+          Divider(color: Colors.grey.withValues(alpha: 0.4)),
 
           // Action buttons row
           Row(

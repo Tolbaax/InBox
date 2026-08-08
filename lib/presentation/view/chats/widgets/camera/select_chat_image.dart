@@ -25,7 +25,7 @@ class SelectChatImage extends StatelessWidget {
       splashRadius: 20.0.sp,
       icon: Icon(
         isCamera ? Icons.camera_alt : Icons.photo,
-        color: AppColors.black.withOpacity(0.45),
+        color: AppColors.black.withValues(alpha: 0.45),
         size: 22.0.sp,
       ),
       onPressed: () async {

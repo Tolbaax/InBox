@@ -1,4 +1,5 @@
 import 'dart:io';
+
 import 'package:equatable/equatable.dart';
 
 class PostParams extends Equatable {
@@ -15,6 +16,5 @@ class PostParams extends Equatable {
   });
 
   @override
-  // TODO: implement props
   List<Object?> get props => [postText, imageFile, videoFile, gifUrl];
 }

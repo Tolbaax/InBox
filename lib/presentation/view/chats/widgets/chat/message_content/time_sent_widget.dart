@@ -27,7 +27,7 @@ class TimeSentWidget extends StatelessWidget {
             : EdgeInsetsDirectional.symmetric(vertical: 0.0, horizontal: 4.0.w),
         decoration: BoxDecoration(
           color:
-              isText ? Colors.transparent : AppColors.black.withOpacity(0.2.sp),
+              isText ? Colors.transparent : AppColors.black.withValues(alpha: 0.2.sp),
           borderRadius: BorderRadius.circular(12.0.sp),
         ),
         child: Row(

@@ -60,7 +60,7 @@ class PostItemHeader extends StatelessWidget {
             children: [
               CircleAvatar(
                 radius: 22.0,
-                backgroundColor: AppColors.primary.withOpacity(0.5),
+                backgroundColor: AppColors.primary.withValues(alpha: 0.5),
                 child: MyCachedNetImage(
                   imageUrl: post.profilePic,
                   radius: 18.5.sp,
@@ -104,7 +104,7 @@ class PostItemHeader extends StatelessWidget {
                           formatPostTime(post.publishTime),
                           maxLines: 1,
                           style: TextStyle(
-                            color: AppColors.blackOlive.withOpacity(0.85),
+                            color: AppColors.blackOlive.withValues(alpha: 0.85),
                             fontSize: 12.5.sp,
                             fontWeight: FontWeight.w500,
                           ),
@@ -116,12 +116,12 @@ class PostItemHeader extends StatelessWidget {
                         child: CircleAvatar(
                           radius: 1.2.sp,
                           backgroundColor:
-                              AppColors.blackOlive.withOpacity(0.6),
+                              AppColors.blackOlive.withValues(alpha: 0.6),
                         ),
                       ),
                       Icon(
                         FontAwesomeIcons.earthAfrica,
-                        color: AppColors.blackOlive.withOpacity(0.78),
+                        color: AppColors.blackOlive.withValues(alpha: 0.78),
                         size: 9.5.sp,
                       )
                     ],
@@ -140,7 +140,7 @@ class PostItemHeader extends StatelessWidget {
             icon: Icon(
               FontAwesomeIcons.ellipsis,
               size: 17.0.sp,
-              color: AppColors.blackOlive.withOpacity(0.8),
+              color: AppColors.blackOlive.withValues(alpha: 0.8),
             ),
           ),
         ),

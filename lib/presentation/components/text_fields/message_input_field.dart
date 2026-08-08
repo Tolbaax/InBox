@@ -74,7 +74,7 @@ class MessageInputField extends StatelessWidget {
                     ),
                     color: isCameraRev
                         ? AppColors.white
-                        : AppColors.black.withOpacity(0.5),
+                        : AppColors.black.withValues(alpha: 0.5),
                   ),
                   Flexible(
                     child: ConstrainedBox(
@@ -126,7 +126,7 @@ class MessageInputField extends StatelessWidget {
                         onPressed: () {},
                         splashRadius: 20.0.sp,
                         icon: const Icon(Icons.attach_file),
-                        color: AppColors.black.withOpacity(0.5),
+                        color: AppColors.black.withValues(alpha: 0.5),
                       ),
                     ),
                   if (isMessageEmpty)

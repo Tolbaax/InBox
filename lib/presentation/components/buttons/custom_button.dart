@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:inbox/core/utils/app_colors.dart';
 import 'package:inbox/core/extensions/media_query_extensions.dart';
+import 'package:inbox/core/utils/app_colors.dart';
 
 class CustomButton extends StatelessWidget {
   final GestureTapCallback? onTap;

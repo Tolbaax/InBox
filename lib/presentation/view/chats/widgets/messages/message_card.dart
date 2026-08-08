@@ -36,7 +36,7 @@ class MessageCard extends StatelessWidget {
                           uID != chat.lastMessageSenderId &&
                           !chat.isSeen
                       ? AppColors.primary
-                      : AppColors.blackOlive.withOpacity(0.7),
+                      : AppColors.blackOlive.withValues(alpha: 0.7),
                   fontSize: 11.1.sp,
                   fontWeight: FontWeight.w500,
                   fontFamily: '',

@@ -24,7 +24,7 @@ class ImageViewTopRowIcons extends StatelessWidget {
             },
             icon: CircleAvatar(
               radius: 20.0.sp,
-              backgroundColor: AppColors.black.withOpacity(0.5),
+              backgroundColor: AppColors.black.withValues(alpha: 0.5),
               child: Icon(Icons.clear, color: AppColors.white),
             ),
           ),

@@ -19,6 +19,7 @@ ThemeData appTheme() {
     scaffoldBackgroundColor: Colors.white,
     dividerColor: AppColors.primary.withValues(alpha: 0.4),
     appBarTheme: _appBarTheme(),
+    useMaterial3: true,
     progressIndicatorTheme: _progressIndicatorTheme(),
     popupMenuTheme: const PopupMenuThemeData(color: Colors.white),
     textTheme: const TextTheme(),
@@ -43,7 +44,9 @@ AppBarTheme _appBarTheme() {
   return AppBarTheme(
     centerTitle: true,
     elevation: 0.0,
-    backgroundColor: Colors.transparent,
+    scrolledUnderElevation: 0.0,
+    surfaceTintColor: Colors.transparent,
+    backgroundColor: Colors.white,
     systemOverlayStyle: _systemOverlayStyle,
     titleTextStyle: TextStyle(
       color: AppColors.black,
