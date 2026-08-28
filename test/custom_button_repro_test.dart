@@ -11,7 +11,7 @@ void main() {
         designSize: const Size(390, 844),
         minTextAdapt: true,
         splitScreenMode: true,
-        builder: (context, child) => MaterialApp(
+        builder: (context, child) => const MaterialApp(
           home: Scaffold(
             body: SafeArea(
               child: SingleChildScrollView(
@@ -19,8 +19,8 @@ void main() {
                   child: Form(
                     child: Column(
                       children: [
-                        const CustomTextField(),
-                        const CustomButton(onTap: null, text: 'Hi'),
+                        CustomTextField(),
+                        CustomButton(onTap: null, text: 'Hi'),
                       ],
                     ),
                   ),

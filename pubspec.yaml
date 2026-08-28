@@ -3,7 +3,7 @@ description: "A new Flutter project."
 
 publish_to: 'none'
 
-version: 1.0.0+1
+version: 1.0.0+2
 
 environment:
   sdk: ^3.5.4
@@ -52,8 +52,6 @@ dependencies:
   path_provider: ^2.1.5
   flutter_hooks: ^0.20.5
   app_links: ^6.3.3
-  #TODO USE FREERASP
-  freerasp: ^6.11.0
   flutter_linkify: ^6.0.0
   permission_handler: ^11.3.1
   image_picker: ^1.1.2
