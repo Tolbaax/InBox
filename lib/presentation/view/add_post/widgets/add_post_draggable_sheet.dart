@@ -63,14 +63,16 @@ class AddPostDraggableSheet extends StatelessWidget {
                   ),
                 ],
               ),
-              Divider(height: 0.0, color: AppColors.gray.withValues(alpha: 0.4)),
+              Divider(
+                  height: 0.0, color: AppColors.gray.withValues(alpha: 0.4)),
               _buildListTile(
                 onTap: () => cubit.getPostImageFromCamera(context),
                 icon: FontAwesomeIcons.camera,
                 color: AppColors.nickel,
                 text: AppStrings.camera,
               ),
-              Divider(height: 0.0, color: AppColors.gray.withValues(alpha: 0.4)),
+              Divider(
+                  height: 0.0, color: AppColors.gray.withValues(alpha: 0.4)),
               _buildListTile(
                 onTap: () async {
                   if (await checkInternetConnectivity()) {
@@ -84,22 +86,6 @@ class AddPostDraggableSheet extends StatelessWidget {
                 text: AppStrings.gif,
                 iconSize: 25.0.sp,
               ),
-              // Divider(height: 0.0, color: AppColors.gray.withValues(alpha: 0.4)),
-              // _buildListTile(
-              //   onTap: () {},
-              //   icon: FontAwesomeIcons.music,
-              //   color: Colors.pink,
-              //   text: AppStrings.music,
-              // ),
-              // Divider(height: 0.0, color: AppColors.gray.withValues(alpha: 0.4)),
-              // _buildListTile(
-              //   onTap: () {},
-              //   icon: Icons.location_on,
-              //   color: AppColors.red,
-              //   text: AppStrings.location,
-              //   iconSize: 25.0.sp,
-              // ),
-              // Divider(height: 0.0, color: AppColors.gray.withValues(alpha: 0.4)),
             ],
           ),
         );

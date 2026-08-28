@@ -7,7 +7,6 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:inbox/core/error/failure.dart';
 import 'package:inbox/core/params/auth/signin_params.dart';
 import 'package:inbox/core/params/auth/signup_params.dart';
-import 'package:inbox/core/usecase/usecase.dart';
 import 'package:inbox/domain/repositories/firebase_auth_repository.dart';
 import 'package:inbox/domain/usecases/auth/signin_usecase.dart';
 import 'package:inbox/domain/usecases/auth/signout_usecase.dart';
@@ -18,13 +17,15 @@ import 'package:inbox/presentation/view/login/widgets/login_form.dart';
 
 class _FakeAuthRepository implements FirebaseAuthRepository {
   @override
-  Future<Either<Failure, void>> signIn(SignInParams params) async => Right(null);
+  Future<Either<Failure, void>> signIn(SignInParams params) async =>
+      const Right(null);
 
   @override
-  Future<Either<Failure, void>> signUp(SignUpParams params) async => Right(null);
+  Future<Either<Failure, void>> signUp(SignUpParams params) async =>
+      const Right(null);
 
   @override
-  Future<Either<Failure, void>> signOut() async => Right(null);
+  Future<Either<Failure, void>> signOut() async => const Right(null);
 }
 
 void main() {
