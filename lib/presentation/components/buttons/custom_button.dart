@@ -19,43 +19,57 @@ class CustomButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final bool isLoading = condition ?? false;
     return GestureDetector(
-      onTap: onTap,
-      child: Container(
-        height: 40.0.h,
-        width: context.width * 0.8,
-        decoration: BoxDecoration(
-          gradient: LinearGradient(
-            colors: colors ??
-                [
-                  AppColors.primary,
-                  AppColors.primary,
-                  AppColors.lightBlue,
-                ],
-            begin: Alignment.centerLeft,
-            end: Alignment.centerRight,
-          ),
-          borderRadius: BorderRadius.circular(20.0.r),
-          boxShadow: [
-            BoxShadow(
-              color: AppColors.primary.withValues(alpha: 0.5),
-              blurRadius: 3.0.sp,
-              offset: const Offset(0, 3),
-            ),
-          ],
+      onTap: isLoading ? null : onTap,
+      child: ConstrainedBox(
+        constraints: BoxConstraints(
+          minWidth: context.width * 0.8,
+          maxWidth: context.width * 0.9,
+          minHeight: 40.0.h,
         ),
-        child: Center(
-          child: condition!
-              ? CircularProgressIndicator(
-                  color: AppColors.white, strokeWidth: 1.2.sp)
-              : Text(
-                  text,
-                  style: TextStyle(
-                    color: AppColors.white,
-                    fontSize: 16.0.sp,
-                    fontWeight: FontWeight.w500,
+        child: Container(
+          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+          decoration: BoxDecoration(
+            gradient: LinearGradient(
+              colors: colors ??
+                  [
+                    AppColors.primary,
+                    AppColors.primary,
+                    AppColors.lightBlue,
+                  ],
+              begin: Alignment.centerLeft,
+              end: Alignment.centerRight,
+            ),
+            borderRadius: BorderRadius.circular(20.0.r),
+            boxShadow: [
+              BoxShadow(
+                color: AppColors.primary.withValues(alpha: 0.5),
+                blurRadius: 3.0.sp,
+                offset: const Offset(0, 3),
+              ),
+            ],
+          ),
+          child: Center(
+            child: isLoading
+                ? const SizedBox(
+                    width: 20,
+                    height: 20,
+                    child: CircularProgressIndicator(
+                      color: Colors.white, strokeWidth: 1.2),
+                  )
+                : Text(
+                    text,
+                    textAlign: TextAlign.center,
+                    maxLines: 2,
+                    overflow: TextOverflow.ellipsis,
+                    style: TextStyle(
+                      color: AppColors.white,
+                      fontSize: 16.0.sp,
+                      fontWeight: FontWeight.w500,
+                    ),
                   ),
-                ),
+          ),
         ),
       ),
     );

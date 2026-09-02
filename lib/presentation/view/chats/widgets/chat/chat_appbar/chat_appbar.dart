@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:inbox/core/functions/navigator.dart';
@@ -29,6 +30,11 @@ class ChatAppBar extends StatelessWidget implements PreferredSizeWidget {
 
         return AppBar(
           backgroundColor: AppColors.policeBlue,
+          systemOverlayStyle: SystemUiOverlayStyle(
+            statusBarColor: AppColors.policeBlue,
+            statusBarIconBrightness: Brightness.light,
+            statusBarBrightness: Brightness.dark,
+          ),
           leading: BackButton(
             color: AppColors.white,
             onPressed: () async {

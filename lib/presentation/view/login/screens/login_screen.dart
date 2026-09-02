@@ -55,9 +55,6 @@ class SignInScreen extends StatelessWidget {
                             height: 70.h,
                           ),
                         ),
-                        SizedBox(
-                          height: 15.0.h,
-                        ),
                         Text(
                           AppStrings.login,
                           style: TextStyle(

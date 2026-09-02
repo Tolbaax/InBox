@@ -110,7 +110,7 @@ class RegisterForm extends StatelessWidget {
             condition: state is RegisterLoadingState,
           ),
           SizedBox(
-            height: 30.0.h,
+            height: 20.0.h,
           ),
           const HaveAccount(),
         ],

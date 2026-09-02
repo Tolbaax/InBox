@@ -3,6 +3,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:inbox/core/extensions/media_query_extensions.dart';
 import 'package:inbox/presentation/view/chats/widgets/camera/select_chat_image.dart';
+
 import '../../../../core/shared/common.dart';
 import '../../../../core/utils/app_colors.dart';
 import '../../../../core/utils/app_strings.dart';
@@ -119,16 +120,16 @@ class MessageInputField extends StatelessWidget {
                       ),
                     ),
                   ),
-                  if (!isCameraRev)
-                    RotationTransition(
-                      turns: const AlwaysStoppedAnimation(-45 / 360),
-                      child: IconButton(
-                        onPressed: () {},
-                        splashRadius: 20.0.sp,
-                        icon: const Icon(Icons.attach_file),
-                        color: AppColors.black.withValues(alpha: 0.5),
-                      ),
-                    ),
+                  // if (!isCameraRev)
+                  //   RotationTransition(
+                  //     turns: const AlwaysStoppedAnimation(-45 / 360),
+                  //     child: IconButton(
+                  //       onPressed: () {},
+                  //       splashRadius: 20.0.sp,
+                  //       icon: const Icon(Icons.attach_file),
+                  //       color: AppColors.black.withValues(alpha: 0.5),
+                  //     ),
+                  //   ),
                   if (isMessageEmpty)
                     SelectChatImage(
                         receiverId: receiverId, name: name, isCamera: true),
