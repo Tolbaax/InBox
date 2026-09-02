@@ -6,6 +6,7 @@ import 'package:inbox/core/functions/app_dialogs.dart';
 import 'package:inbox/core/functions/navigator.dart';
 import 'package:inbox/core/functions/validators.dart';
 import 'package:inbox/core/shared/common.dart';
+
 import '../../../../../core/utils/app_strings.dart';
 import '../../../components/buttons/custom_button.dart';
 import '../../../components/text_fields/custom_text_field.dart';
@@ -79,7 +80,7 @@ class LoginForm extends StatelessWidget {
             condition: state is LoginLoadingState,
           ),
           SizedBox(
-            height: 30.0.h,
+            height: 20.0.h,
           ),
           const DonTHaveAccount(),
         ],
